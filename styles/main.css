@@ -1,0 +1,174 @@
+/*----------------------------------------------------
+ * Load some custom fonts.
+ * Open Sans: Apache License, version 2.0
+ *----------------------------------------------------*/
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+/*----------------------------------------------------
+ * General
+ *----------------------------------------------------*/
+
+html {
+    background-color: #444444;
+    color: white;
+    font-family: 'Open Sans','Droid Sans',Arial,sans-serif;
+    font-size: 13px;
+}
+
+/*----------------------------------------------------
+ * Content
+ *----------------------------------------------------*/
+
+#content-wrapper {
+    overflow: visible;
+    position: relative;
+    width: 100%;
+}
+
+#content {
+    float: left;
+    position: relative;
+    margin: 0 20px;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+/*----------------------------------------------------
+ * Sidebars
+ *----------------------------------------------------*/
+
+#sidebar-left, #sidebar-right {
+    font-size: 90%;
+    float: left;
+    display: block;
+    padding: 0;
+    margin: 0;
+    vertical-align: baseline;
+}
+
+#sidebar-left {
+    width: 280px;
+}
+
+#sidebar-right {
+    width: 180px;
+}
+
+#sidebar-left h1, #sidebar-right h1 {
+    font-size: 110%;
+    border-bottom: solid 1px #BFBFBF;
+}
+
+/*----------------------------------------------------
+ * Controls
+ *----------------------------------------------------*/
+
+.control-buttons span.section {
+    display: block;
+    padding: 10px 0;
+}
+
+.control-buttons .ui-button {
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+}
+
+.control-buttons .ui-button {
+    display: block;
+}
+
+#sidebar-left .ui-buttonset {
+    margin-right: 0;
+}
+
+/*----------------------------------------------------
+ * Image info
+ *----------------------------------------------------*/
+
+#image-info {
+    display: none;
+}
+
+#image-info ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 5px 0;
+    text-align: left;
+}
+
+#image-info ul li {
+    background-color: #616161;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    display: inline;
+    outline: 0 none;
+    padding: 4px 8px;
+    text-decoration: none;
+}
+
+input#select-species {
+    width: 200px;
+}
+
+/*----------------------------------------------------
+ * Action buttons
+ *----------------------------------------------------*/
+
+#action-buttons ul {
+    list-style: none outside none;
+    margin: 0 0 8px;
+    padding: 0;
+    text-align: left;
+}
+
+#action-buttons ul li {
+    display: inline;
+    margin-right: 1px;
+}
+
+/*----------------------------------------------------
+ * Map
+ *----------------------------------------------------*/
+
+#map {
+    background-color: #000000;
+    border: solid 2px #7F7F7F;
+    height: 400px;
+    width: 600px;
+}
+
+/*----------------------------------------------------
+ * Directory tree
+ *----------------------------------------------------*/
+
+#dir-tree {
+    padding: 5px;
+    height: 300px;
+}
+
+ul.jqueryFileTree a {
+    color: #FFFFFF;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+ul.jqueryFileTree a:hover {
+    background-color: #555555;
+}
+
+/*----------------------------------------------------
+ * Misc
+ *----------------------------------------------------*/
+
+.clearfix:after {
+    clear: both;
+    content: " ";
+    display: block;
+    font-size: 0;
+    height: 0;
+    visibility: hidden;
+}

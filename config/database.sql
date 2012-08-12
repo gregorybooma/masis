@@ -19,6 +19,7 @@ CREATE TABLE image_info
     PRIMARY KEY (id),
     UNIQUE (img_dir, file_name)
 );
+CREATE INDEX ON image_info (img_dir);
 
 CREATE TABLE species
 (

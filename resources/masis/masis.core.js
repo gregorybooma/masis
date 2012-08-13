@@ -188,8 +188,7 @@ function init() {
     var container = document.getElementById("olControlLayerSwitcher");
     map.addControl(new OpenLayers.Control.LayerSwitcher({div: container}));
 
-    // Add coordinates of the mouse position to the bottom right corner
-    // of the map.
+    // Show coordinates of the mouse position.
     //map.addControl(new OpenLayers.Control.MousePosition());
 
     // Set stroke width.
@@ -199,7 +198,7 @@ function init() {
     controls = {
         polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),
         modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
-        select: new OpenLayers.Control.SelectFeature(vectorLayer,
+        annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
             {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect}),
         remove: new OpenLayers.Control.SelectFeature(vectorLayer,
             {onSelect: onFeatureRemove})

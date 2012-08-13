@@ -29,8 +29,8 @@
                     <label for="navigateToggle">Navigate</label>
                     <input type="radio" name="control" value="polygon" id="selectToggle" onclick="toggleControl(this);" />
                     <label for="selectToggle">Select</label>
-                    <input type="radio" name="control" value="select" id="assignToggle" onclick="toggleControl(this);" />
-                    <label for="assignToggle">Assign</label>
+                    <input type="radio" name="control" value="annotate" id="annotateToggle" onclick="toggleControl(this);" />
+                    <label for="annotateToggle">Annotate</label>
                     <span class="section">Modify selections:</span>
                     <input type="radio" name="control" value="modify" id="transformToggle" onclick="toggleControl(this);" />
                     <label for="transformToggle">Transform</label>

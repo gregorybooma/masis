@@ -36,6 +36,23 @@ CREATE TABLE species
     UNIQUE (name_venacular)
 );
 
+CREATE TABLE selections
+(
+    id SERIAL,
+    image_info_id INTEGER NOT NULL,
+    species_id INTEGER,
+    vector_id VARCHAR NOT NULL,
+    vector_wkt VARCHAR NOT NULL,
+    area_pixels INTEGER,
+    area_m2 DOUBLE PRECISION,
+    remarks VARCHAR(50),
+
+    PRIMARY KEY (id),
+    UNIQUE (image_info_id,vector_id),
+    FOREIGN KEY (image_info_id) REFERENCES image_info (id),
+    FOREIGN KEY (species_id) REFERENCES species (id)
+);
+
 /* Insert data */
 
 COPY image_info (altitude,depth,area,img_dir,file_name)

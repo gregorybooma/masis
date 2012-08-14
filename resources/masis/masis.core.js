@@ -60,11 +60,7 @@ $(document).ready(function() {
 
     // Set commit button action.
     $("#action-commit").click(function() {
-        var areas = get_areas(vectorLayer);
-        $("#polygons").empty();
-        for (a in areas) {
-            $("#polygons").append(a + ": " + areas[a] * imageObject.area_per_pixel + " m2 (" + areas[a] + " px)\n");
-        }
+        onCommit(this);
     });
 
     // Load the file tree.
@@ -88,6 +84,26 @@ $(document).ready(function() {
         resizable: false,
         modal: true
     });
+    $( "#dialog-selections-save-success" ).dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        buttons: {
+            Ok: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    $( "#dialog-unknown-error" ).dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        buttons: {
+            Ok: function() {
+                $(this).dialog("close");
+            }
+        }
+    });
 
     // Initialize the page.
     init();
@@ -95,18 +111,55 @@ $(document).ready(function() {
 
 /*** Callback functions ***/
 
+function onCommit(button) {
+    var vectors = {};
+    for (f in vectorLayer.features) {
+        var feature = vectorLayer.features[f];
+        var area_pixels = parseInt(feature.geometry.getArea());
+        vectors[f] = {
+            id: feature.id,
+            image_id: imageObject.id,
+            image_name: imageObject.name,
+            image_dir: imageObject.dir,
+            area_pixels: area_pixels,
+            area_m2: area_pixels * imageObject.area_per_pixel,
+            vector_wkt: feature.geometry.toString(),
+            species_id: feature.species_id,
+            species_name: feature.species_name,
+            };
+    }
+    // Save features to the database.
+    $.ajax({
+        type: "POST",
+        url: "fetch.php?do=save_selections",
+        dataType: "json",
+        data: vectors,
+        success: function(data) {
+            if (data.result == 'success') {
+                $("#dialog-selections-save-success").dialog('open');
+            }
+            else {
+                $("#dialog-unknown-error").dialog('open');
+            }
+        }
+    });
+}
+
 function onFeatureRemove(feature) {
     var checked = document.getElementById("removePolygon").checked;
     if (checked) {
+        // Set button options for the dialog.
         $("#dialog-remove-selection").dialog("option", 'buttons', {
                 "Delete selection": function() {
-                        $( this ).dialog( "close" );
-                        feature.destroy();
-                    },
-                    Cancel: function() {
-                        $( this ).dialog( "close" );
-                    }
-                });
+                    $( this ).dialog( "close" );
+                    // Destroy the vector.
+                    feature.destroy();
+                },
+                Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            });
+        // Open the dialog.
         $("#dialog-remove-selection").dialog('open');
     }
 }
@@ -119,7 +172,8 @@ function onFeatureSelect(feature) {
 
     $('#assign-species').append( $('<input />')
         .attr('name', "assign-species")
-        .attr('id', "select-species") );
+        .attr('id', "select-species")
+        .attr('placeholder', "Enter species name...") );
 
     $('#select-species').autocomplete({
         source: "load.php?do=get_species",
@@ -135,7 +189,7 @@ function onFeatureSelect(feature) {
             // value with the value of the selected item. This is not desired.
             event.preventDefault();
             // Set the species ID and name for the selected feature.
-            selectedFeature.species_id = ui.item.value;
+            selectedFeature.species_id = parseInt(ui.item.value);
             selectedFeature.species_name = ui.item.label;
             // Replace the text field value with the label.
             $("#select-species").val(ui.item.label);

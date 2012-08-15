@@ -36,7 +36,7 @@ CREATE TABLE species
     UNIQUE (name_venacular)
 );
 
-CREATE TABLE selections
+CREATE TABLE vectors
 (
     id SERIAL,
     image_info_id INTEGER NOT NULL,

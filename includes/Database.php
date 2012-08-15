@@ -59,7 +59,7 @@ class Database {
                 s.id AS species_id,
                 s.name_latin,
                 s.name_venacular
-            FROM selections v
+            FROM vectors v
                 -- OUTER JOIN because unassigned vectors should be returned
                 -- as well
                 LEFT OUTER JOIN species s ON v.species_id = s.id
@@ -72,7 +72,7 @@ class Database {
     public function save_vectors($vectors) {
         foreach ($vectors as $i => $vector) {
             // Check if this particular vector already exists in the database.
-            $query = "SELECT id FROM selections
+            $query = "SELECT id FROM vectors
                 WHERE image_info_id = {$vector['image_id']}
                 AND vector_id = '{$vector['id']}';";
             $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
@@ -88,7 +88,7 @@ class Database {
 
             // Save or update vector.
             if ( is_null($vector_id) ) {
-                $query = "INSERT INTO selections (
+                $query = "INSERT INTO vectors (
                         image_info_id,
                         species_id,
                         vector_id,
@@ -106,7 +106,7 @@ class Database {
                         {$vector['species_name']});";
             }
             else {
-                $query = "UPDATE selections SET (
+                $query = "UPDATE vectors SET (
                         species_id,
                         vector_wkt,
                         area_pixels,
@@ -126,7 +126,7 @@ class Database {
     }
 
     public function delete_vector($image_id, $vector_id) {
-        $query = "DELETE FROM selections
+        $query = "DELETE FROM vectors
             WHERE image_info_id = {$image_id}
                 AND vector_id = '{$vector_id}';";
         pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());

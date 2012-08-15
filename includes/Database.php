@@ -60,7 +60,9 @@ class Database {
                 s.name_latin,
                 s.name_venacular
             FROM selections v
-                INNER JOIN species s ON v.species_id = s.id
+                -- OUTER JOIN because unassigned vectors should be returned
+                -- as well
+                LEFT OUTER JOIN species s ON v.species_id = s.id
             WHERE v.image_info_id = {$image_id};";
 
         $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
@@ -68,7 +70,6 @@ class Database {
     }
 
     public function save_vectors($vectors) {
-        $return_value = 0;
         foreach ($vectors as $i => $vector) {
             // Check if this particular vector already exists in the database.
             $query = "SELECT id FROM selections
@@ -77,6 +78,13 @@ class Database {
             $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
             $row = pg_fetch_row($result);
             $vector_id = $row ? $row[0] : NULL;
+
+            // Handle vectors not assigned to a species.
+            if ( !is_int($vector['species_id']) && !ctype_digit($vector['species_id']) ) {
+                $vector['species_id'] = 'NULL';
+                $vector['species_name'] = NULL;
+            }
+            $vector['species_name'] = is_null($vector['species_name']) ? 'NULL' : "'{$vector['species_name']}'";
 
             // Save or update vector.
             if ( is_null($vector_id) ) {
@@ -95,7 +103,7 @@ class Database {
                         '{$vector['vector_wkt']}',
                         {$vector['area_pixels']},
                         {$vector['area_m2']},
-                        '{$vector['species_name']}');";
+                        {$vector['species_name']});";
             }
             else {
                 $query = "UPDATE selections SET (
@@ -109,12 +117,19 @@ class Database {
                         '{$vector['vector_wkt']}',
                         {$vector['area_pixels']},
                         {$vector['area_m2']},
-                        '{$vector['species_name']}')
+                        {$vector['species_name']})
                     WHERE image_info_id = {$vector['image_id']}
                         AND vector_id = '{$vector['id']}';";
             }
-            $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+            pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
         }
+    }
+
+    public function delete_vector($image_id, $vector_id) {
+        $query = "DELETE FROM selections
+            WHERE image_info_id = {$image_id}
+                AND vector_id = '{$vector_id}';";
+        pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
     }
 }
 

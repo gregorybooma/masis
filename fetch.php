@@ -10,8 +10,12 @@ $db->connect();
 
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
 switch ($do) {
-    case 'save_selections':
+    case 'save_vectors':
         $rv = $db->save_vectors($_POST);
+        print json_encode(array('result' => 'success'));
+        break;
+    case 'delete_vector':
+        $rv = $db->delete_vector($_GET['image_id'], $_GET['vector_id']);
         print json_encode(array('result' => 'success'));
         break;
     default:

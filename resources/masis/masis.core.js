@@ -131,7 +131,7 @@ function onCommit(button) {
     // Save features to the database.
     $.ajax({
         type: "POST",
-        url: "fetch.php?do=save_selections",
+        url: "fetch.php?do=save_vectors",
         dataType: "json",
         data: vectors,
         success: function(data) {
@@ -152,8 +152,23 @@ function onFeatureRemove(feature) {
         $("#dialog-remove-selection").dialog("option", 'buttons', {
                 "Delete selection": function() {
                     $( this ).dialog( "close" );
-                    // Destroy the vector.
-                    feature.destroy();
+
+                    // Delete the vector from the database.
+                    $.ajax({
+                        type: "GET",
+                        url: "fetch.php?do=delete_vector",
+                        dataType: "json",
+                        data: {image_id: imageObject.id, vector_id: feature.id},
+                        success: function(data) {
+                            if (data.result == 'success') {
+                                // Destroy the vector object.
+                                feature.destroy();
+                            }
+                            else {
+                                $("#dialog-unknown-error").dialog('open');
+                            }
+                        }
+                    });
                 },
                 Cancel: function() {
                     $( this ).dialog( "close" );
@@ -317,8 +332,9 @@ function setModifyFeature() {
 function set_image(path) {
     $.ajax({
         type: "GET",
-        url: "load.php?do=get_image_info&path="+path,
+        url: "load.php?do=get_image_info",
         dataType: "xml",
+        data: {path: path},
         success: function(xml) {
             // Set image info.
             var info = $(xml).find('image');

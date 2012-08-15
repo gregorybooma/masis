@@ -35,6 +35,11 @@ switch ($do) {
     case 'get_species':
         $json->html_select_species();
         break;
+    case 'get_vectors':
+        $image_id = !empty($_GET['image_id']) ? $_GET['image_id'] : NULL;
+        if ( !isset($image_id) ) die("Parameter `image_id` is not set.");
+        $json->get_vectors($image_id);
+        break;
     default:
         if ( !isset($do) ) {
             die("Parameter `do` is not set.");

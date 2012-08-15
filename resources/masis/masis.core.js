@@ -216,8 +216,24 @@ function onFeatureSelect(feature) {
     */
 }
 
+// Remove the assign species input field when a vector is unselected.
 function onFeatureUnselect(feature) {
     $('#assign-species').remove();
+}
+
+// Load vectors from a vectors object to the vector layer.
+function onLoadVectors(vectors) {
+    var Feature = OpenLayers.Feature.Vector;
+    var Geometry = OpenLayers.Geometry;
+    var features = [];
+    for (i in vectors) {
+        var vector = vectors[i];
+        features[i] = new Feature(Geometry.fromWKT(vector.vector_wkt));
+        features[i].id = vector.vector_id;
+        features[i].species_id = vector.species_id;
+        features[i].species_name = vector.species_name;
+    }
+    vectorLayer.addFeatures(features);
 }
 
 /*** Other functions ***/
@@ -396,12 +412,33 @@ function load_image(img) {
     $( "#map" ).resizable('option', 'maxHeight', img.height);
     $( "#map" ).resizable('option', 'maxWidth', img.width);
 
-    // Reset page elements.
+    // Enable the control buttons.
     $("#feature-controls input:radio").button("enable");
+
+    // Check the default control button.
     var e = document.getElementById("navigateToggle")
     e.checked = true;
+
+    // Refresh the buttons because the element's checked state is changed
+    // programatically.
+    $("#feature-controls input:radio").button( "refresh" );
+
+    // Activate the right control.
     toggleControl(e);
+
+    // Reset other page elements (e.g. assign species input field).
     onFeatureUnselect();
+
+    // Load existing vectors from the database.
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=get_vectors",
+        dataType: "json",
+        data: {image_id: img.id},
+        success: function(vectors) {
+            onLoadVectors(vectors);
+        }
+    });
 }
 
 function update_page_image_info(img) {

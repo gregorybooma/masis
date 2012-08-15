@@ -53,7 +53,21 @@ class Database {
         return $result;
     }
 
-    public function save_selections($vectors) {
+    public function get_vectors($image_id) {
+        $query = "SELECT v.vector_id,
+                v.vector_wkt,
+                s.id AS species_id,
+                s.name_latin,
+                s.name_venacular
+            FROM selections v
+                INNER JOIN species s ON v.species_id = s.id
+            WHERE v.image_info_id = {$image_id};";
+
+        $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+        return $result;
+    }
+
+    public function save_vectors($vectors) {
         $return_value = 0;
         foreach ($vectors as $i => $vector) {
             // Check if this particular vector already exists in the database.
@@ -101,7 +115,6 @@ class Database {
             }
             $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
         }
-        return $result;
     }
 }
 

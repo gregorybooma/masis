@@ -24,4 +24,21 @@ class JSON {
         }
         print json_encode($species_arr);
     }
+
+    public function get_vectors($image_id) {
+        global $db;
+
+        $result = $db->get_vectors($image_id);
+        $vectors = array();
+        while ( $row = pg_fetch_array($result, null, PGSQL_ASSOC) ) {
+            if ( $row['name_venacular'] ) {
+                $species_name = sprintf("%s (%s)", $row['name_latin'], $row['name_venacular']);
+            } else {
+                $species_name = $row['name_latin'];
+            }
+            $row['species_name'] = $species_name;
+            $vectors[] = $row;
+        }
+        print json_encode($vectors);
+    }
 }

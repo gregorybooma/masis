@@ -52,16 +52,3 @@ CREATE TABLE selections
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
     FOREIGN KEY (species_id) REFERENCES species (id)
 );
-
-/* Insert data */
-
-COPY image_info (altitude,depth,area,img_dir,file_name)
-    FROM 'image_info.csv'
-    DELIMITER ',' CSV HEADER;
-
-INSERT INTO species (name_latin, native, invasive) VALUES ('Didemnum vexillum', 'f', 't');
-INSERT INTO species (name_latin, name_venacular) VALUES ('Haliclona oculata', 'finger sponge');
-INSERT INTO species (name_latin, name_venacular) VALUES ('Isodictya palmata', 'palmate sponge');
-INSERT INTO species (name_latin, name_venacular) VALUES ('Microciona prolifera', 'red-beard sponge');
-INSERT INTO species (name_latin, name_venacular) VALUES ('Suberites ficus', 'fig sponge');
-INSERT INTO species (name_latin, name_venacular) VALUES ('Terebratulina septentrionalis', 'brachiopod');

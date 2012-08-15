@@ -2,18 +2,30 @@
 
 /**
  * The Database class provides methods for retrieving data from the database.
- *
- * Requires that config.php is imported.
  */
 class Database {
-    private $dbconn = null;
+    public $dbh = null;
 
     /**
      * Connect with the PostgreSQL database.
      */
     public function connect() {
         global $config;
-        $this->dbconn = pg_connect("host={$config['pg']['host']} dbname={$config['pg']['dbname']} user={$config['pg']['username']} password={$config['pg']['password']}");
+
+        try {
+            $this->dbh = new PDO("pgsql:dbname={$config['pg']['dbname']};host={$config['pg']['host']}",
+                $config['pg']['username'],
+                $config['pg']['password'],
+                array(
+                    PDO::ATTR_PERSISTENT => true // Use persistent connections.
+                ));
+        }
+        catch (PDOException $e) {
+            exit( "Unable to connect: " . $e->getMessage() );
+        }
+
+        // Throw exceptions so errors can be handled gracefully.
+        $this->dbh->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
     }
 
     /**
@@ -25,42 +37,57 @@ class Database {
      */
     public function get_image_attributes($dir, $filename) {
         $filename = explode('.', $filename);
-        $filename = $filename[0];
+        $filename = $filename[0] . ".%";
 
-        $query = "SELECT id,altitude,depth,area FROM image_info
-            WHERE img_dir = '{$dir}'
-                AND file_name SIMILAR TO '{$filename}.%';";
-        if ( !$result = pg_query($this->dbconn, $query) ) {
-            throw new Exception( pg_last_error() );
+        try {
+            $sth = $this->dbh->prepare("SELECT id,altitude,depth,area FROM image_info
+                WHERE img_dir = :dir AND file_name SIMILAR TO :filename;");
+            $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
+            $sth->bindParam(":filename", $filename, PDO::PARAM_STR);
+            $sth->execute();
         }
-        return pg_fetch_assoc($result);
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth->fetch(PDO::FETCH_ASSOC);
     }
 
     public function get_files_for_dir($dir) {
-        $query = "SELECT file_name FROM image_info
-            WHERE img_dir = '{$dir}'";
-        if ( !$result = pg_query($this->dbconn, $query) ) {
-            throw new Exception( pg_last_error() );
+        try {
+            $sth = $this->dbh->prepare("SELECT file_name FROM image_info
+                WHERE img_dir = :dir;");
+            $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
+            $sth->execute();
         }
-        return $result;
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth;
     }
 
     public function get_species($filter = null) {
         if ($filter) {
             $query = "SELECT * FROM species
-                WHERE name_latin ~* '{$filter}'
-                OR name_venacular ~* '{$filter}';";
+                WHERE name_latin ~* :filter
+                    OR name_venacular ~* :filter;";
         } else {
             $query = "SELECT * FROM species;";
         }
-        if ( !$result = pg_query($this->dbconn, $query) ) {
-            throw new Exception( pg_last_error() );
+
+        try {
+            $sth = $this->dbh->prepare($query);
+            if ($filter) $sth->bindParam(":filter", $filter, PDO::PARAM_STR);
+            $sth->execute();
         }
-        return $result;
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth;
     }
 
     public function get_vectors($image_id) {
-        $query = "SELECT v.vector_id,
+        try {
+            $sth = $this->dbh->prepare("SELECT v.vector_id,
                 v.vector_wkt,
                 s.id AS species_id,
                 s.name_latin,
@@ -69,32 +96,43 @@ class Database {
                 -- OUTER JOIN because unassigned vectors should be returned
                 -- as well
                 LEFT OUTER JOIN species s ON v.species_id = s.id
-            WHERE v.image_info_id = {$image_id};";
-
-        if ( !$result = pg_query($this->dbconn, $query) ) {
-            throw new Exception( pg_last_error() );
+            WHERE v.image_info_id = :image_id;");
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+            $sth->execute();
         }
-        return $result;
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth;
     }
 
     public function save_vectors($vectors) {
+        // Start a database transaction.
+        $this->dbh->beginTransaction();
+
         foreach ($vectors as $i => $vector) {
             // Check if this particular vector already exists in the database.
-            $query = "SELECT id FROM vectors
-                WHERE image_info_id = {$vector['image_id']}
-                AND vector_id = '{$vector['id']}';";
-            if ( !$result = pg_query($this->dbconn, $query) ) {
-                throw new Exception( pg_last_error() );
+            try {
+                $sth = $this->dbh->prepare("SELECT id FROM vectors
+                    WHERE image_info_id = :image_id
+                        AND vector_id = :vector_id;");
+                $sth->bindParam(":image_id", $vector['image_id'], PDO::PARAM_INT);
+                $sth->bindParam(":vector_id", $vector['id'], PDO::PARAM_STR);
+                $sth->execute();
             }
-            $row = pg_fetch_row($result);
+            catch (Exception $e) {
+                throw new Exception( $e->getMessage() );
+            }
+            $row = $sth->fetch();
             $vector_id = $row ? $row[0] : NULL;
 
             // Handle vectors not assigned to a species.
-            if ( !is_int($vector['species_id']) && !ctype_digit($vector['species_id']) ) {
-                $vector['species_id'] = 'NULL';
+            // The ( !is_int() && !ctype_digit() ) part is for checking numeric
+            // strings.
+            if ( !isset($vector['species_id']) || ( !is_int($vector['species_id']) && !ctype_digit($vector['species_id']) ) ) {
+                $vector['species_id'] = NULL;
                 $vector['species_name'] = NULL;
             }
-            $vector['species_name'] = is_null($vector['species_name']) ? 'NULL' : "'{$vector['species_name']}'";
 
             // Save or update vector.
             if ( is_null($vector_id) ) {
@@ -107,13 +145,13 @@ class Database {
                         area_m2,
                         remarks)
                     VALUES (
-                        {$vector['image_id']},
-                        {$vector['species_id']},
-                        '{$vector['id']}',
-                        '{$vector['vector_wkt']}',
-                        {$vector['area_pixels']},
-                        {$vector['area_m2']},
-                        {$vector['species_name']});";
+                        :image_id,
+                        :species_id,
+                        :id,
+                        :vector_wkt,
+                        :area_pixels,
+                        :area_m2,
+                        :species_name);";
             }
             else {
                 $query = "UPDATE vectors SET (
@@ -123,26 +161,45 @@ class Database {
                         area_m2,
                         remarks
                     ) = (
-                        {$vector['species_id']},
-                        '{$vector['vector_wkt']}',
-                        {$vector['area_pixels']},
-                        {$vector['area_m2']},
-                        {$vector['species_name']})
-                    WHERE image_info_id = {$vector['image_id']}
-                        AND vector_id = '{$vector['id']}';";
+                        :species_id,
+                        :vector_wkt,
+                        :area_pixels,
+                        :area_m2,
+                        :species_name)
+                    WHERE image_info_id = :image_id
+                        AND vector_id = :id;";
             }
-            if ( !$result = pg_query($this->dbconn, $query) ) {
-                throw new Exception( pg_last_error() );
+            try {
+                $sth = $this->dbh->prepare($query);
+                $sth->bindParam(":species_id", $vector['species_id'], PDO::PARAM_INT);
+                $sth->bindParam(":vector_wkt", $vector['vector_wkt'], PDO::PARAM_STR);
+                $sth->bindParam(":area_pixels", $vector['area_pixels'], PDO::PARAM_INT);
+                $sth->bindParam(":area_m2", $vector['area_m2'], PDO::PARAM_STR);
+                $sth->bindParam(":species_name", $vector['species_name'], PDO::PARAM_STR);
+                $sth->bindParam(":image_id", $vector['image_id'], PDO::PARAM_INT);
+                $sth->bindParam(":id", $vector['id'], PDO::PARAM_STR);
+                $sth->execute();
+            }
+            catch (Exception $e) {
+                throw new Exception( $e->getMessage() );
             }
         }
+
+        // Commit the transaction.
+        $this->dbh->commit();
     }
 
     public function delete_vector($image_id, $vector_id) {
-        $query = "DELETE FROM vectors
-            WHERE image_info_id = {$image_id}
-                AND vector_id = '{$vector_id}';";
-        if ( !$result = pg_query($this->dbconn, $query) ) {
-            throw new Exception( pg_last_error() );
+        try {
+            $sth = $this->dbh->prepare("DELETE FROM vectors
+            WHERE image_info_id = :image_id
+                AND vector_id = :vector_id;");
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+            $sth->bindParam(":vector_id", $vector_id, PDO::PARAM_STR);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
         }
     }
 }

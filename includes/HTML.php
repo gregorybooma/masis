@@ -28,8 +28,8 @@ class HTML {
                 $stack = explode('/', trim($dir, '/'));
                 $img_dir = array_pop($stack);
                 $ext_pattern = '/\.[a-z]+$/';
-                $result = $db->get_files_for_dir($img_dir);
-                while ( $row = pg_fetch_array($result, null, PGSQL_ASSOC) ) {
+                $sth = $db->get_files_for_dir($img_dir);
+                while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
                     // Many entries in the database are .ppm files which are
                     // not supported. So replace the extension .ppm by common
                     // and supported file type extensions and look for these

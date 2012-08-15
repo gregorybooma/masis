@@ -30,14 +30,18 @@ class Database {
         $query = "SELECT id,altitude,depth,area FROM image_info
             WHERE img_dir = '{$dir}'
                 AND file_name SIMILAR TO '{$filename}.%';";
-        $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+        if ( !$result = pg_query($this->dbconn, $query) ) {
+            throw new Exception( pg_last_error() );
+        }
         return pg_fetch_assoc($result);
     }
 
     public function get_files_for_dir($dir) {
         $query = "SELECT file_name FROM image_info
             WHERE img_dir = '{$dir}'";
-        $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+        if ( !$result = pg_query($this->dbconn, $query) ) {
+            throw new Exception( pg_last_error() );
+        }
         return $result;
     }
 
@@ -49,7 +53,9 @@ class Database {
         } else {
             $query = "SELECT * FROM species;";
         }
-        $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+        if ( !$result = pg_query($this->dbconn, $query) ) {
+            throw new Exception( pg_last_error() );
+        }
         return $result;
     }
 
@@ -65,7 +71,9 @@ class Database {
                 LEFT OUTER JOIN species s ON v.species_id = s.id
             WHERE v.image_info_id = {$image_id};";
 
-        $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+        if ( !$result = pg_query($this->dbconn, $query) ) {
+            throw new Exception( pg_last_error() );
+        }
         return $result;
     }
 
@@ -75,7 +83,9 @@ class Database {
             $query = "SELECT id FROM vectors
                 WHERE image_info_id = {$vector['image_id']}
                 AND vector_id = '{$vector['id']}';";
-            $result = pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+            if ( !$result = pg_query($this->dbconn, $query) ) {
+                throw new Exception( pg_last_error() );
+            }
             $row = pg_fetch_row($result);
             $vector_id = $row ? $row[0] : NULL;
 
@@ -121,7 +131,9 @@ class Database {
                     WHERE image_info_id = {$vector['image_id']}
                         AND vector_id = '{$vector['id']}';";
             }
-            pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+            if ( !$result = pg_query($this->dbconn, $query) ) {
+                throw new Exception( pg_last_error() );
+            }
         }
     }
 
@@ -129,7 +141,9 @@ class Database {
         $query = "DELETE FROM vectors
             WHERE image_info_id = {$image_id}
                 AND vector_id = '{$vector_id}';";
-        pg_query($this->dbconn, $query) or die('Query failed: ' . pg_last_error());
+        if ( !$result = pg_query($this->dbconn, $query) ) {
+            throw new Exception( pg_last_error() );
+        }
     }
 }
 

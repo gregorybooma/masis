@@ -64,7 +64,9 @@ class XML {
     public function get_image_info($path) {
         global $config, $db;
 
-        if (!is_file($path)) die("Error: Not a file: {$path}");
+        if ( !is_file($path) ) {
+            throw new Exception( "Not a file: {$path}" );
+        }
 
         // Create a new DOM document.
         $doc = new DOMDocument();

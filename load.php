@@ -29,7 +29,7 @@ switch ($do) {
     case 'get_image_info':
         // Return image info.
         $path = !empty($_GET['path']) ? $_GET['path'] : NULL;
-        if ( !isset($path) ) die("Parameter `path` is not set.");
+        if ( !isset($path) ) exit("Parameter `path` is not set.");
         $xml->get_image_info($path);
         break;
     case 'get_species':
@@ -37,14 +37,14 @@ switch ($do) {
         break;
     case 'get_vectors':
         $image_id = !empty($_GET['image_id']) ? $_GET['image_id'] : NULL;
-        if ( !isset($image_id) ) die("Parameter `image_id` is not set.");
+        if ( !isset($image_id) ) exit("Parameter `image_id` is not set.");
         $json->get_vectors($image_id);
         break;
     default:
         if ( !isset($do) ) {
-            die("Parameter `do` is not set.");
+            exit("Parameter `do` is not set.");
         } else {
-            die("Value '{$do}' for parameter `do` is unknown.");
+            exit("Value '{$do}' for parameter `do` is unknown.");
         }
 }
 

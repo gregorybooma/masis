@@ -59,9 +59,12 @@ $(document).ready(function() {
     // Disable feature controls.
     $("#feature-controls input:radio").button("disable");
 
-    // Set commit button action.
+    // Set button actions.
     $("#action-commit").click(function() {
-        onCommit(this);
+        onCommit();
+    });
+    $("#action-list-vectors").click(function() {
+        onLoadVectorsTable();
     });
 
     // Load the file tree.
@@ -112,7 +115,25 @@ $(document).ready(function() {
 
 /*** Callback functions ***/
 
-function onCommit(button) {
+function onLoadVectorsTable() {
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=table_image_vectors",
+        dataType: "html",
+        data: {image_id: imageObject.id},
+        success: function(table) {
+            $('#vectors-list').html(table);
+            $('#vectors-list table').dataTable({
+                "bJQueryUI" : true, // Enable jQuery UI ThemeRoller support
+                "bSort" : false, // Disable sorting
+                "bFilter" : false, // Disable search box
+                "bLengthChange" : false
+            });
+        }
+    });
+}
+
+function onCommit() {
     var vectors = {};
     for (f in vectorLayer.features) {
         var feature = vectorLayer.features[f];

@@ -33,7 +33,7 @@ dt {
 #content {
     float: left;
     position: relative;
-    margin: 0 20px;
+    margin: 0;
     padding: 0;
     vertical-align: baseline;
 }
@@ -52,6 +52,7 @@ dt {
 }
 
 #sidebar-left {
+    margin-right: 20px;
     width: 280px;
 }
 
@@ -158,6 +159,17 @@ ul.jqueryFileTree a {
 
 ul.jqueryFileTree a:hover {
     background-color: #555555;
+}
+
+/*----------------------------------------------------
+ * DataTables
+ *----------------------------------------------------*/
+
+table.dataTable tr.odd {
+    background-color: #272727;
+}
+table.dataTable tr.even {
+    background-color: #222222;
 }
 
 /*----------------------------------------------------

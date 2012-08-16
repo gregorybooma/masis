@@ -5,6 +5,7 @@ require('includes/XML.php');
 require('includes/JSON.php');
 require('includes/HTML.php');
 require('includes/Database.php');
+require('includes/DataTable.php');
 
 $db = new Database();
 $xml = new XML();
@@ -39,6 +40,12 @@ switch ($do) {
         $image_id = !empty($_GET['image_id']) ? $_GET['image_id'] : NULL;
         if ( !isset($image_id) ) exit("Parameter `image_id` is not set.");
         $json->get_vectors($image_id);
+        break;
+    case 'table_image_vectors':
+        $image_id = !empty($_GET['image_id']) ? $_GET['image_id'] : NULL;
+        if ( !isset($image_id) ) exit("Parameter `image_id` is not set.");
+        $table = new DataTable();
+        $table->list_image_vectors($image_id);
         break;
     default:
         if ( !isset($do) ) {

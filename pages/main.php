@@ -38,7 +38,7 @@
                     <label for="rotateToggle">Rotate</label>
                     <input type="radio" name="control" value="modify" id="resizeToggle" onclick="toggleControl(this);" />
                     <label for="resizeToggle">Resize</label>
-                    <input type="radio" name="control" value="modify" id="dragToggle" onclick="toggleControl(this);" />
+                    <input type="radio" name="control" value="drag" id="dragToggle" onclick="toggleControl(this);" />
                     <label for="dragToggle">Drag</label>
                     <input type="radio" name="control" value="remove" id="removePolygon" onclick="toggleControl(this);" />
                     <label for="removePolygon">Delete</label>

@@ -283,6 +283,7 @@ function init() {
     controls = {
         polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),
         modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
+        drag: new OpenLayers.Control.DragFeature(vectorLayer),
         annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
             {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect}),
         remove: new OpenLayers.Control.SelectFeature(vectorLayer,
@@ -311,7 +312,6 @@ function setModifyFeature() {
     var transform = document.getElementById("transformToggle").checked;
     var rotate = document.getElementById("rotateToggle").checked;
     var resize = document.getElementById("resizeToggle").checked;
-    var drag = document.getElementById("dragToggle").checked;
 
     if (transform) {
         controls.modify.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
@@ -322,9 +322,6 @@ function setModifyFeature() {
     }
     else if(resize) {
         controls.modify.mode = OpenLayers.Control.ModifyFeature.RESIZE;
-    }
-    else if(drag) {
-        controls.modify.mode = OpenLayers.Control.ModifyFeature.DRAG;
     }
 }
 

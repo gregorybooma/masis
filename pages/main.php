@@ -24,24 +24,28 @@
             <!-- controls -->
             <div>
                 <h3><a href="#">Controls</a></h3>
-                <div id="feature-controls" class="control-buttons">
-                    <input type="radio" name="control" value="none" id="navigateToggle" onclick="toggleControl(this);" checked="checked" />
-                    <label for="navigateToggle">Navigate</label>
-                    <input type="radio" name="control" value="polygon" id="selectToggle" onclick="toggleControl(this);" />
-                    <label for="selectToggle">Select</label>
-                    <input type="radio" name="control" value="annotate" id="annotateToggle" onclick="toggleControl(this);" />
-                    <label for="annotateToggle">Annotate</label>
-                    <span class="section">Modify selections:</span>
-                    <input type="radio" name="control" value="modify" id="transformToggle" onclick="toggleControl(this);" />
-                    <label for="transformToggle">Transform</label>
-                    <input type="radio" name="control" value="modify" id="rotateToggle" onclick="toggleControl(this);" />
-                    <label for="rotateToggle">Rotate</label>
-                    <input type="radio" name="control" value="modify" id="resizeToggle" onclick="toggleControl(this);" />
-                    <label for="resizeToggle">Resize</label>
-                    <input type="radio" name="control" value="drag" id="dragToggle" onclick="toggleControl(this);" />
-                    <label for="dragToggle">Drag</label>
-                    <input type="radio" name="control" value="remove" id="removePolygon" onclick="toggleControl(this);" />
-                    <label for="removePolygon">Delete</label>
+                <div>
+                    <div id="feature-controls" class="control-buttons">
+                        <input type="radio" name="control" value="none" id="navigateToggle" onclick="toggleControl(this);" checked="checked" />
+                        <label for="navigateToggle">Navigate</label>
+                        <input type="radio" name="control" value="polygon" id="selectToggle" onclick="toggleControl(this);" />
+                        <label for="selectToggle">Draw Polygon</label>
+                        <input type="radio" name="control" value="regular_polygon" id="regularSelectToggle" onclick="toggleControl(this);" />
+                        <label for="regularSelectToggle">Draw Regular Polygon</label>
+                        <input type="radio" name="control" value="annotate" id="annotateToggle" onclick="toggleControl(this);" />
+                        <label for="annotateToggle">Annotate</label>
+                        <span class="section">Modify selections:</span>
+                        <input type="radio" name="control" value="modify" id="transformToggle" onclick="toggleControl(this);" />
+                        <label for="transformToggle">Transform</label>
+                        <input type="radio" name="control" value="modify" id="rotateToggle" onclick="toggleControl(this);" />
+                        <label for="rotateToggle">Rotate</label>
+                        <input type="radio" name="control" value="modify" id="resizeToggle" onclick="toggleControl(this);" />
+                        <label for="resizeToggle">Resize</label>
+                        <input type="radio" name="control" value="drag" id="dragToggle" onclick="toggleControl(this);" />
+                        <label for="dragToggle">Drag</label>
+                        <input type="radio" name="control" value="remove" id="removePolygon" onclick="toggleControl(this);" />
+                        <label for="removePolygon">Delete</label>
+                    </div>
                 </div>
             </div>
             <!-- end controls -->
@@ -52,6 +56,13 @@
                 <div id="olControlLayerSwitcher"></div>
             </div>
             <!-- end layer switcher -->
+
+            <!-- image info -->
+            <div>
+                <h3><a href="#">Image Information</a></h3>
+                <div id="image-info"></div>
+            </div>
+            <!-- end image info -->
 
             <!-- directory tree -->
             <div>
@@ -75,14 +86,18 @@
             <div id="map"></div>
             <!-- end map -->
 
-            <!-- image info -->
-            <div id="image-info">
-                <ul>
-                    <li id="image-altitude"></li>
-                    <li id="image-area"></li>
-                </ul>
+            <div id="context-controls">
+                <div id="regular-polygon-controls">
+                    <input type="radio" name="sides" value="4" id="polygonSquare" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                    <label for="polygonSquare">Square</label>
+                    <input type="radio" name="sides" value="5" id="polygonPentagon" checked="checked" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                    <label for="polygonPentagon">Pentagon</label>
+                    <input type="radio" name="sides" value="6" id="polygonHexagon" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                    <label for="polygonHexagon">Hexagon</label>
+                    <input type="radio" name="sides" value="40" id="polygonCircle" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                    <label for="polygonCircle">Circle</label>
+                </div>
             </div>
-            <!-- end image info -->
 
             <!-- temporary -->
             <pre id="polygons"></pre>

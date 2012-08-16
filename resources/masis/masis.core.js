@@ -41,7 +41,7 @@ $(document).ready(function() {
 		return false;
 	}).next().hide();
     */
-    $("#sidebar-left").accordion({ header: "h3", active: 2, fillSpace: false });
+    $("#sidebar-left").accordion({ header: "h3", active: 3, fillSpace: false });
 
     // Make the map element resizable.
     $( "#map" ).resizable({
@@ -54,6 +54,7 @@ $(document).ready(function() {
 
     // Transform feature controls into a jQuery UI button set.
     $("#feature-controls").buttonset();
+    $("#regular-polygon-controls").buttonset();
 
     // Disable feature controls.
     $("#feature-controls input:radio").button("disable");
@@ -282,6 +283,7 @@ function init() {
     // Set controls.
     controls = {
         polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),
+        regular_polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.RegularPolygon, {irregular: true}),
         modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
         drag: new OpenLayers.Control.DragFeature(vectorLayer),
         annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
@@ -294,11 +296,14 @@ function init() {
     }
 }
 
+// Activate selected control.
 function toggleControl(element) {
     for (key in controls) {
         var control = controls[key];
         if (element.value == key && element.checked) {
             control.activate();
+            toggleContextControl(key);
+
             if (key == 'modify') {
                 setModifyFeature();
             }
@@ -308,6 +313,26 @@ function toggleControl(element) {
     }
 }
 
+// Hide or show context controls.
+function toggleContextControl(checked_key) {
+    if (checked_key == 'regular_polygon') {
+        $('#regular-polygon-controls').show();
+        setRegularPolygonOptions({sides: 4})
+        $('#polygonSquare').attr('checked', true);
+        $("#regular-polygon-controls input:radio").button("refresh");
+    }
+    else {
+        $('#regular-polygon-controls').hide();
+    }
+}
+
+// Set the options for drawing regular polygons.
+function setRegularPolygonOptions(options) {
+    options.irregular = true; // Draw irregular polygons by default.
+    controls.regular_polygon.handler.setOptions(options);
+}
+
+// Set the modify feature for modifying polygons.
 function setModifyFeature() {
     var transform = document.getElementById("transformToggle").checked;
     var rotate = document.getElementById("rotateToggle").checked;
@@ -455,9 +480,12 @@ function load_image(img) {
 }
 
 function update_page_image_info(img) {
-    $('#image-altitude').html("Altitude: " + roundNumber(img.altitude, 2) + " m");
-    $('#image-area').html("Area: " + roundNumber(img.area, 2) + " m<sup>2</sup>");
-    $('#image-info').show();
+    $('#image-info').empty();
+    $('#image-info').append("<dl></dl>");
+    $('#image-info dl').append("<dt>File:</dt><dd>" + img.url + "</dd>");
+    $('#image-info dl').append("<dt>Depth:</dt><dd>" + img.depth + " m</dd>");
+    $('#image-info dl').append("<dt>Altitude:</dt><dd>" + roundNumber(img.altitude, 2) + " m</dd>");
+    $('#image-info dl').append("<dt>Area:</dt><dd>" + roundNumber(img.area, 2) + " m<sup>2</sup></dd>");
 }
 
 // Set the next image in the map.

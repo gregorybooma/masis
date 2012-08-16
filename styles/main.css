@@ -16,6 +16,10 @@ html {
     font-size: 13px;
 }
 
+dt {
+    font-weight: bold;
+}
+
 /*----------------------------------------------------
  * Content
  *----------------------------------------------------*/
@@ -73,6 +77,7 @@ html {
     border-radius: 0;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
+    margin-right: 0;
 }
 
 .control-buttons .ui-button {
@@ -83,31 +88,26 @@ html {
     margin-right: 0;
 }
 
+#context-controls {
+    margin: 0;
+    padding: 5px 0;
+}
+
+#context-controls div {
+    display: none;
+}
+
 /*----------------------------------------------------
  * Image info
  *----------------------------------------------------*/
 
-#image-info {
-    display: none;
+#image-info dd {
+    margin: 0.3em 0.5em;
 }
 
-#image-info ul {
-    list-style: none outside none;
-    margin: 0;
-    padding: 5px 0;
-    text-align: left;
-}
-
-#image-info ul li {
-    background-color: #616161;
-    border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    display: inline;
-    outline: 0 none;
-    padding: 4px 8px;
-    text-decoration: none;
-}
+/*----------------------------------------------------
+ * Input
+ *----------------------------------------------------*/
 
 input#select-species {
     width: 200px;

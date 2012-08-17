@@ -202,5 +202,43 @@ class Database {
             throw new Exception( $e->getMessage() );
         }
     }
+
+    /**
+     * Create database table `areas_image_grouped`.
+     *
+     * This table contains the species coverage per image. The total coverage
+     * for each species can be calculated using this table.
+     */
+    public function set_areas_image_grouped() {
+        // Start a database transaction.
+        $this->dbh->beginTransaction();
+
+        try {
+            $sth = $this->dbh->prepare("DROP TABLE IF EXISTS areas_image_grouped;");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        try {
+            $sth = $this->dbh->prepare("SELECT i.id as image_id,
+                    s.id as species_id,
+                    sum(v.area_m2) as species_area,
+                    i.area as image_area
+                INTO areas_image_grouped
+                FROM vectors v
+                    INNER JOIN species s ON s.id = v.species_id
+                    INNER JOIN image_info i ON i.id = v.image_info_id
+                GROUP BY i.id, s.id;");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        // Commit the transaction.
+        $this->dbh->commit();
+    }
 }
 

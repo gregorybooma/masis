@@ -15,9 +15,12 @@ class DataTable {
         $column_names = array(
             'vector_id' => "Vector",
             'species_id' => "Species ID",
-            'name_latin' => "Species (Latin)",
+            'name_latin' => "Species",
             'name_venacular' => "Species (venacular)",
             'area_m2' => "Area (m<sup>2</sup>)",
+            'species_area' => "Species Coverage (m<sup>2</sup>)",
+            'total_area' => "Total Area (m<sup>2</sup>)",
+            'species_cover' => "Species Coverage Fraction",
             '' => "",
             );
         for ($i = 0; $i < $sth->columnCount(); $i++) {
@@ -122,6 +125,30 @@ class DataTable {
         $this->set_table_heads($sth);
         $body = $this->build_tbody_simple($sth);
         $this->build($body, "", array('header'));
+    }
+
+    public function species_coverage() {
+        global $db;
+
+        $db->set_areas_image_grouped();
+
+        try {
+            $sth = $db->dbh->prepare("SELECT s.name_latin,
+                    SUM(a.species_area) as species_area,
+                    SUM(a.image_area) as total_area,
+                    (SUM(a.species_area) / SUM(a.image_area)) as species_cover
+                FROM areas_image_grouped a
+                    INNER JOIN species s ON s.id = a.species_id
+                GROUP BY s.name_latin;");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        $this->set_table_heads($sth);
+        $body = $this->build_tbody_simple($sth);
+        $this->build($body);
     }
 }
 

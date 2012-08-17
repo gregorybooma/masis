@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="resources/openlayers/theme/default/style.css" type="text/css" />
     <link rel="stylesheet" href="resources/jquery.filetree/jquery.filetree.css" type="text/css" />
     <link rel="stylesheet" href="resources/jquery.ui/themes/benthic/jquery-ui.css" type="text/css" />
-    <link rel="stylesheet" href="resources/jquery.datatables/css/jquery.dataTables.css" type="text/css" />
+    <link rel="stylesheet" href="resources/jquery.datatables/css/jquery.dataTables_themeroller.css" type="text/css" />
     <link rel="stylesheet" href="styles/main.css" type="text/css" />
     <!-- javascripts: -->
     <script src="resources/jquery/jquery.min.js" type="text/javascript"></script>
@@ -81,6 +81,7 @@
                 <ul>
                     <li><button id="action-commit">Commit</button></li>
                     <li><button id="action-list-vectors">List Vectors</button></li>
+                    <li><button id="action-species-stats">Show Species Stats</button></li>
                 </ul>
             </div>
             <!-- end buttons -->
@@ -106,6 +107,7 @@
 
         <!-- tables -->
         <div id="vectors-list"></div>
+        <div id="species-coverage"></div>
         <!-- end tables -->
 
     </div> <!-- end content-wrapper -->

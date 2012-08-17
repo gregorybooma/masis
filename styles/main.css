@@ -172,6 +172,13 @@ table.dataTable tr.even {
     background-color: #222222;
 }
 
+table.dataTable tr.odd td.sorting_1 {
+    background-color: #003147;
+}
+table.dataTable tr.even td.sorting_1 {
+    background-color: #00283A;
+}
+
 /*----------------------------------------------------
  * Misc
  *----------------------------------------------------*/

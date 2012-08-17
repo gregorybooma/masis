@@ -47,6 +47,10 @@ switch ($do) {
         $table = new DataTable();
         $table->list_image_vectors($image_id);
         break;
+    case 'table_species_coverage':
+        $table = new DataTable();
+        $table->species_coverage();
+        break;
     default:
         if ( !isset($do) ) {
             exit("Parameter `do` is not set.");

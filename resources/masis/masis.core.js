@@ -66,6 +66,9 @@ $(document).ready(function() {
     $("#action-list-vectors").click(function() {
         onLoadVectorsTable();
     });
+    $("#action-species-stats").click(function() {
+        onLoadSpeciesCoverageTable();
+    });
 
     // Load the file tree.
     $('#dir-tree').fileTree(
@@ -114,6 +117,23 @@ $(document).ready(function() {
 });
 
 /*** Callback functions ***/
+
+function onLoadSpeciesCoverageTable() {
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=table_species_coverage",
+        dataType: "html",
+        success: function(table) {
+            $('#species-coverage').html(table);
+            $('#species-coverage table').dataTable({
+                "bJQueryUI" : true, // Enable jQuery UI ThemeRoller support
+                "bSort" : true, // Enable sorting
+                "bFilter" : true, // Enable search box
+                "bLengthChange" : false
+            });
+        }
+    });
+}
 
 function onLoadVectorsTable() {
     $.ajax({

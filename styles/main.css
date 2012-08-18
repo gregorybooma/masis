@@ -179,6 +179,10 @@ table.dataTable tr.even td.sorting_1 {
     background-color: #00283A;
 }
 
+div.dataTables_wrapper .ui-widget-header {
+    background: none;
+}
+
 /*----------------------------------------------------
  * Misc
  *----------------------------------------------------*/

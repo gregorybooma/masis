@@ -136,6 +136,7 @@ function onLoadSpeciesCoverageTable() {
 }
 
 function onLoadVectorsTable() {
+    if (!imageObject) return;
     $.ajax({
         type: "GET",
         url: "load.php?do=table_image_vectors",
@@ -154,6 +155,7 @@ function onLoadVectorsTable() {
 }
 
 function onCommit() {
+    if (!imageObject) return;
     var vectors = {};
     for (f in vectorLayer.features) {
         var feature = vectorLayer.features[f];

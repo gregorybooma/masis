@@ -19,7 +19,7 @@ class DataTable {
             'name_venacular' => "Species (venacular)",
             'area_m2' => "Area (m<sup>2</sup>)",
             'species_area' => "Species Coverage (m<sup>2</sup>)",
-            'total_area' => "Total Area (m<sup>2</sup>)",
+            'surface_area' => "Surface Area (m<sup>2</sup>)",
             'species_cover' => "Species Coverage Fraction",
             '' => "",
             );
@@ -110,7 +110,7 @@ class DataTable {
         try {
             $sth = $db->dbh->prepare("SELECT v.vector_id,
                 v.area_m2,
-                s.name_latin,
+                '<i>' || s.name_latin || '</i>' as name_latin,
                 s.name_venacular
             FROM vectors v
                 LEFT OUTER JOIN species s ON v.species_id = s.id
@@ -133,9 +133,9 @@ class DataTable {
         $db->set_areas_image_grouped();
 
         try {
-            $sth = $db->dbh->prepare("SELECT s.name_latin,
+            $sth = $db->dbh->prepare("SELECT '<i>' || s.name_latin || '</i>' as name_latin,
                     SUM(a.species_area) as species_area,
-                    SUM(a.image_area) as total_area,
+                    SUM(a.image_area) as surface_area,
                     (SUM(a.species_area) / SUM(a.image_area)) as species_cover
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.id = a.species_id

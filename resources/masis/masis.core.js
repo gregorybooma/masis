@@ -31,6 +31,11 @@ function ImageInfo() {
 /*** On page ready ***/
 
 $(document).ready(function() {
+    // Set the tabs widget.
+    $( "#tabs" ).tabs({
+        create: function(event, ui) { onLoadSpeciesCoverageTable(); }
+    });
+
     // Style buttons with jQuery UI.
     $( "input:submit, button").button();
 
@@ -225,7 +230,7 @@ function onFeatureRemove(feature) {
 
 function onFeatureSelect(feature) {
     selectedFeature = feature;
-    $('#action-buttons ul').append( $('<li></li>')
+    $('#workspace-buttons ul').append( $('<li></li>')
         .attr('id', "assign-species")
         .text("Assign species: ") );
 

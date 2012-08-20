@@ -20,96 +20,110 @@
     <script src="resources/masis/masis.core.js" type="text/javascript"></script>
   </head>
   <body>
-    <div id="content-wrapper" class="clearfix">
-        <!-- sidebar-left -->
-        <div id="sidebar-left">
-            <!-- controls -->
-            <div>
-                <h3><a href="#">Controls</a></h3>
+    <div id="content-wrapper">
+
+    <!-- tabs -->
+    <div id="tabs">
+        <ul>
+            <li><a href="#tab-workspace">Workspace</a></li>
+            <li><a href="#tab-statistics">Statistics</a></li>
+        </ul>
+
+        <!-- tab workspace -->
+        <div id="tab-workspace" class="clearfix">
+
+            <!-- sidebar-left -->
+            <div id="sidebar-left">
+                <!-- controls -->
                 <div>
-                    <div id="feature-controls" class="control-buttons">
-                        <input type="radio" name="control" value="none" id="navigateToggle" onclick="toggleControl(this);" checked="checked" />
-                        <label for="navigateToggle">Navigate</label>
-                        <input type="radio" name="control" value="polygon" id="selectToggle" onclick="toggleControl(this);" />
-                        <label for="selectToggle">Draw Polygon</label>
-                        <input type="radio" name="control" value="regular_polygon" id="regularSelectToggle" onclick="toggleControl(this);" />
-                        <label for="regularSelectToggle">Draw Regular Polygon</label>
-                        <input type="radio" name="control" value="annotate" id="annotateToggle" onclick="toggleControl(this);" />
-                        <label for="annotateToggle">Annotate</label>
-                        <span class="section">Modify selections:</span>
-                        <input type="radio" name="control" value="modify" id="transformToggle" onclick="toggleControl(this);" />
-                        <label for="transformToggle">Transform</label>
-                        <input type="radio" name="control" value="modify" id="rotateToggle" onclick="toggleControl(this);" />
-                        <label for="rotateToggle">Rotate</label>
-                        <input type="radio" name="control" value="modify" id="resizeToggle" onclick="toggleControl(this);" />
-                        <label for="resizeToggle">Resize</label>
-                        <input type="radio" name="control" value="drag" id="dragToggle" onclick="toggleControl(this);" />
-                        <label for="dragToggle">Drag</label>
-                        <input type="radio" name="control" value="remove" id="removePolygon" onclick="toggleControl(this);" />
-                        <label for="removePolygon">Delete</label>
+                    <h3><a href="#">Controls</a></h3>
+                    <div>
+                        <div id="feature-controls" class="control-buttons">
+                            <input type="radio" name="control" value="none" id="navigateToggle" onclick="toggleControl(this);" checked="checked" />
+                            <label for="navigateToggle">Navigate</label>
+                            <input type="radio" name="control" value="polygon" id="selectToggle" onclick="toggleControl(this);" />
+                            <label for="selectToggle">Draw Polygon</label>
+                            <input type="radio" name="control" value="regular_polygon" id="regularSelectToggle" onclick="toggleControl(this);" />
+                            <label for="regularSelectToggle">Draw Regular Polygon</label>
+                            <input type="radio" name="control" value="annotate" id="annotateToggle" onclick="toggleControl(this);" />
+                            <label for="annotateToggle">Annotate</label>
+                            <span class="section">Modify selections:</span>
+                            <input type="radio" name="control" value="modify" id="transformToggle" onclick="toggleControl(this);" />
+                            <label for="transformToggle">Transform</label>
+                            <input type="radio" name="control" value="modify" id="rotateToggle" onclick="toggleControl(this);" />
+                            <label for="rotateToggle">Rotate</label>
+                            <input type="radio" name="control" value="modify" id="resizeToggle" onclick="toggleControl(this);" />
+                            <label for="resizeToggle">Resize</label>
+                            <input type="radio" name="control" value="drag" id="dragToggle" onclick="toggleControl(this);" />
+                            <label for="dragToggle">Drag</label>
+                            <input type="radio" name="control" value="remove" id="removePolygon" onclick="toggleControl(this);" />
+                            <label for="removePolygon">Delete</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- end controls -->
+                <!-- end controls -->
 
-            <!-- layer switcher -->
-            <div>
-                <h3><a href="#">Layers</a></h3>
-                <div id="olControlLayerSwitcher"></div>
-            </div>
-            <!-- end layer switcher -->
-
-            <!-- image info -->
-            <div>
-                <h3><a href="#">Image Information</a></h3>
-                <div id="image-info"></div>
-            </div>
-            <!-- end image info -->
-
-            <!-- directory tree -->
-            <div>
-                <h3><a href="#">Photo Library</a></h3>
-                <div id="dir-tree"></div>
-            </div>
-            <!-- end directory tree -->
-        </div>
-        <!-- end sidebar-left -->
-
-        <div id="content">
-            <!-- buttons -->
-            <div id="action-buttons">
-                <ul>
-                    <li><button id="action-commit">Commit</button></li>
-                    <li><button id="action-list-vectors">List Vectors</button></li>
-                    <li><button id="action-species-stats">Show Species Stats</button></li>
-                </ul>
-            </div>
-            <!-- end buttons -->
-
-            <!-- map -->
-            <div id="map"></div>
-            <!-- end map -->
-
-            <div id="context-controls">
-                <div id="regular-polygon-controls">
-                    <input type="radio" name="sides" value="4" id="polygonSquare" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
-                    <label for="polygonSquare">Square</label>
-                    <input type="radio" name="sides" value="5" id="polygonPentagon" checked="checked" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
-                    <label for="polygonPentagon">Pentagon</label>
-                    <input type="radio" name="sides" value="6" id="polygonHexagon" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
-                    <label for="polygonHexagon">Hexagon</label>
-                    <input type="radio" name="sides" value="40" id="polygonCircle" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
-                    <label for="polygonCircle">Circle</label>
+                <!-- layer switcher -->
+                <div>
+                    <h3><a href="#">Layers</a></h3>
+                    <div id="olControlLayerSwitcher"></div>
                 </div>
+                <!-- end layer switcher -->
+
+                <!-- image info -->
+                <div>
+                    <h3><a href="#">Image Information</a></h3>
+                    <div id="image-info"></div>
+                </div>
+                <!-- end image info -->
+
+                <!-- directory tree -->
+                <div>
+                    <h3><a href="#">Photo Library</a></h3>
+                    <div id="dir-tree"></div>
+                </div>
+                <!-- end directory tree -->
             </div>
+            <!-- end sidebar-left -->
 
-        </div> <!-- end content -->
+            <div id="content">
+                <!-- buttons -->
+                <div id="workspace-buttons" class="action-buttons">
+                    <ul>
+                        <li><button id="action-commit">Commit</button></li>
+                    </ul>
+                </div>
+                <!-- end buttons -->
 
-        <!-- tables -->
-        <div id="vectors-list"></div>
-        <div id="species-coverage"></div>
-        <!-- end tables -->
+                <!-- map -->
+                <div id="map"></div>
+                <!-- end map -->
 
+                <div id="context-controls">
+                    <div id="regular-polygon-controls">
+                        <input type="radio" name="sides" value="4" id="polygonSquare" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                        <label for="polygonSquare">Square</label>
+                        <input type="radio" name="sides" value="5" id="polygonPentagon" checked="checked" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                        <label for="polygonPentagon">Pentagon</label>
+                        <input type="radio" name="sides" value="6" id="polygonHexagon" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                        <label for="polygonHexagon">Hexagon</label>
+                        <input type="radio" name="sides" value="40" id="polygonCircle" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                        <label for="polygonCircle">Circle</label>
+                    </div>
+                </div>
+
+            </div> <!-- end content -->
+
+        </div> <!-- end tab workspace -->
+
+        <!-- tab statistics -->
+        <div id="tab-statistics">
+            <!-- Species statistics -->
+            <h1>Species Coverage <span id="action-species-stats" class="headerlink" title="Refresh table">R</span></h1>
+            <div id="species-coverage"></div>
+        </div> <!-- end tab statistics -->
+
+    </div> <!-- end tabs -->
     </div> <!-- end content-wrapper -->
 
     <!-- dialogs -->

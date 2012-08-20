@@ -118,16 +118,40 @@ input#select-species {
  * Action buttons
  *----------------------------------------------------*/
 
-#action-buttons ul {
+.action-buttons ul {
     list-style: none outside none;
     margin: 0 0 8px;
     padding: 0;
     text-align: left;
 }
 
-#action-buttons ul li {
+.action-buttons ul li {
     display: inline;
     margin-right: 1px;
+}
+
+/*----------------------------------------------------
+ * Header links
+ *----------------------------------------------------*/
+
+span.headerlink {
+    color: #1C7DAC;
+    font-size: 0.7em;
+    padding: 0 4px;
+    text-decoration: none;
+}
+span.headerlink {
+    visibility: hidden;
+}
+h1:hover > span.headerlink,
+h2:hover > span.headerlink,
+h3:hover > span.headerlink {
+    visibility: visible;
+}
+span.headerlink:hover {
+    background-color: #00415E;
+    color: white;
+    cursor: pointer;
 }
 
 /*----------------------------------------------------

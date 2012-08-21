@@ -365,30 +365,30 @@ function init() {
 
 // Activate selected control.
 function toggleControl(element) {
+    toggleContextControl(element);
     for (key in controls) {
         var control = controls[key];
         if (element.value == key && element.checked) {
             control.activate();
-            toggleContextControl(key);
-
-            if (key == 'modify') {
-                setModifyFeature();
-            }
-        } else {
+            if (key == 'modify')  setModifyMode();
+        }
+        else {
             control.deactivate();
         }
     }
 }
 
 // Hide or show context controls.
-function toggleContextControl(checked_key) {
-    if (checked_key == 'regular_polygon') {
+function toggleContextControl(element) {
+    if (element.getAttribute('id') == 'regularSelectToggle' && element.checked) {
+        // Show the controls for drawing regular polygons.
         $('#regular-polygon-controls').show();
-        setRegularPolygonOptions({sides: 4})
+        setRegularPolygonOptions({sides: 4});
         $('#polygonSquare').attr('checked', true);
         $("#regular-polygon-controls input:radio").button("refresh");
     }
     else {
+        // Hide the controls for drawing regular polygons.
         $('#regular-polygon-controls').hide();
     }
 }
@@ -400,7 +400,7 @@ function setRegularPolygonOptions(options) {
 }
 
 // Set the modify feature for modifying polygons.
-function setModifyFeature() {
+function setModifyMode() {
     var transform = document.getElementById("transformToggle").checked;
     var rotate = document.getElementById("rotateToggle").checked;
     var resize = document.getElementById("resizeToggle").checked;
@@ -612,4 +612,3 @@ function test1() {
     box = new OpenLayers.Feature.Vector(bounds.toGeometry());
     vectorLayer.addFeatures(box);
 }
-

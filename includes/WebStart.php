@@ -5,7 +5,7 @@ define('MASIS', true);
 
 class MaSIS {
 
-    public static function start() {
+    public function start() {
         // Load settings. If the settings file doesn't exist, give directions
         // to create one.
         if ( is_file(ROOT."/settings.php") ) {
@@ -27,7 +27,7 @@ class MaSIS {
      * @param $angle_y Camera lens constant, the vertical angle.
      * @return float The area in square meters.
      */
-    public static function get_area_from_altitude($altitude, $angle_x = 0.510472157, $angle_y = 0.386512004) {
+    static function get_area_from_altitude($altitude, $angle_x = 0.510472157, $angle_y = 0.386512004) {
         $ratio_x = 2 * tan($angle_x / 2);
         $ratio_y = 2 * tan($angle_y / 2);
 

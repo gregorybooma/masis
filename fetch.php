@@ -1,11 +1,13 @@
 <?php
 
-require('settings.php');
-require('includes/Database.php');
+$root = dirname( __FILE__ );
+define('ROOT', $root);
 
+require("$root/settings.php");
+require("$root/includes/WebStart.php");
+
+require("$root/includes/Database.php");
 $db = new Database();
-
-// Connect to the database.
 $db->connect();
 
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
@@ -44,5 +46,3 @@ switch ($do) {
             exit("Value '{$do}' for parameter `do` is unknown.");
         }
 }
-
-?>

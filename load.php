@@ -1,53 +1,53 @@
 <?php
 
-require('settings.php');
-require('includes/XML.php');
-require('includes/JSON.php');
-require('includes/HTML.php');
-require('includes/Database.php');
-require('includes/DataTable.php');
+$root = dirname( __FILE__ );
+define('ROOT', $root);
 
+require("$root/settings.php");
+require("$root/includes/WebStart.php");
+
+require("$root/includes/Database.php");
 $db = new Database();
-$xml = new XML();
-$html = new HTML();
-$json = new JSON();
-
-// Connect to the database.
 $db->connect();
 
-// What to do.. what to do..
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
 switch ($do) {
     case 'get_file_list':
-        // Return file list.
+        require("$root/includes/XML.php");
+        $xml = new XML();
         $xml->get_file_list($config['image_path']);
         break;
     case 'get_file_list_html':
-        // Return file list.
         $dir = urldecode($_POST['dir']);
+        require("$root/includes/HTML.php");
+        $html = new HTML();
         $html->get_file_list($dir);
         break;
     case 'get_image_info':
-        // Return image info.
-        $path = !empty($_GET['path']) ? $_GET['path'] : NULL;
-        if ( !isset($path) ) exit("Parameter `path` is not set.");
-        $xml->get_image_info($path);
+        if ( empty($_GET['path']) ) exit("Parameter `path` is not set.");
+        require("$root/includes/XML.php");
+        $xml = new XML();
+        $xml->get_image_info($_GET['path']);
         break;
     case 'get_species':
+        require("$root/includes/JSON.php");
+        $json = new JSON();
         $json->html_select_species();
         break;
     case 'get_vectors':
-        $image_id = !empty($_GET['image_id']) ? $_GET['image_id'] : NULL;
-        if ( !isset($image_id) ) exit("Parameter `image_id` is not set.");
-        $json->get_vectors($image_id);
+        if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
+        require("$root/includes/JSON.php");
+        $json = new JSON();
+        $json->get_vectors($_GET['image_id']);
         break;
     case 'table_image_vectors':
-        $image_id = !empty($_GET['image_id']) ? $_GET['image_id'] : NULL;
-        if ( !isset($image_id) ) exit("Parameter `image_id` is not set.");
+        if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
+        require("$root/includes/DataTable.php");
         $table = new DataTable();
-        $table->list_image_vectors($image_id);
+        $table->list_image_vectors($_GET['image_id']);
         break;
     case 'table_species_coverage':
+        require("$root/includes/DataTable.php");
         $table = new DataTable();
         $table->species_coverage();
         break;
@@ -58,5 +58,3 @@ switch ($do) {
             exit("Value '{$do}' for parameter `do` is unknown.");
         }
 }
-
-?>

@@ -240,5 +240,45 @@ class Database {
         // Commit the transaction.
         $this->dbh->commit();
     }
-}
 
+    /**
+     * Calculate the area for all records in table `image_info`. Records that
+     * already have the area set are skipped.
+     *
+     * @return int The number of updated records.
+     */
+    public function set_areas() {
+        try {
+            $sth = $this->dbh->prepare("SELECT id, altitude FROM image_info
+                WHERE area IS NULL;");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        // Start a database transaction.
+        $this->dbh->beginTransaction();
+
+        $count = 0;
+        while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
+            $area = MaSIS::get_area_from_altitude($row['altitude']);
+
+            try {
+                $sth2 = $this->dbh->prepare("UPDATE image_info SET area = :area
+                    WHERE id = :id;");
+                $sth2->bindParam(":area", $area, PDO::PARAM_STR);
+                $sth2->bindParam(":id", $row['id'], PDO::PARAM_INT);
+                $sth2->execute();
+            }
+            catch (Exception $e) {
+                throw new Exception( $e->getMessage() );
+            }
+            $count++;
+        }
+
+        // Commit the transaction.
+        $this->dbh->commit();
+        return $count;
+    }
+}

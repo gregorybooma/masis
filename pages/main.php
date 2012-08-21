@@ -27,6 +27,7 @@
         <ul>
             <li><a href="#tab-workspace">Workspace</a></li>
             <li><a href="#tab-statistics">Statistics</a></li>
+            <li><a href="#tab-maintenance">Maintenance</a></li>
         </ul>
 
         <!-- tab workspace -->
@@ -122,6 +123,15 @@
             <h1>Species Coverage <span id="action-species-stats" class="headerlink" title="Refresh table">R</span></h1>
             <div id="species-coverage"></div>
         </div> <!-- end tab statistics -->
+
+        <!-- tab maintenance -->
+        <div id="tab-maintenance">
+            <div class="action-buttons">
+                <ul>
+                    <li><button id="action-set-db-areas">Set Areas in the Database</button></li>
+                </ul>
+            </div>
+        </div> <!-- end tab maintenance -->
 
     </div> <!-- end tabs -->
     </div> <!-- end content-wrapper -->

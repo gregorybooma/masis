@@ -74,6 +74,9 @@ $(document).ready(function() {
     $("#action-species-stats").click(function() {
         onLoadSpeciesCoverageTable();
     });
+    $("#action-set-db-areas").click(function() {
+        onSetDatabaseAreas();
+    });
 
     // Load the file tree.
     $('#dir-tree').fileTree(
@@ -122,6 +125,22 @@ $(document).ready(function() {
 });
 
 /*** Callback functions ***/
+
+function onSetDatabaseAreas() {
+    $.ajax({
+        type: "GET",
+        url: "fetch.php?do=set_areas",
+        dataType: "json",
+        success: function(data) {
+            if (data.result == 'success') {
+                alert("All areas have been set in the database (" + data.count + " records were updated).");
+            }
+            else {
+                $("#dialog-unknown-error").dialog('open');
+            }
+        }
+    });
+}
 
 function onLoadSpeciesCoverageTable() {
     $.ajax({

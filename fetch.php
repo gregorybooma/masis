@@ -28,6 +28,15 @@ switch ($do) {
             print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );
         }
         break;
+    case 'set_areas':
+        try {
+            $count = $db->set_areas();
+            print json_encode( array('result' => 'success', 'count' => $count) );
+        }
+        catch (Exception $e) {
+            print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );
+        }
+        break;
     default:
         if ( !isset($do) ) {
             exit("Parameter `do` is not set.");

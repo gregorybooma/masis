@@ -95,7 +95,7 @@ class XML {
 
         // Calculate additional attributes.
         if ( empty($attr['area']) && !empty($attr['altitude']) ) {
-            $attr['area'] = $this->get_area($attr['altitude']);
+            $attr['area'] = MaSIS::get_area_from_altitude($attr['altitude']);
         }
         if ( !empty($attr['area']) && !empty($width) && !empty($height) ) {
             $attr['area_per_pixel'] = $attr['area'] / ($width * $height);
@@ -113,16 +113,6 @@ class XML {
 
         header("Content-type: text/xml");
         print $doc->saveXML();
-    }
-
-    public static function get_area($altitude, $angle_x = 0.510472157, $angle_y = 0.386512004) {
-        $ratio_x = 2 * tan($angle_x / 2);
-        $ratio_y = 2 * tan($angle_y / 2);
-
-        $size_y = $altitude * $ratio_y;
-        $size_x = $altitude * $ratio_x;
-
-        return $size_y * $size_x;
     }
 }
 

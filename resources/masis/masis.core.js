@@ -33,7 +33,12 @@ function ImageInfo() {
 $(document).ready(function() {
     // Set the tabs widget.
     $( "#tabs" ).tabs({
-        create: function(event, ui) { onLoadSpeciesCoverageTable(); }
+        select: function(event, ui) {
+            // Update the contents of the Statistics tab whenever it's selected
+            if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
+                onLoadSpeciesCoverageTable();
+            }
+        }
     });
 
     // Style buttons with jQuery UI.

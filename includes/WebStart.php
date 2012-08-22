@@ -4,6 +4,8 @@
 define('MASIS', true);
 
 class MaSIS {
+    public $lens_angle_x = 0.510472157;
+    public $lens_angle_y = 0.386512004;
 
     public function start() {
         // Load settings. If the settings file doesn't exist, give directions
@@ -27,7 +29,10 @@ class MaSIS {
      * @param $angle_y Camera lens constant, the vertical angle.
      * @return float The area in square meters.
      */
-    static function get_area_from_altitude($altitude, $angle_x = 0.510472157, $angle_y = 0.386512004) {
+    static function get_area_from_altitude($altitude, $angle_x = null, $angle_y = null) {
+        $angle_x = isset($angle_x) ? $angle_x : self::$lens_angle_x;
+        $angle_y = isset($angle_y) ? $angle_y : self::$lens_angle_y;
+
         $ratio_x = 2 * tan($angle_x / 2);
         $ratio_y = 2 * tan($angle_y / 2);
 

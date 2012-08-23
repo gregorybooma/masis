@@ -38,6 +38,18 @@ dt {
     vertical-align: baseline;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    border-bottom: 1px solid #777777;
+    font-weight: normal;
+    margin: 20px auto 10px;
+    padding: 3px auto;
+    clear: both;
+}
+
+.text-italic {
+    font-style: italic;
+}
+
 /*----------------------------------------------------
  * Sidebars
  *----------------------------------------------------*/
@@ -58,11 +70,6 @@ dt {
 
 #sidebar-right {
     width: 180px;
-}
-
-#sidebar-left h1, #sidebar-right h1 {
-    font-size: 110%;
-    border-bottom: solid 1px #BFBFBF;
 }
 
 /*----------------------------------------------------

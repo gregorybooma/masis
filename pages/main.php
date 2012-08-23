@@ -37,7 +37,7 @@
             <div id="sidebar-left">
                 <!-- controls -->
                 <div>
-                    <h3><a href="#">Controls</a></h3>
+                    <h1><a href="#">Controls</a></h1>
                     <div>
                         <div id="feature-controls" class="control-buttons">
                             <input type="radio" name="control" value="none" id="navigateToggle" onclick="toggleControl(this);" checked="checked" />
@@ -66,21 +66,33 @@
 
                 <!-- layer switcher -->
                 <div>
-                    <h3><a href="#">Layers</a></h3>
+                    <h1><a href="#">Layers</a></h1>
                     <div id="olControlLayerSwitcher"></div>
                 </div>
                 <!-- end layer switcher -->
 
                 <!-- image info -->
                 <div>
-                    <h3><a href="#">Image Information</a></h3>
-                    <div id="image-info"></div>
+                    <h1><a href="#">Image Information</a></h1>
+                    <div>
+                        <div id="image-info"></div>
+
+                        <h3>Annotation status:</h3>
+                        <div id="image-annotation-status">
+                            <input type="radio" name="annotation-status" value="incomplete" id="annotation-status-incomplete" checked="checked" />
+                            <label for="annotation-status-incomplete">Incomplete</label><br/>
+                            <input type="radio" name="annotation-status" value="review" id="annotation-status-review" />
+                            <label for="annotation-status-review">Needs Review</label><br/>
+                            <input type="radio" name="annotation-status" value="complete" id="annotation-status-complete" />
+                            <label for="annotation-status-complete">Complete</label><br/>
+                        </div>
+                    </div>
                 </div>
                 <!-- end image info -->
 
                 <!-- directory tree -->
                 <div>
-                    <h3><a href="#">Photo Library</a></h3>
+                    <h1><a href="#">Photo Library</a></h1>
                     <div id="dir-tree"></div>
                 </div>
                 <!-- end directory tree -->
@@ -120,8 +132,17 @@
         <!-- tab statistics -->
         <div id="tab-statistics">
             <!-- Species statistics -->
-            <h1>Species Coverage <span id="action-species-stats" class="headerlink" title="Refresh table">R</span></h1>
-            <div id="species-coverage"></div>
+            <h1>Species coverage</h1>
+
+            <h2>Overall coverage</h2>
+            <p>Coverage based on all images. Only images for which the
+            annotation status is set to "Complete" are included in the
+            calculation.</p>
+            <div id="species-coverage-overall"></div>
+
+            <h2>Coverage where present</h2>
+            <p>Coverage based on images where the species was found.</p>
+            <div id="species-coverage-where-present"></div>
         </div> <!-- end tab statistics -->
 
         <!-- tab maintenance -->

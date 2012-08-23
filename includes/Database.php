@@ -40,7 +40,7 @@ class Database {
         $filename = $filename[0] . ".%";
 
         try {
-            $sth = $this->dbh->prepare("SELECT id,altitude,depth,area FROM image_info
+            $sth = $this->dbh->prepare("SELECT * FROM image_info
                 WHERE img_dir = :dir AND file_name SIMILAR TO :filename;");
             $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
             $sth->bindParam(":filename", $filename, PDO::PARAM_STR);
@@ -55,7 +55,8 @@ class Database {
     public function get_files_for_dir($dir) {
         try {
             $sth = $this->dbh->prepare("SELECT file_name FROM image_info
-                WHERE img_dir = :dir;");
+                WHERE img_dir = :dir
+                ORDER BY file_name;");
             $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
             $sth->execute();
         }
@@ -281,4 +282,24 @@ class Database {
         $this->dbh->commit();
         return $count;
     }
+
+    /**
+     * Set the annotation status for an image.
+     *
+     * @param int $image_id The id for the image (image_info.id).
+     * @param string $status The status ('incomplete','complete','moderate','review').
+     */
+    public function set_annotation_status($image_id, $status) {
+        try {
+            $sth = $this->dbh->prepare("UPDATE image_info SET annotation_status = :status
+                WHERE id = :id;");
+            $sth->bindParam(":status", $status, PDO::PARAM_STR);
+            $sth->bindParam(":id", $image_id, PDO::PARAM_INT);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+    }
+
 }

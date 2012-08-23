@@ -7,6 +7,8 @@ CREATE DATABASE masis
 
 /* Create tables */
 
+CREATE TYPE annstat AS ENUM ('incomplete','complete','moderate','review');
+
 CREATE TABLE image_info
 (
     id SERIAL,
@@ -15,6 +17,7 @@ CREATE TABLE image_info
     area DOUBLE PRECISION,
     img_dir VARCHAR NOT NULL,
     file_name VARCHAR NOT NULL,
+    annotation_status annstat,
 
     PRIMARY KEY (id),
     UNIQUE (img_dir, file_name)

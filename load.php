@@ -25,9 +25,9 @@ switch ($do) {
         break;
     case 'get_image_info':
         if ( empty($_GET['path']) ) exit("Parameter `path` is not set.");
-        require("$root/includes/XML.php");
-        $xml = new XML();
-        $xml->get_image_info($_GET['path']);
+        require("$root/includes/JSON.php");
+        $json = new JSON();
+        $json->get_image_info($_GET['path']);
         break;
     case 'get_species':
         require("$root/includes/JSON.php");
@@ -46,10 +46,15 @@ switch ($do) {
         $table = new DataTable();
         $table->list_image_vectors($_GET['image_id']);
         break;
-    case 'table_species_coverage':
+    case 'table_species_coverage_where_present':
         require("$root/includes/DataTable.php");
         $table = new DataTable();
-        $table->species_coverage();
+        $table->species_coverage_where_present();
+        break;
+    case 'table_species_coverage_overall':
+        require("$root/includes/DataTable.php");
+        $table = new DataTable();
+        $table->species_coverage_overall();
         break;
     default:
         if ( !isset($do) ) {

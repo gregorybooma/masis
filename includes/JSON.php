@@ -4,6 +4,46 @@
  * The JSON class generates data in JSON format.
  */
 class JSON {
+
+    /**
+     * Prints info for an image file.
+     *
+     * @param string $path Path to the image file.
+     * @uses array $config Configuration array from config.php.
+     * @uses $db Database object.
+     */
+    public function get_image_info($path) {
+        global $config, $db;
+
+        if ( !is_file($path) ) {
+            throw new Exception( "Not a file: {$path}" );
+        }
+
+        // Get file info.
+        list($width, $height, $type, $dim_attr) = getimagesize($path);
+        $stack = explode('/', $path);
+
+        // Set info array.
+        $info = array();
+        $info['name'] = array_pop($stack);
+        $info['dir'] = array_pop($stack);
+        $info['width'] = $width;
+        $info['height'] = $height;
+        $info['url'] = $config['image_base_url'] . $info['dir'] . '/' . $info['name'];
+        $info['path'] = $path;
+
+        $arr = $db->get_image_attributes($info['dir'], $info['name']);
+        $info = array_merge($info, $arr);
+
+        if ( empty($info['area']) && !empty($info['altitude']) ) {
+            $info['area'] = MaSIS::get_area_from_altitude($info['altitude']);
+        }
+        if ( !empty($info['area']) && !empty($width) && !empty($height) ) {
+            $info['area_per_pixel'] = $info['area'] / ($width * $height);
+        }
+        print json_encode($info);
+    }
+
     public function html_select_species() {
         global $db;
 

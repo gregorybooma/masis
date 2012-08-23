@@ -28,15 +28,24 @@ function ImageInfo() {
     };
 }
 
-/*** On page ready ***/
-
 $(document).ready(function() {
+    // Initialize the interface.
+    initInterface();
+
+    // Initialize the workspace.
+    initWorkspace();
+
+    // Load the directory tree.
+    onLoadDirTree();
+});
+
+function initInterface() {
     // Set the tabs widget.
     $( "#tabs" ).tabs({
         select: function(event, ui) {
             // Update the contents of the Statistics tab whenever it's selected
             if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
-                onLoadSpeciesCoverageTable();
+                onLoadTableSpeciesCoverageOverall();
             }
         }
     });
@@ -51,20 +60,21 @@ $(document).ready(function() {
 		return false;
 	}).next().hide();
     */
-    $("#sidebar-left").accordion({ header: "h3", active: 3, fillSpace: false });
+    $("#sidebar-left").accordion({ header: "h1", active: 3, fillSpace: false });
 
     // Make the map element resizable.
     $( "#map" ).resizable({
         stop: function(event, ui) {
-            // Render the map in the resized map element to maintain
-            // restriction of movement outside image borders.
-            map.render('map');
+                // Render the map in the resized map element to maintain
+                // restriction of movement outside image borders.
+                map.render('map');
             }
         });
 
     // Transform feature controls into a jQuery UI button set.
     $("#feature-controls").buttonset();
     $("#regular-polygon-controls").buttonset();
+    //$("#image-annotation-status").buttonset();
 
     // Disable feature controls.
     $("#feature-controls input:radio").button("disable");
@@ -76,27 +86,12 @@ $(document).ready(function() {
     $("#action-list-vectors").click(function() {
         onLoadVectorsTable();
     });
-    $("#action-species-stats").click(function() {
-        onLoadSpeciesCoverageTable();
-    });
     $("#action-set-db-areas").click(function() {
         onSetDatabaseAreas();
     });
-
-    // Load the file tree.
-    $('#dir-tree').fileTree(
-        {
-        root: config.image_path,
-        script: 'load.php?do=get_file_list_html',
-        folderEvent: 'click',
-        expandSpeed: 750,
-        collapseSpeed: 750,
-        multiFolder: false
-        },
-        function(file) {
-            set_image(file);
-        }
-    );
+    $("input:radio[name=annotation-status]").change(function() {
+        onSetImageAnnotationStatus(this);
+    });
 
     // Initialize dialogs.
     $( "#dialog-remove-selection" ).dialog({
@@ -124,12 +119,61 @@ $(document).ready(function() {
             }
         }
     });
+}
 
-    // Initialize the page.
-    init();
-});
+function initWorkspace() {
+    // Create a map.
+    map = new OpenLayers.Map('map', {
+        units: 'dd', // Set units to decimal degrees (but we treat them as pixels)
+        theme: null,
+        displayProjection: 'EPSG:90091'
+        }
+    );
 
-/*** Callback functions ***/
+    // Create a vector layer.
+    vectorLayer = new OpenLayers.Layer.Vector( "Selections" );
+
+    // Add layers to the map.
+    map.addLayers([vectorLayer]);
+
+    // Add a layer switcher to the map.
+    var container = document.getElementById("olControlLayerSwitcher");
+    map.addControl(new OpenLayers.Control.LayerSwitcher({div: container}));
+
+    // Set stroke width.
+    OpenLayers.Feature.Vector.style['default']['strokeWidth'] = '2';
+
+    // Set controls.
+    controls = {
+        polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),
+        regular_polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.RegularPolygon, {irregular: true}),
+        modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
+        drag: new OpenLayers.Control.DragFeature(vectorLayer),
+        annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
+            {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect}),
+        remove: new OpenLayers.Control.SelectFeature(vectorLayer,
+            {onSelect: onFeatureRemove})
+    };
+    for(var key in controls) {
+        map.addControl(controls[key]);
+    }
+}
+
+function onLoadDirTree() {
+    $('#dir-tree').fileTree(
+        {
+        root: config.image_path,
+        script: 'load.php?do=get_file_list_html',
+        folderEvent: 'click',
+        expandSpeed: 750,
+        collapseSpeed: 750,
+        multiFolder: false
+        },
+        function(file) {
+            setImage(file);
+        }
+    );
+}
 
 function onSetDatabaseAreas() {
     $.ajax({
@@ -147,14 +191,48 @@ function onSetDatabaseAreas() {
     });
 }
 
-function onLoadSpeciesCoverageTable() {
+function onSetImageAnnotationStatus(element) {
     $.ajax({
         type: "GET",
-        url: "load.php?do=table_species_coverage",
+        url: "fetch.php?do=set_annotation_status",
+        dataType: "json",
+        data: {image_id: imageObject.id, status: element.value},
+        success: function(data) {
+            if (data.result != 'success') {
+                $("#dialog-unknown-error").dialog('open');
+            }
+        }
+    });
+}
+
+function onLoadTableSpeciesCoverageOverall() {
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=table_species_coverage_overall",
         dataType: "html",
         success: function(table) {
-            $('#species-coverage').html(table);
-            $('#species-coverage table').dataTable({
+            $('#species-coverage-overall').html(table);
+            $('#species-coverage-overall table').dataTable({
+                "bJQueryUI" : true, // Enable jQuery UI ThemeRoller support
+                "bSort" : true, // Enable sorting
+                "bFilter" : true, // Enable search box
+                "bLengthChange" : false
+            });
+
+            // Load the next table.
+            onLoadTableSpeciesCoverageWherePresent();
+        }
+    });
+}
+
+function onLoadTableSpeciesCoverageWherePresent() {
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=table_species_coverage_where_present",
+        dataType: "html",
+        success: function(table) {
+            $('#species-coverage-where-present').html(table);
+            $('#species-coverage-where-present table').dataTable({
                 "bJQueryUI" : true, // Enable jQuery UI ThemeRoller support
                 "bSort" : true, // Enable sorting
                 "bFilter" : true, // Enable search box
@@ -326,48 +404,6 @@ function onLoadVectors(vectors) {
 
 /*** Other functions ***/
 
-// Page initialization.
-function init() {
-    // Create a map.
-    map = new OpenLayers.Map('map', {
-        units: 'dd', // Set units to decimal degrees (but we treat them as pixels)
-        theme: null,
-        displayProjection: 'EPSG:90091'
-        }
-    );
-
-    // Create a vector layer.
-    vectorLayer = new OpenLayers.Layer.Vector( "Selections" );
-
-    // Add layers to the map.
-    map.addLayers([vectorLayer]);
-
-    // Add a layer switcher to the map.
-    var container = document.getElementById("olControlLayerSwitcher");
-    map.addControl(new OpenLayers.Control.LayerSwitcher({div: container}));
-
-    // Show coordinates of the mouse position.
-    //map.addControl(new OpenLayers.Control.MousePosition());
-
-    // Set stroke width.
-    OpenLayers.Feature.Vector.style['default']['strokeWidth'] = '2';
-
-    // Set controls.
-    controls = {
-        polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),
-        regular_polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.RegularPolygon, {irregular: true}),
-        modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
-        drag: new OpenLayers.Control.DragFeature(vectorLayer),
-        annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
-            {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect}),
-        remove: new OpenLayers.Control.SelectFeature(vectorLayer,
-            {onSelect: onFeatureRemove})
-    };
-    for(var key in controls) {
-        map.addControl(controls[key]);
-    }
-}
-
 // Activate selected control.
 function toggleControl(element) {
     toggleContextControl(element);
@@ -423,57 +459,42 @@ function setModifyMode() {
 }
 
 // Set and load image from path.
-function set_image(path) {
+function setImage(path) {
     $.ajax({
         type: "GET",
         url: "load.php?do=get_image_info",
-        dataType: "xml",
+        dataType: "json",
         data: {path: path},
-        success: function(xml) {
-            // Set image info.
-            var info = $(xml).find('image');
+        success: function(info) {
             // Set image object.
-            set_image_object(info);
+            setImageObject(info);
             // Load new image.
-            load_image(imageObject);
+            loadImage(imageObject);
             // Update image info on page.
-            update_page_image_info(imageObject);
+            updatePageImageInfo(imageObject);
         }
     });
 }
 
 // Set image object from imago info object.
-function set_image_object(info) {
+function setImageObject(info) {
     var to_float = ['altitude','area','area_per_pixel','depth'];
-    var to_int = ['width','height'];
 
     // Set new image object.
     imageObject = new ImageInfo();
 
     // Copy all info attributes to the image object.
-    info.each(function() {
-        $(this.attributes).each(function(i, attr) {
-            var val = attr.value;
-            if ( val ) {
-                if ( $.inArray(attr.name, to_float) != -1 ) {
-                    val = parseFloat(val);
-                }
-                else if ( $.inArray(attr.name, to_int) != -1 ) {
-                    val = parseInt(val);
-                }
-                imageObject[attr.name] = val;
-            }
-        });
-    });
-
-    // Copy all child nodes as attributes to the image object.
-    info.children().each(function() {
-        imageObject[this.tagName] = $(this).text();
-    });
+    for (key in info) {
+        var val = info[key];
+        if ( $.inArray(key, to_float) != -1 ) {
+            val = parseFloat(val);
+        }
+        imageObject[key] = val;
+    }
 }
 
-// Load new image into the map.
-function load_image(img) {
+// Load new image into the workspace.
+function loadImage(img) {
     // Check the image object.
     if (! img instanceof ImageInfo) {
         alert("Error: Expected ImageInfo object, got something else.");
@@ -526,7 +547,7 @@ function load_image(img) {
     $("#feature-controls input:radio").button("enable");
 
     // Check the default control button.
-    var e = document.getElementById("navigateToggle")
+    var e = document.getElementById("navigateToggle");
     e.checked = true;
 
     // Refresh the buttons because the element's checked state is changed
@@ -549,66 +570,24 @@ function load_image(img) {
             onLoadVectors(vectors);
         }
     });
+
+    // Set the image annotation status input to the right value.
+    var $radios = $('input:radio[name=annotation-status]');
+    if( img.annotation_status ) {
+        $radios.filter('[value=' + img.annotation_status + ']').attr('checked', true);
+    }
+    else {
+        $radios.filter('[value=incomplete]').attr('checked', true);
+    }
 }
 
-function update_page_image_info(img) {
+function updatePageImageInfo(img) {
     $('#image-info').empty();
     $('#image-info').append("<dl></dl>");
     $('#image-info dl').append("<dt>File:</dt><dd>" + img.url + "</dd>");
     $('#image-info dl').append("<dt>Depth:</dt><dd>" + img.depth + " m</dd>");
     $('#image-info dl').append("<dt>Altitude:</dt><dd>" + roundNumber(img.altitude, 2) + " m</dd>");
     $('#image-info dl').append("<dt>Area:</dt><dd>" + roundNumber(img.area, 2) + " m<sup>2</sup></dd>");
-}
-
-// Set the next image in the map.
-function set_next_image() {
-    // Set image position.
-    if (imagePosition == imageFiles.find('file').length - 1) {
-        // Go to the first file if the end is reached.
-        imagePosition = 0;
-    } else {
-        imagePosition++;
-    }
-    // Set a new image.
-    set_image(imagePosition);
-}
-
-// Set the previous image in the map.
-function set_previous_image() {
-    // Set image position.
-    if (imagePosition == 0 ) {
-        // Go to the last file if the beginning is reached.
-        imagePosition = imageFiles.find('file').length - 1
-    } else {
-        imagePosition--;
-    }
-    // Set a new image.
-    set_image(imagePosition);
-}
-
-// List all file in imageFiles.
-function list_files() {
-    // Get dir elements.
-    imageFiles.find('dir').each(function() {
-        var dir_name = $(this).attr('name');
-        var dir_text = $(this).text();
-        // Get file elements.
-        $(this).find('file').each(function() {
-            var file_name = $(this).attr('name');
-            var file_text = $(this).text();
-            $('#image_info').append("file: "+file_name+"\n");
-        });
-    });
-}
-
-// Put all features areas in an array.
-function get_areas(vectorLayer) {
-    var areas = [];
-    for (f in vectorLayer.features) {
-        var val = vectorLayer.features[f].geometry.getArea()
-        areas[f] = parseInt(val);
-    }
-    return areas;
 }
 
 // Functions for testing purposes.

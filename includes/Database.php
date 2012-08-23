@@ -215,24 +215,22 @@ class Database {
         $this->dbh->beginTransaction();
 
         try {
-            $sth = $this->dbh->prepare("DROP TABLE IF EXISTS areas_image_grouped;");
-            $sth->execute();
+            $sth = $this->dbh->exec("TRUNCATE areas_image_grouped;");
         }
         catch (Exception $e) {
             throw new Exception( $e->getMessage() );
         }
 
         try {
-            $sth = $this->dbh->prepare("SELECT i.id as image_id,
-                    s.id as species_id,
-                    sum(v.area_m2) as species_area,
-                    i.area as image_area
-                INTO areas_image_grouped
+            $sth = $this->dbh->exec("INSERT INTO areas_image_grouped (image_info_id,species_id,species_area,image_area)
+                SELECT i.id,
+                    s.id,
+                    sum(v.area_m2),
+                    i.area
                 FROM vectors v
                     INNER JOIN species s ON s.id = v.species_id
                     INNER JOIN image_info i ON i.id = v.image_info_id
                 GROUP BY i.id, s.id;");
-            $sth->execute();
         }
         catch (Exception $e) {
             throw new Exception( $e->getMessage() );

@@ -131,30 +131,6 @@ class DataTable {
         $this->build($body, "", array('header'));
     }
 
-    public function species_coverage_where_present() {
-        global $db;
-
-        //$db->set_areas_image_grouped();
-
-        try {
-            $sth = $db->dbh->prepare("SELECT s.name_latin,
-                    SUM(a.species_area) as species_area,
-                    SUM(a.image_area) as surface_area,
-                    (SUM(a.species_area) / SUM(a.image_area)) as species_cover
-                FROM areas_image_grouped a
-                    INNER JOIN species s ON s.id = a.species_id
-                GROUP BY s.name_latin;");
-            $sth->execute();
-        }
-        catch (Exception $e) {
-            throw new Exception( $e->getMessage() );
-        }
-
-        $this->set_table_heads($sth);
-        $body = $this->build_tbody_simple($sth);
-        $this->build($body);
-    }
-
     public function species_coverage_overall() {
         global $db;
 
@@ -175,11 +151,6 @@ class DataTable {
         $row = $sth->fetch();
         $total_surface = $row ? $row[0] : 0;
 
-        // Cannot divide by zero.
-        if ($total_surface == 0) {
-            return;
-        }
-
         try {
             $sth = $db->dbh->prepare("SELECT s.name_latin,
                     SUM(a.species_area) as species_area,
@@ -187,13 +158,37 @@ class DataTable {
                     (SUM(a.species_area) / :total_surface) as species_cover
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.id = a.species_id
-                    INNER JOIN image_info i ON i.id = a.image_id
+                    INNER JOIN image_info i ON i.id = a.image_info_id
                 -- Images marked as 'complete' are fully reviewed and
                 -- annotated. Only for these images can be said that a species
                 -- is not present on the image if no vectors are set.
                 WHERE i.annotation_status = 'complete'
                 GROUP BY s.name_latin;");
             $sth->bindParam(":total_surface", $total_surface, PDO::PARAM_STR);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        $this->set_table_heads($sth);
+        $body = $this->build_tbody_simple($sth);
+        $this->build($body);
+    }
+
+    public function species_coverage_where_present() {
+        global $db;
+
+        //$db->set_areas_image_grouped();
+
+        try {
+            $sth = $db->dbh->prepare("SELECT s.name_latin,
+                    SUM(a.species_area) as species_area,
+                    SUM(a.image_area) as surface_area,
+                    (SUM(a.species_area) / SUM(a.image_area)) as species_cover
+                FROM areas_image_grouped a
+                    INNER JOIN species s ON s.id = a.species_id
+                GROUP BY s.name_latin;");
             $sth->execute();
         }
         catch (Exception $e) {

@@ -55,3 +55,17 @@ CREATE TABLE vectors
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
     FOREIGN KEY (species_id) REFERENCES species (id)
 );
+
+CREATE TABLE areas_image_grouped
+(
+    id SERIAL,
+    image_info_id INTEGER NOT NULL,
+    species_id INTEGER NOT NULL,
+    species_area DOUBLE PRECISION NOT NULL,
+    image_area DOUBLE PRECISION NOT NULL,
+
+    PRIMARY KEY (id),
+    UNIQUE (image_info_id,species_id),
+    FOREIGN KEY (image_info_id) REFERENCES image_info (id),
+    FOREIGN KEY (species_id) REFERENCES species (id)
+);

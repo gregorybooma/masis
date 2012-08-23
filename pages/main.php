@@ -135,14 +135,14 @@
             <h1>Species coverage</h1>
 
             <h2>Overall coverage</h2>
-            <p>Coverage based on all images. Only images for which the
-            annotation status is set to "Complete" are included in the
+            <p>Coverage based on all annotated images. Only images for which
+            the annotation status is set to "Complete" are included in the
             calculation.</p>
-            <div id="species-coverage-overall"></div>
+            <div id="species-coverage-overall">Loading...</div>
 
             <h2>Coverage where present</h2>
             <p>Coverage based on images where the species was found.</p>
-            <div id="species-coverage-where-present"></div>
+            <div id="species-coverage-where-present">Loading...</div>
         </div> <!-- end tab statistics -->
 
         <!-- tab maintenance -->

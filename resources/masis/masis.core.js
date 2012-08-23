@@ -46,6 +46,7 @@ function initInterface() {
             // Update the contents of the Statistics tab whenever it's selected
             if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
                 onLoadTableSpeciesCoverageOverall();
+                onLoadTableSpeciesCoverageWherePresent();
             }
         }
     });
@@ -218,9 +219,6 @@ function onLoadTableSpeciesCoverageOverall() {
                 "bFilter" : true, // Enable search box
                 "bLengthChange" : false
             });
-
-            // Load the next table.
-            onLoadTableSpeciesCoverageWherePresent();
         }
     });
 }

@@ -100,6 +100,20 @@ function initInterface() {
     });
 
     // Initialize dialogs.
+    $( "#dialog-on-commit" ).dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        buttons: {
+            Yes: function() {
+                $( this ).dialog( "close" );
+                saveVectors();
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        }
+    });
     $( "#dialog-remove-selection" ).dialog({
         autoOpen: false,
         resizable: false,
@@ -279,6 +293,10 @@ function onLoadVectorsTable() {
 
 function onCommit() {
     if (!imageObject) return;
+    $("#dialog-on-commit").dialog('open');
+}
+
+function saveVectors() {
     var vectors = {};
     for (f in vectorLayer.features) {
         var feature = vectorLayer.features[f];

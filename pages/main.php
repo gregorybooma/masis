@@ -158,11 +158,14 @@
     </div> <!-- end content-wrapper -->
 
     <!-- dialogs -->
+    <div id="dialog-on-commit" title="Commit changes?">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You are about to save all changes. Are you sure?</p>
+    </div>
     <div id="dialog-remove-selection" title="Remove selection?">
         <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>The selection will be permanently deleted. Are you sure?</p>
     </div>
     <div id="dialog-selections-save-success" title="Selections saved">
-        <p><span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 20px 0;"></span>The selections have been saved successfully.</p>
+        <p><span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 20px 0;"></span>All selections have been saved.</p>
     </div>
     <div id="dialog-unknown-error" title="Error">
         <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>An unknown error has occured. Please contact the website administrator about this problem.</p>

@@ -26,24 +26,27 @@ CREATE INDEX ON image_info (img_dir);
 
 CREATE TABLE species
 (
-    id SERIAL,
-    name_latin VARCHAR(50) NOT NULL,
-    name_venacular VARCHAR(50),
-    native BOOLEAN,
-    invasive BOOLEAN,
-    description VARCHAR(100),
-    remarks VARCHAR(100),
+    aphia_id INTEGER NOT NULL,
+    lsid VARCHAR,
+    scientific_name VARCHAR NOT NULL,
+    status VARCHAR,
+    valid_aphia_id INTEGER,
+    valid_name VARCHAR,
+    kingdom VARCHAR,
+    phylum VARCHAR,
+    class VARCHAR,
+    "order" VARCHAR,
+    family VARCHAR,
+    genus VARCHAR,
 
-    PRIMARY KEY (id),
-    UNIQUE (name_latin),
-    UNIQUE (name_venacular)
+    PRIMARY KEY (aphia_id)
 );
 
 CREATE TABLE vectors
 (
     id SERIAL,
     image_info_id INTEGER NOT NULL,
-    species_id INTEGER,
+    aphia_id INTEGER,
     vector_id VARCHAR NOT NULL,
     vector_wkt VARCHAR NOT NULL,
     area_pixels INTEGER,
@@ -53,19 +56,19 @@ CREATE TABLE vectors
     PRIMARY KEY (id),
     UNIQUE (image_info_id,vector_id),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
-    FOREIGN KEY (species_id) REFERENCES species (id)
+    FOREIGN KEY (aphia_id) REFERENCES species (aphia_id)
 );
 
 CREATE TABLE areas_image_grouped
 (
     id SERIAL,
     image_info_id INTEGER NOT NULL,
-    species_id INTEGER NOT NULL,
+    aphia_id INTEGER NOT NULL,
     species_area DOUBLE PRECISION NOT NULL,
     image_area DOUBLE PRECISION NOT NULL,
 
     PRIMARY KEY (id),
-    UNIQUE (image_info_id,species_id),
+    UNIQUE (image_info_id,aphia_id),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
-    FOREIGN KEY (species_id) REFERENCES species (id)
+    FOREIGN KEY (aphia_id) REFERENCES species (aphia_id)
 );

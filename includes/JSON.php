@@ -44,23 +44,46 @@ class JSON {
         print json_encode($info);
     }
 
-    public function html_select_species() {
-        global $db;
+    /**
+     * Return a list of species names matching the search term.
+     *
+     * This method retrieves the species names from the online WoRMS (World
+     * Register of Marine Species) database.
+     *
+     * @param $term The keyword to match against species names in the database.
+     * @param $searchpar Search by 0 = scientific name, 1 = common name.
+     */
+    public function get_species_from_worms($term, $searchpar=0) {
+        global $config, $db;
 
-        $filter = isset($_GET['term']) ? $_GET['term'] : null;
-        $sth = $db->get_species($filter);
+        // Call the WoRMS webservice.
+        $client = new SoapClient("http://www.marinespecies.org/aphia.php?p=soap&wsdl=1");
+
+        switch ($searchpar) {
+            case 0:
+                // Get max. 50 records matching the scientific species name.
+                $records = $client->getAphiaRecords($term);
+                break;
+            case 1:
+                // Get max. 50 records matching the common species name.
+                $records = $client->getAphiaRecordsByVernacular($term);
+                break;
+            default:
+                throw new Exception( "Value '$searchpar' is invalid for parameter `searchpar`." );
+        }
+
         $species = array();
         $species[] = array('label' => "Unassigned", 'value' => null);
-        while ( $s = $sth->fetch(PDO::FETCH_ASSOC) ) {
-            if ( $s['name_venacular'] ) {
-                $label = sprintf("%s (%s)", $s['name_latin'], $s['name_venacular']);
-            } else {
-                $label = $s['name_latin'];
+        if ($records) {
+            // Cache the records to the local database.
+            $db->cache_aphia_records($records, $config['update_species_records']);
+
+            foreach ( $records as $sp ) {
+                $species[] = array(
+                    'label' => $sp->scientificname,
+                    'value' => $sp->AphiaID
+                    );
             }
-            $species[] = array(
-                'label' => $label,
-                'value' => $s['id']
-                );
         }
         print json_encode($species);
     }
@@ -71,12 +94,6 @@ class JSON {
         $sth = $db->get_vectors($image_id);
         $vectors = array();
         while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
-            if ( $row['name_venacular'] ) {
-                $species_name = sprintf("%s (%s)", $row['name_latin'], $row['name_venacular']);
-            } else {
-                $species_name = $row['name_latin'];
-            }
-            $row['species_name'] = $species_name;
             $vectors[] = $row;
         }
         print json_encode($vectors);

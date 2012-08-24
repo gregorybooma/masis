@@ -66,18 +66,128 @@ class Database {
         return $sth;
     }
 
-    public function get_species($filter = null) {
-        if ($filter) {
-            $query = "SELECT * FROM species
-                WHERE name_latin ~* :filter
-                    OR name_venacular ~* :filter;";
-        } else {
-            $query = "SELECT * FROM species;";
+    /**
+     * Caches the records retrieved from the online WoRMS database.
+     *
+     * @param $records The records object returned by the SOAP function getAphiaRecords*()
+     * @param boolean $update Whether to update existing records in the database.
+     */
+    public function cache_aphia_records($records, $update=true) {
+        // Begin a database transaction.
+        $this->dbh->beginTransaction();
+
+        foreach ($records as $sp) {
+            // Check if this record already exists in the database.
+            try {
+                $sth = $this->dbh->prepare("SELECT aphia_id FROM species
+                    WHERE aphia_id = :aphia_id;");
+                $sth->bindParam(":aphia_id", $sp->AphiaID, PDO::PARAM_INT);
+                $sth->execute();
+            }
+            catch (Exception $e) {
+                throw new Exception( $e->getMessage() );
+            }
+            $row = $sth->fetch();
+            $aphia_id = $row ? $row[0] : NULL;
+
+            // Cache or update the record.
+            $query = NULL;
+            if ( is_null($aphia_id) ) {
+                $query = "INSERT INTO species (
+                        aphia_id,
+                        lsid,
+                        scientific_name,
+                        status,
+                        valid_aphia_id,
+                        valid_name,
+                        kingdom,
+                        phylum,
+                        class,
+                        \"order\",
+                        family,
+                        genus
+                        )
+                    VALUES (
+                        :aphia_id,
+                        :lsid,
+                        :scientific_name,
+                        :status,
+                        :valid_aphia_id,
+                        :valid_name,
+                        :kingdom,
+                        :phylum,
+                        :class,
+                        :order,
+                        :family,
+                        :genus);";
+            }
+            else if ($update) {
+                $query = "UPDATE species SET (
+                        lsid,
+                        scientific_name,
+                        status,
+                        valid_aphia_id,
+                        valid_name,
+                        kingdom,
+                        phylum,
+                        class,
+                        \"order\",
+                        family,
+                        genus
+                    ) = (
+                        :lsid,
+                        :scientific_name,
+                        :status,
+                        :valid_aphia_id,
+                        :valid_name,
+                        :kingdom,
+                        :phylum,
+                        :class,
+                        :order,
+                        :family,
+                        :genus)
+                    WHERE aphia_id = :aphia_id;";
+            }
+
+            if (!$query) continue;
+
+            try {
+                $sth = $this->dbh->prepare($query);
+                $sth->bindParam(":aphia_id", $sp->AphiaID, PDO::PARAM_INT);
+                $sth->bindParam(":lsid", $sp->lsid, PDO::PARAM_STR);
+                $sth->bindParam(":scientific_name", $sp->scientificname, PDO::PARAM_STR);
+                $sth->bindParam(":status", $sp->status, PDO::PARAM_STR);
+                $sth->bindParam(":valid_aphia_id", $sp->valid_AphiaID, PDO::PARAM_INT);
+                $sth->bindParam(":valid_name", $sp->valid_name, PDO::PARAM_STR);
+                $sth->bindParam(":kingdom", $sp->kingdom, PDO::PARAM_STR);
+                $sth->bindParam(":phylum", $sp->phylum, PDO::PARAM_STR);
+                $sth->bindParam(":class", $sp->class, PDO::PARAM_STR);
+                $sth->bindParam(":order", $sp->order, PDO::PARAM_STR);
+                $sth->bindParam(":family", $sp->family, PDO::PARAM_STR);
+                $sth->bindParam(":genus", $sp->genus, PDO::PARAM_STR);
+                $sth->execute();
+            }
+            catch (Exception $e) {
+                throw new Exception( $e->getMessage() );
+            }
         }
 
+        // Commit the transaction.
+        $this->dbh->commit();
+    }
+
+    /**
+     * Return a list of species names matching the search term.
+     *
+     * This method can be used for the Autocomplete feature of jQuery UI.
+     *
+     * @param $term The keyword to match against species names in the database.
+     * @return A PDO statement handler which returns the results.
+     */
+    public function get_species($term) {
         try {
-            $sth = $this->dbh->prepare($query);
-            if ($filter) $sth->bindParam(":filter", $filter, PDO::PARAM_STR);
+            $sth = $this->dbh->prepare("SELECT * FROM species WHERE scientific_name ~* :term;");
+            $sth->bindParam(":term", $term, PDO::PARAM_STR);
             $sth->execute();
         }
         catch (Exception $e) {
@@ -90,13 +200,12 @@ class Database {
         try {
             $sth = $this->dbh->prepare("SELECT v.vector_id,
                 v.vector_wkt,
-                s.id AS species_id,
-                s.name_latin,
-                s.name_venacular
+                v.aphia_id,
+                s.scientific_name
             FROM vectors v
                 -- OUTER JOIN because unassigned vectors should be returned
                 -- as well
-                LEFT OUTER JOIN species s ON v.species_id = s.id
+                LEFT OUTER JOIN species s ON v.aphia_id = s.aphia_id
             WHERE v.image_info_id = :image_id;");
             $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
             $sth->execute();
@@ -139,7 +248,7 @@ class Database {
             if ( is_null($vector_id) ) {
                 $query = "INSERT INTO vectors (
                         image_info_id,
-                        species_id,
+                        aphia_id,
                         vector_id,
                         vector_wkt,
                         area_pixels,
@@ -147,7 +256,7 @@ class Database {
                         remarks)
                     VALUES (
                         :image_id,
-                        :species_id,
+                        :aphia_id,
                         :id,
                         :vector_wkt,
                         :area_pixels,
@@ -156,13 +265,13 @@ class Database {
             }
             else {
                 $query = "UPDATE vectors SET (
-                        species_id,
+                        aphia_id,
                         vector_wkt,
                         area_pixels,
                         area_m2,
                         remarks
                     ) = (
-                        :species_id,
+                        :aphia_id,
                         :vector_wkt,
                         :area_pixels,
                         :area_m2,
@@ -172,7 +281,7 @@ class Database {
             }
             try {
                 $sth = $this->dbh->prepare($query);
-                $sth->bindParam(":species_id", $vector['species_id'], PDO::PARAM_INT);
+                $sth->bindParam(":aphia_id", $vector['species_id'], PDO::PARAM_INT);
                 $sth->bindParam(":vector_wkt", $vector['vector_wkt'], PDO::PARAM_STR);
                 $sth->bindParam(":area_pixels", $vector['area_pixels'], PDO::PARAM_INT);
                 $sth->bindParam(":area_m2", $vector['area_m2'], PDO::PARAM_STR);
@@ -222,15 +331,15 @@ class Database {
         }
 
         try {
-            $sth = $this->dbh->exec("INSERT INTO areas_image_grouped (image_info_id,species_id,species_area,image_area)
+            $sth = $this->dbh->exec("INSERT INTO areas_image_grouped (image_info_id,aphia_id,species_area,image_area)
                 SELECT i.id,
-                    s.id,
+                    s.aphia_id,
                     sum(v.area_m2),
                     i.area
                 FROM vectors v
-                    INNER JOIN species s ON s.id = v.species_id
+                    INNER JOIN species s ON s.aphia_id = v.aphia_id
                     INNER JOIN image_info i ON i.id = v.image_info_id
-                GROUP BY i.id, s.id;");
+                GROUP BY i.id, s.aphia_id;");
         }
         catch (Exception $e) {
             throw new Exception( $e->getMessage() );

@@ -93,6 +93,11 @@ function initInterface() {
     $("input:radio[name=annotation-status]").change(function() {
         onSetImageAnnotationStatus(this);
     });
+    $("#select-species-searchpar").change(function() {
+        $('#select-species').autocomplete(
+            "option", "source", "load.php?do=get_species&searchpar=" + $("#select-species-searchpar option:selected").val()
+        );
+    });
 
     // Initialize dialogs.
     $( "#dialog-remove-selection" ).dialog({
@@ -118,6 +123,19 @@ function initInterface() {
             Ok: function() {
                 $(this).dialog("close");
             }
+        }
+    });
+    $( "#dialog-assign-species" ).dialog({
+        autoOpen: false,
+        width: 400,
+        modal: true,
+        buttons: {
+            Ok: function() {
+                $(this).dialog("close");
+            }
+        },
+        close: function() {
+            $('#select-species').autocomplete("destroy");
         }
     });
 }
@@ -330,15 +348,8 @@ function onFeatureRemove(feature) {
 
 function onFeatureSelect(feature) {
     selectedFeature = feature;
-    $('#workspace-buttons ul').append( $('<li></li>')
-        .attr('id', "assign-species")
-        .text("Assign species: ") );
 
-    $('#assign-species').append( $('<input />')
-        .attr('name', "assign-species")
-        .attr('id', "select-species")
-        .attr('placeholder', "Enter species name...") );
-
+    $('#select-species').attr('value', "");
     $('#select-species').autocomplete({
         source: "load.php?do=get_species",
         create: function(event, ui) {
@@ -359,6 +370,8 @@ function onFeatureSelect(feature) {
             $("#select-species").val(ui.item.label);
         }
     });
+
+    $("#dialog-assign-species").dialog('open');
 
     /*
     loadSelectList($('#select-species'),
@@ -394,8 +407,8 @@ function onLoadVectors(vectors) {
         var vector = vectors[i];
         features[i] = new Feature(Geometry.fromWKT(vector.vector_wkt));
         features[i].id = vector.vector_id;
-        features[i].species_id = vector.species_id;
-        features[i].species_name = vector.species_name;
+        features[i].species_id = vector.aphia_id;
+        features[i].species_name = vector.scientific_name;
     }
     vectorLayer.addFeatures(features);
 }

@@ -30,9 +30,12 @@ switch ($do) {
         $json->get_image_info($_GET['path']);
         break;
     case 'get_species':
-        require("$root/includes/JSON.php");
-        $json = new JSON();
-        $json->html_select_species();
+        if ( !empty($_GET['term']) ) {
+            $searchpar = !empty($_GET['searchpar']) ? $_GET['searchpar'] : 0;
+            require("$root/includes/JSON.php");
+            $json = new JSON();
+            $json->get_species_from_worms($_GET['term'], $searchpar);
+        }
         break;
     case 'get_vectors':
         if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");

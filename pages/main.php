@@ -167,6 +167,21 @@
     <div id="dialog-unknown-error" title="Error">
         <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>An unknown error has occured. Please contact the website administrator about this problem.</p>
     </div>
+    <div id="dialog-assign-species" title="Assign species">
+        <p>To assign a species to the selection, enter a species name in the search
+        field and wait for a list of matches to appear. Select a species from
+        the list to assign the species.</p>
+        <form>
+        <fieldset>
+            <legend>Select species</legend>
+            <select name="searchpar" id="select-species-searchpar">
+                <option value="0" selected>Scientific Name</option>
+                <option value="1">Common Name</option>
+            </select>
+            <input type="text" name="assign-species" id="select-species" size="50" value="" placeholder="Enter species name...">
+        </fieldset>
+        </form>
+    </div>
     <!-- end dialogs -->
 
   </body>

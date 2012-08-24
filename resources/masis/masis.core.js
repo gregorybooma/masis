@@ -390,6 +390,8 @@ function onFeatureSelect(feature) {
         $('#assign-species-label a').attr('href', "#");
         $('#assign-species-label a').text("Unassigned");
     }
+    // Reset the search parameter (sets it to "Scientific Name").
+     $("#select-species-searchpar").val(0);
     // Open dialog.
     $("#dialog-assign-species").dialog('open');
 

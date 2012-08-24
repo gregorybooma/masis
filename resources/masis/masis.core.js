@@ -360,17 +360,37 @@ function onFeatureSelect(feature) {
             }
         },
         select: function(event, ui) {
+            var id = ui.item.value;
+            var name = ui.item.label;
             // The default action of select is to replace the text field's
             // value with the value of the selected item. This is not desired.
             event.preventDefault();
             // Set the species ID and name for the selected feature.
-            selectedFeature.species_id = parseInt(ui.item.value);
-            selectedFeature.species_name = ui.item.label;
+            selectedFeature.species_id = id;
+            selectedFeature.species_name = name;
             // Replace the text field value with the label.
-            $("#select-species").val(ui.item.label);
+            $("#select-species").val(name);
+            // Update dialog label.
+            if ( id ) {
+                $('#assign-species-label a').attr('href', "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + id);
+                $('#assign-species-label a').text(name);
+            }
+            else {
+                $('#assign-species-label a').attr('href', "#");
+                $('#assign-species-label a').text("Unassigned");
+            }
         }
     });
-
+    // Update dialog label.
+    if ( feature.species_id ) {
+        $('#assign-species-label a').attr('href', "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + feature.species_id);
+        $('#assign-species-label a').text(feature.species_name);
+    }
+    else {
+        $('#assign-species-label a').attr('href', "#");
+        $('#assign-species-label a').text("Unassigned");
+    }
+    // Open dialog.
     $("#dialog-assign-species").dialog('open');
 
     /*

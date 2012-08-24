@@ -180,6 +180,7 @@
             </select>
             <input type="text" name="assign-species" id="select-species" size="50" value="" placeholder="Enter species name...">
         </fieldset>
+        <p>Assigned to: <span id="assign-species-label" class="text-italic"><a href="#">Unassigned</a></span></p>
         </form>
     </div>
     <!-- end dialogs -->

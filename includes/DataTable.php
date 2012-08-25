@@ -151,9 +151,9 @@ class DataTable {
 
         try {
             $sth = $db->dbh->prepare("SELECT s.scientific_name,
-                    SUM(a.species_area) as species_area,
-                    SUM(a.image_area) as surface_area,
-                    (SUM(a.species_area) / :total_surface) as species_cover
+                    SUM(a.species_area) AS species_area,
+                    (1.0 * :total_surface) AS surface_area,
+                    (SUM(a.species_area) / :total_surface) AS species_cover
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                     INNER JOIN image_info i ON i.id = a.image_info_id

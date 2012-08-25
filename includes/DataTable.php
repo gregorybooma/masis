@@ -20,6 +20,7 @@ class DataTable {
             'species_area' => "Species Coverage (m<sup>2</sup>)",
             'surface_area' => "Surface Area (m<sup>2</sup>)",
             'species_cover' => "Species Coverage Fraction",
+            'species_cover_percent' => "Species Coverage %",
             '' => "",
             );
         for ($i = 0; $i < $sth->columnCount(); $i++) {
@@ -153,7 +154,7 @@ class DataTable {
             $sth = $db->dbh->prepare("SELECT s.scientific_name,
                     SUM(a.species_area) AS species_area,
                     (1.0 * :total_surface) AS surface_area,
-                    (SUM(a.species_area) / :total_surface) AS species_cover
+                    (SUM(a.species_area) / :total_surface * 100) AS species_cover_percent
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                     INNER JOIN image_info i ON i.id = a.image_info_id
@@ -183,7 +184,7 @@ class DataTable {
             $sth = $db->dbh->prepare("SELECT s.scientific_name,
                     SUM(a.species_area) as species_area,
                     SUM(a.image_area) as surface_area,
-                    (SUM(a.species_area) / SUM(a.image_area)) as species_cover
+                    (SUM(a.species_area) / SUM(a.image_area) * 100) as species_cover_percent
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                 GROUP BY s.scientific_name;");

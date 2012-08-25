@@ -224,6 +224,7 @@ function onSetDatabaseAreas() {
 }
 
 function onSetImageAnnotationStatus(element) {
+    if (!imageObject) return;
     $.ajax({
         type: "GET",
         url: "fetch.php?do=set_annotation_status",

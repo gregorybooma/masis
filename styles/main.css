@@ -50,6 +50,10 @@ h1, h2, h3, h4, h5, h6 {
     font-style: italic;
 }
 
+.hidden {
+    display: none;
+}
+
 /*----------------------------------------------------
  * Sidebars
  *----------------------------------------------------*/
@@ -173,10 +177,10 @@ span.headerlink:hover {
 }
 
 /*----------------------------------------------------
- * Directory tree
+ * Photo Library
  *----------------------------------------------------*/
 
-#dir-tree {
+#photo-library {
     padding: 5px;
     height: 300px;
 }
@@ -190,6 +194,34 @@ ul.jqueryFileTree a {
 
 ul.jqueryFileTree a:hover {
     background-color: #555555;
+}
+
+/*----------------------------------------------------
+ * Indicator icons
+ *----------------------------------------------------*/
+
+.icon {
+    line-height: 18px;
+    padding: 0 0 6px 18px;
+}
+
+.icon-indicators {
+    float: right;
+    padding: 0 3px;
+    position: relative;
+    top: -1.5em;
+}
+
+.icon-annotation-complete {
+    background: url("images/accept.png") no-repeat;
+}
+
+.icon-annotation-review {
+    background: url("images/exclamation.png") no-repeat;
+}
+
+.icon-vector {
+    background: url("images/select.png") no-repeat;
 }
 
 /*----------------------------------------------------

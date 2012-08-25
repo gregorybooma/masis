@@ -54,9 +54,14 @@ class Database {
 
     public function get_files_for_dir($dir) {
         try {
-            $sth = $this->dbh->prepare("SELECT file_name FROM image_info
-                WHERE img_dir = :dir
-                ORDER BY file_name;");
+            $sth = $this->dbh->prepare("SELECT i.file_name,
+                    i.annotation_status,
+                    COUNT(v.id) AS n_vectors
+                FROM image_info i
+                    LEFT OUTER JOIN vectors v ON v.image_info_id = i.id
+                WHERE i.img_dir = :dir
+                GROUP BY i.file_name, i.annotation_status
+                ORDER BY i.file_name;");
             $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
             $sth->execute();
         }

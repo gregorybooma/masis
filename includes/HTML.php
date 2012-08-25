@@ -41,7 +41,10 @@ class HTML {
                     foreach ($file as $filename) {
                         if ( file_exists($dir . $filename) ) {
                             $ext = preg_replace('/^.*\./', '', $filename);
-                            echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a></li>";
+                            $icons = "";
+                            $icons .= !empty($row['annotation_status']) ? "<span class='icon icon-annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
+                            $icons .= "<span class='icon icon-vector' title='Total selections: {$row['n_vectors']}'>{$row['n_vectors']}</span>";
+                            echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><div class='icon-indicators'>{$icons}</div></li>";
                             break;
                         }
                     }

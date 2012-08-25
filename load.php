@@ -13,11 +13,6 @@ $db->connect();
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
 switch ($do) {
     case 'get_file_list':
-        require("$root/includes/XML.php");
-        $xml = new XML();
-        $xml->get_file_list($config['image_path']);
-        break;
-    case 'get_file_list_html':
         $dir = urldecode($_POST['dir']);
         require("$root/includes/HTML.php");
         $html = new HTML();

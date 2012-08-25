@@ -26,12 +26,12 @@
 // 1.00 - released (24 March 2008)
 //
 // TERMS OF USE
-// 
+//
 // This plugin is dual-licensed under the GNU General Public License and the MIT License and
-// is copyright 2008 A Beautiful Site, LLC. 
+// is copyright 2008 A Beautiful Site, LLC.
 //
 if(jQuery) (function($){
-	
+
 	$.extend($.fn, {
 		fileTree: function(o, h) {
 			// Defaults
@@ -45,20 +45,30 @@ if(jQuery) (function($){
 			if( o.collapseEasing == undefined ) o.collapseEasing = null;
 			if( o.multiFolder == undefined ) o.multiFolder = true;
 			if( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
-			
+
 			$(this).each( function() {
-				
+
 				function showTree(c, t) {
 					$(c).addClass('wait');
 					$(".jqueryFileTree.start").remove();
-					$.post(o.script, { dir: t }, function(data) {
-						$(c).find('.start').html('');
-						$(c).removeClass('wait').append(data);
-						if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
-						bindTree(c);
-					});
+                    $.ajax({
+                      type: 'POST',
+                      url: o.script,
+                      data: { dir: t },
+                      success: function(data) {
+                            $(c).find('.start').html('');
+                            $(c).removeClass('wait').append(data);
+                            if( o.root == t ) {
+                                $(c).find('UL:hidden').show();
+                            }
+                            else {
+                                $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
+                            }
+                            bindTree(c);
+                        }
+                    });
 				}
-				
+
 				function bindTree(t) {
 					$(t).find('LI A').bind(o.folderEvent, function() {
 						if( $(this).parent().hasClass('directory') ) {
@@ -91,5 +101,5 @@ if(jQuery) (function($){
 			});
 		}
 	});
-	
+
 })(jQuery);

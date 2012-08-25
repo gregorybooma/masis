@@ -193,14 +193,13 @@ function initWorkspace() {
 }
 
 function onLoadDirTree() {
-    $('#dir-tree').fileTree(
-        {
-        root: config.image_path,
-        script: 'load.php?do=get_file_list_html',
-        folderEvent: 'click',
-        expandSpeed: 750,
-        collapseSpeed: 750,
-        multiFolder: false
+    $('#photo-library').fileTree({
+            root: config.image_path,
+            script: 'load.php?do=get_file_list',
+            folderEvent: 'click',
+            expandSpeed: 750,
+            collapseSpeed: 750,
+            multiFolder: false
         },
         function(file) {
             setImage(file);

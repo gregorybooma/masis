@@ -90,12 +90,12 @@
                 </div>
                 <!-- end image info -->
 
-                <!-- directory tree -->
+                <!-- photo library -->
                 <div>
                     <h1><a href="#">Photo Library</a></h1>
-                    <div id="dir-tree"></div>
+                    <div id="photo-library"></div>
                 </div>
-                <!-- end directory tree -->
+                <!-- end photo library -->
             </div>
             <!-- end sidebar-left -->
 
@@ -158,33 +158,35 @@
     </div> <!-- end content-wrapper -->
 
     <!-- dialogs -->
-    <div id="dialog-on-commit" title="Commit changes?">
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You are about to save all changes. Are you sure?</p>
-    </div>
-    <div id="dialog-remove-selection" title="Remove selection?">
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>The selection will be permanently deleted. Are you sure?</p>
-    </div>
-    <div id="dialog-selections-save-success" title="Selections saved">
-        <p><span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 20px 0;"></span>All selections have been saved.</p>
-    </div>
-    <div id="dialog-unknown-error" title="Error">
-        <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>An unknown error has occured. Please contact the website administrator about this problem.</p>
-    </div>
-    <div id="dialog-assign-species" title="Assign species">
-        <p>To assign a species to the selection, enter a species name in the search
-        field and wait for a list of matches to appear. Select a species from
-        the list to assign the species.</p>
-        <form>
-        <fieldset>
-            <legend>Select species</legend>
-            <select name="searchpar" id="select-species-searchpar">
-                <option value="0" selected>Scientific Name</option>
-                <option value="1">Common Name</option>
-            </select>
-            <input type="text" name="assign-species" id="select-species" size="50" value="" placeholder="Enter species name...">
-        </fieldset>
-        <p>Assigned to: <span id="assign-species-label" class="text-italic"><a href="#">Unassigned</a></span></p>
-        </form>
+    <div class="hidden">
+        <div id="dialog-on-commit" title="Commit changes?">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You are about to save all changes. Are you sure?</p>
+        </div>
+        <div id="dialog-remove-selection" title="Remove selection?">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>The selection will be permanently deleted. Are you sure?</p>
+        </div>
+        <div id="dialog-selections-save-success" title="Selections saved">
+            <p><span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 20px 0;"></span>All selections have been saved.</p>
+        </div>
+        <div id="dialog-unknown-error" title="Error">
+            <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>An unknown error has occured. Please contact the website administrator about this problem.</p>
+        </div>
+        <div id="dialog-assign-species" title="Assign species">
+            <p>To assign a species to the selection, enter a species name in the search
+            field and wait for a list of matches to appear. Select a species from
+            the list to assign the species.</p>
+            <form>
+            <fieldset>
+                <legend>Select species</legend>
+                <select name="searchpar" id="select-species-searchpar">
+                    <option value="0" selected>Scientific Name</option>
+                    <option value="1">Common Name</option>
+                </select>
+                <input type="text" name="assign-species" id="select-species" size="50" value="" placeholder="Enter species name...">
+            </fieldset>
+            <p>Assigned to: <span id="assign-species-label" class="text-italic"><a href="#">Unassigned</a></span></p>
+            </form>
+        </div>
     </div>
     <!-- end dialogs -->
 

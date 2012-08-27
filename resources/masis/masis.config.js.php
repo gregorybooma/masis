@@ -3,10 +3,6 @@
 // Create a config object in JavaScript space.
 require('../../settings.php');
 
-print "var config = {};\n";
-$exclude = array('pg');
-foreach ($config as $key => $val) {
-    if ( !in_array($key, $exclude) ) {
-        print "config.{$key} = '{$val}';\n";
-    }
-}
+print "var config = {};";
+print "config.image_path = '". Config::read('image_path') ."';";
+print "config.image_base_url = '". Config::read('image_base_url') ."';";

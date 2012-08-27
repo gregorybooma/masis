@@ -10,14 +10,14 @@ class HTML {
     public function get_file_list($dir) {
         global $config, $db;
 
-        if( file_exists($dir) ) {
+        if ( file_exists($dir) ) {
             $files = scandir($dir);
             natcasesort($files);
-            if( count($files) > 2 ) { /* The 2 accounts for . and .. */
+            if ( count($files) > 2 ) { /* The 2 accounts for . and .. */
                 echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
                 // List dirs
                 foreach( $files as $file ) {
-                    if( file_exists($dir . $file) && $file != '.' && $file != '..' && is_dir($dir . $file) ) {
+                    if ( file_exists($dir . $file) && $file != '.' && $file != '..' && is_dir($dir . $file) ) {
                         echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($dir . $file) . "/\">{$file}</a></li>";
                     }
                 }

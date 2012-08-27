@@ -1,0 +1,131 @@
+/*
+********************
+WebSite: MemberL ogin
+Name: style.css
+Type: css
+Version: 3.0
+Author: FireDart
+********************
+*/
+/*Import Reset */
+@import url("reset.css"); 
+body {
+	background: #eeeeee url("../images/bg.png");
+	color: #42423d;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	margin: 0 auto;
+	padding: 0px;
+}
+
+/* Notice */
+.notice{
+	background:#efefef;
+	border:1px solid #999999;
+	color:#ffffff;
+	padding:9px 10px 11px 40px;
+	margin:10px 0px 10px 0px;
+	position: relative;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	-o-border-radius:3px;
+	-khtml-border-radius:3px;
+}
+.notice.success:before, .notice.error:before, .notice.info:before {
+	content: '';
+	top: 2px;
+	left: 5px;
+	position: absolute;
+	padding: 16px;
+}
+.notice.success{
+	background: #61b832;
+	background: #61b832 -webkit-repeating-linear-gradient(#61b832, #479619);
+	background: #61b832 -moz-repeating-linear-gradient(#61b832, #479619);
+}
+	.notice.success:before {
+		background: url("../images/good.png") no-repeat;
+		top: 4px;
+	}
+.notice.error {
+	background: #CE3512;
+	background: #CE3512 -webkit-repeating-linear-gradient(#E6724E, #CE3512);
+	background: #CE3512 -moz-repeating-linear-gradient(#E6724E, #CE3512);
+}
+	.notice.error:before {
+		background: url("../images/error.png") no-repeat;
+	}
+.notice.info {
+	background: #74D1F0;
+	background: #74D1F0 -webkit-repeating-linear-gradient(#74D1F0, #50A3BF);
+	background: #74D1F0 -moz-repeating-linear-gradient(#74D1F0, #50A3BF);
+}
+	.notice.info:before {
+		background: url("../images/info.png") no-repeat;
+	}
+
+/* ClearFix */
+.group:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/* Forms + Labels */
+label {
+	border-right: 0px;
+	clear: both;
+	float: left;
+	font-weight: bold;
+	margin: 0px 0px 5px 0px;
+	padding: 0px 0px 0px 0px;
+}
+label span {
+	float: left;
+	padding: 5px 0px 5px 0px;
+}
+input, select {
+	clear: both;
+	float: left;
+	width: 288px;
+}
+select {
+	width: 300px;
+}
+input[type=checkbox] {
+	float: left;
+	width: 0px;
+	clear: none;
+	margin: 0px 10px 0px 0px;
+}
+input[type=submit] {
+	width: 300px;
+}
+fieldset {
+	border-bottom: 1px dashed #cccccc;
+	float: left;
+	margin: 0px 0px 10px 0px;
+}
+fieldset legend {
+	border-bottom: 1px dashed #cccccc;
+	font-weight: bold;
+	padding: 5px 5px 15px 5px;
+	margin: 0px 0px 10px 0px;
+	text-align: center;
+	width: 290px;
+}
+
+#wrapper {
+	background: #ffffff;
+	width: 300px;
+	padding: 20px;
+	margin: 0px auto;
+}
+
+#wrapper h1 {
+	text-align: center;
+	width: 100%;
+}

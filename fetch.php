@@ -10,6 +10,11 @@ require("$root/includes/Database.php");
 $db = new Database();
 $db->connect();
 
+require("$root/includes/login/member.inc.php");
+if ( $member->sessionIsSet() != true ) {
+    exit("You must be logged in to use this page.");
+}
+
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
 switch ($do) {
     case 'save_vectors':

@@ -81,15 +81,6 @@ function initInterface() {
     $("#feature-controls input:radio").button("disable");
 
     // Set button actions.
-    $("#action-commit").click(function() {
-        onCommit();
-    });
-    $("#action-list-vectors").click(function() {
-        onLoadVectorsTable();
-    });
-    $("#action-set-db-areas").click(function() {
-        onSetDatabaseAreas();
-    });
     $("input:radio[name=annotation-status]").change(function() {
         onSetImageAnnotationStatus(this);
     });
@@ -504,7 +495,7 @@ function setModifyMode() {
     else if (rotate) {
         controls.modify.mode = OpenLayers.Control.ModifyFeature.ROTATE;
     }
-    else if(resize) {
+    else if (resize) {
         controls.modify.mode = OpenLayers.Control.ModifyFeature.RESIZE;
     }
 }
@@ -624,7 +615,7 @@ function loadImage(img) {
 
     // Set the image annotation status input to the right value.
     var $radios = $('input:radio[name=annotation-status]');
-    if( img.annotation_status ) {
+    if ( img.annotation_status ) {
         $radios.filter('[value=' + img.annotation_status + ']').attr('checked', true);
     }
     else {

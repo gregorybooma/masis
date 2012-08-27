@@ -13,12 +13,10 @@ class Database {
         global $config;
 
         try {
-            $this->dbh = new PDO("pgsql:dbname={$config['pg']['dbname']};host={$config['pg']['host']}",
-                $config['pg']['username'],
-                $config['pg']['password'],
-                array(
-                    PDO::ATTR_PERSISTENT => true // Use persistent connections.
-                ));
+            $this->dbh = new PDO("pgsql:dbname=" . Config::read('database') . ";host=" . Config::read('hostname'),
+                Config::read('username'),
+                Config::read('password'),
+                Config::read('drivers'));
         }
         catch (PDOException $e) {
             exit( "Unable to connect: " . $e->getMessage() );
@@ -27,6 +25,60 @@ class Database {
         // Throw exceptions so errors can be handled gracefully.
         $this->dbh->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
     }
+
+	/*
+	 * Create a new database prepared query
+	 *
+	 * @param string $query The prepared statement query to the database
+	 * @param array|string $bind All the variables to bind to the prepared statement
+	 * @return return the executed string
+	 */
+	public function query($query, $bind = null, $fetch = 'FETCH_ASSOC') {
+		/* Prepare the query statement */
+		$this->sth = $this->dbh->prepare($query);
+		/* Bind each value supplied from $bind */
+		if ($bind != null) {
+			foreach($bind as $select => $value) {
+				/* For each type of value give the appropriate param */
+				if (is_int($value)) {
+					$param = PDO::PARAM_INT;
+				} elseif (is_bool($value)) {
+					$param = PDO::PARAM_BOOL;
+				} elseif (is_null($value)) {
+					$param = PDO::PARAM_NULL;
+				} elseif (is_string($value)) {
+					$param = PDO::PARAM_STR;
+				} else {
+					$param = FALSE;
+				}
+				/* Bid value */
+				if ($param) {
+					$this->sth->bindValue($select, $value, $param);
+				}
+			}
+		}
+		/* Execute Query & check for any errors */
+		if (!$this->sth->execute()){
+			$result = array(
+				1 => 'false',
+				2 => '<b>[DATABASE] Error - Query:</b> There was an error in sql syntax',
+			);
+			return $result;
+		}
+		/* Return all content */
+		if ($fetch == 'FETCH_ASSOC') {
+			$result = $this->sth->fetch(PDO::FETCH_ASSOC);
+		} elseif ($fetch == 'FETCH_BOTH') {
+			$result = $this->sth->fetch(PDO::FETCH_BOTH);
+		} elseif ($fetch == 'FETCH_LAZY') {
+			$result = $this->sth->fetch(PDO::FETCH_LAZY);
+		} elseif ($fetch == 'FETCH_OBJ') {
+			$result = $this->sth->fetch(PDO::FETCH_OBJ);
+		} elseif ($fetch == 'fetchAll') {
+			$result = $this->sth->fetchAll();
+		}
+		return $result;
+	}
 
     /**
      * Get the altitude for an image file.

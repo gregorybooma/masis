@@ -29,7 +29,7 @@ class JSON {
         $info['dir'] = array_pop($stack);
         $info['width'] = $width;
         $info['height'] = $height;
-        $info['url'] = $config['image_base_url'] . $info['dir'] . '/' . $info['name'];
+        $info['url'] = Config::read('image_base_url') . $info['dir'] . '/' . $info['name'];
         $info['path'] = $path;
 
         $arr = $db->get_image_attributes($info['dir'], $info['name']);
@@ -76,7 +76,7 @@ class JSON {
         $species[] = array('label' => "Unassigned", 'value' => null);
         if ($records) {
             // Cache the records to the local database.
-            $db->cache_aphia_records($records, $config['update_species_records']);
+            $db->cache_aphia_records($records, Config::read('update_species_records'));
 
             foreach ( $records as $sp ) {
                 $species[] = array(

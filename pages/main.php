@@ -22,6 +22,31 @@
   <body>
     <div id="content-wrapper">
 
+    <div id="header" class="clearfix">
+        <h1>MaSIS</h1>
+        <div id="user">
+            <?php if ( $member->sessionIsSet() == true ) {
+                $user = $member->data();
+            ?>
+            <div id="user-options">
+                <ul>
+                    <li>Hello, <?php echo $user->username; ?></li>
+                    <li><a href="member.php?action=settings" class="button">Account</a></li>
+                    <li><a href="member.php?action=logout" class="button">Logout</a></li>
+                </ul>
+            </div>
+            <?php } else { ?>
+            <div id="user-options">
+                <ul>
+                    <li>Hello, Guest</li>
+                    <li><a href="member.php?action=login" class="button">Login</a></li>
+                    <li><a href="member.php?action=register" class="button">Register</a></li>
+                </ul>
+            </div>
+            <?php } ?>
+        </div>
+    </div>
+
     <!-- tabs -->
     <div id="tabs">
         <ul>
@@ -103,7 +128,7 @@
                 <!-- buttons -->
                 <div id="workspace-buttons" class="action-buttons">
                     <ul>
-                        <li><button id="action-commit">Commit</button></li>
+                        <li><a href="#" onclick="onCommit(); return false;" class="button">Commit</a></li>
                     </ul>
                 </div>
                 <!-- end buttons -->
@@ -149,7 +174,7 @@
         <div id="tab-maintenance">
             <div class="action-buttons">
                 <ul>
-                    <li><button id="action-set-db-areas">Set Areas in the Database</button></li>
+                    <li><a href="#" onclick="onSetDatabaseAreas(); return false;" class="button">Set Areas in the Database</a></li>
                 </ul>
             </div>
         </div> <!-- end tab maintenance -->

@@ -8,6 +8,8 @@ class MaSIS {
     public $lens_angle_y = 0.386512004;
 
     public function start() {
+        global $member;
+
         // Load settings. If the settings file doesn't exist, give directions
         // to create one.
         if ( is_file(ROOT."/settings.php") ) {

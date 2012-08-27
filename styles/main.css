@@ -20,6 +20,92 @@ dt {
     font-weight: bold;
 }
 
+a:link, a:visited {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+a:hover, a:active {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    border-bottom: 1px solid #777777;
+    font-weight: normal;
+    margin: 20px auto 10px;
+    padding: 3px auto;
+    clear: both;
+}
+
+/*----------------------------------------------------
+ * Link buttons
+ *----------------------------------------------------*/
+
+.button,
+.button.disabled:hover,
+.button:disabled:hover {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: -moz-linear-gradient(#4E4E4E, #222222) repeat scroll 0 0 transparent;
+    border-color: #333333 #2E2E2E #171717;
+    border-style: solid;
+    border-width: 1px;
+    color: #FFFFFF;
+    text-shadow: 0 1px 0 #000000;
+}
+
+#tabs .button,
+#tabs .button.disabled:hover,
+#tabs .button:disabled:hover {
+    border-color: #262626 #212121 #0A0A0A;
+}
+
+.button {
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Helvetica,arial,freesans,clean,sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 24px;
+    padding: 0 10px;
+    position: relative;
+    white-space: nowrap;
+}
+
+.button:hover {
+    background: -moz-linear-gradient(#0A81BA, #06567D) repeat scroll 0 0 transparent;
+    border-color: #2C4E6E #213B54 #112A45;
+    color: #FFFFFF;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+#tabs .button:hover {
+    border-color: #213B54 #17293A #0A1A2B;
+}
+
+.button:active {
+    background: -moz-linear-gradient(#0B97D9, #066B9C) repeat scroll 0 0 transparent;
+}
+
+/*----------------------------------------------------
+ * Header
+ *----------------------------------------------------*/
+
+#header h1 {
+    border: medium none;
+    color: #A6A6A6;
+    display: inline;
+    letter-spacing: 10px;
+    position: relative;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
+    top: -4px;
+}
+
 /*----------------------------------------------------
  * Content
  *----------------------------------------------------*/
@@ -36,14 +122,6 @@ dt {
     margin: 0;
     padding: 0;
     vertical-align: baseline;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    border-bottom: 1px solid #777777;
-    font-weight: normal;
-    margin: 20px auto 10px;
-    padding: 3px auto;
-    clear: both;
 }
 
 .text-italic {
@@ -139,6 +217,30 @@ input#select-species {
 .action-buttons ul li {
     display: inline;
     margin-right: 1px;
+}
+
+/*----------------------------------------------------
+ * User options
+ *----------------------------------------------------*/
+
+#header {
+    display: block;
+}
+
+#user {
+    float: right;
+}
+
+#user-options ul {
+    list-style: none outside none;
+    margin: 2px 0;
+    padding: 0;
+    text-align: left;
+}
+
+#user-options ul li {
+    display: inline;
+    margin-right: 8px;
 }
 
 /*----------------------------------------------------

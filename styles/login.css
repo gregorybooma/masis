@@ -1,0 +1,217 @@
+/*Import Reset */
+@import url("login-reset.css");
+body {
+	background: #eeeeee url("../images/bg.png");
+	color: #42423d;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	margin: 0 auto;
+	padding: 0px;
+}
+
+/* Notice */
+.notice{
+	background:#efefef;
+	border:1px solid #999999;
+	color:#ffffff;
+	padding:9px 10px 11px 40px;
+	margin:10px 0px 10px 0px;
+	position: relative;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	-o-border-radius:3px;
+	-khtml-border-radius:3px;
+}
+.notice.success:before, .notice.error:before, .notice.info:before {
+	content: '';
+	top: 2px;
+	left: 5px;
+	position: absolute;
+	padding: 16px;
+}
+.notice.success{
+	background: #61b832;
+	background: #61b832 -webkit-repeating-linear-gradient(#61b832, #479619);
+	background: #61b832 -moz-repeating-linear-gradient(#61b832, #479619);
+}
+	.notice.success:before {
+		background: url("../images/good.png") no-repeat;
+		top: 4px;
+	}
+.notice.error {
+	background: #CE3512;
+	background: #CE3512 -webkit-repeating-linear-gradient(#E6724E, #CE3512);
+	background: #CE3512 -moz-repeating-linear-gradient(#E6724E, #CE3512);
+}
+	.notice.error:before {
+		background: url("../images/error.png") no-repeat;
+	}
+.notice.info {
+	background: #74D1F0;
+	background: #74D1F0 -webkit-repeating-linear-gradient(#74D1F0, #50A3BF);
+	background: #74D1F0 -moz-repeating-linear-gradient(#74D1F0, #50A3BF);
+}
+	.notice.info:before {
+		background: url("../images/info.png") no-repeat;
+	}
+
+/* ClearFix */
+.group:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+/* Forms + Labels */
+label {
+	border-right: 0px;
+	clear: clear;
+	float: left;
+	font-weight: bold;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+label span {
+	float: left;
+	padding: 5px 0px 5px 0px;
+}
+input, select {
+	clear: both;
+	float: left;
+	width: 288px;
+}
+input[type=submit] {
+	width: 300px;
+}
+#members {
+	background: #ffffff;
+	width: 300px;
+	margin: 0px auto;
+	padding: 0px 20px 20px 20px;
+	border-radius: 0px 0px 3px 3px;
+	-moz-border-radius: 0px 0px 3px 3px;
+	-webkit-border-radius: 0px 0px 3px 3px;
+	-o-border-radius: 0px 0px 3px 3px;
+	-khtml-border-radius: 0px 0px 3px 3px;
+}
+#members h1 {
+	border-bottom: 1px dashed #cccccc;
+	font-size: 28px;
+}
+form p.remember_me {
+	float: left;
+	line-height: 1em;
+	padding: 0px 0px 10px 0px;
+}
+form p.remember_me input[type=checkbox] {
+	float: left;
+	margin: 0px 5px 0px 0px;
+	width: 15px;
+}
+.options {
+	padding: 10px 0px 0px 0px;
+	text-align: center;
+}
+.options a {
+	text-decoration: none;
+}
+#captcha {
+	width: 300px;
+}
+#captcha input {
+	float: left;
+	width: 100px;
+}
+#captcha img {
+	float: right;
+}
+
+.button.full {
+	float: left;
+	width: 290px;
+	margin: 0px 0px 10px 0px;
+	text-align: center;
+}
+
+
+/* Layout */
+#wrapper {
+	margin: 0px auto;
+	width: 960px;
+}
+#header {
+	background: #ffffff;
+	font-size: 16px;
+	padding: 5px 20px 5px 20px;
+	margin: 0px 0px 10px 0px;
+	-webkit-border-radius: 0px 0px 3px 3px;
+	-moz-border-radius: 0px 0px 3px 3px;
+	-o-border-radius: 0px 0px 3px 3px;
+	-khtml-border-radius: 0px 0px 3px 3px;
+	border-radius: 0px 0px 3px 3px;
+}
+#header h1#logo {
+	float: left;
+	font-size: 25px;
+}
+#header #user {
+	float: right;
+}
+#header #user #user-info {
+	display: block;
+	text-align: right;
+}
+#header #user ul#user-ops {
+	float: right;
+}
+#header #user ul#user-ops li {
+	float: left;
+	margin: 0px 0px 0px 10px;
+}
+
+ul#navigation {
+	background: #74D1F0;
+	background: #74D1F0 -webkit-repeating-linear-gradient(#74D1F0, #50A3BF);
+	background: #74D1F0 -moz-repeating-linear-gradient(#74D1F0, #50A3BF);
+	border: 1px solid #50A3BF;
+	width: 100%;
+	margin: 0px 0px 10px 0px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	border-radius: 3px;
+}
+ul#navigation li {
+	border-right: 1px solid #50A3BF;
+	float: left;
+	padding: 10px;
+
+}
+ul#navigation li:hover {
+	background: #50A3BF;
+	background: #50A3BF -webkit-repeating-linear-gradient(#50A3BF, #74D1F0);
+	background: #50A3BF -moz-repeating-linear-gradient(#50A3BF, #74D1F0);
+}
+ul#navigation li a {
+	color: #ffffff;
+}
+
+#body {
+	background: #ffffff;
+	padding: 20px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	border-radius: 3px;
+}
+
+@media screen and (max-width: 1024px) {
+	#wrapper {
+		width: 90%;
+	}
+}

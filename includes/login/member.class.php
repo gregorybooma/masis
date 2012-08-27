@@ -197,7 +197,7 @@ class member {
 				/* Get User data */
 				$user = $db->query('SELECT id, password FROM users WHERE username = :username', array(':username' => $username), 'FETCH_OBJ');
 				/* Check if user exist */
-				if ($db->statement->rowCount() >= '1') {
+				if ($db->sth->rowCount() >= '1') {
 					/* Check hash */
 					if ($this->verify($password, $user->password) == true) {
 						/* If correct create session */
@@ -265,7 +265,7 @@ class member {
 			/* If so, find the equivilent in the db */
 			$user = $db->query('SELECT id, hash FROM users_logged WHERE id = :id', array(':id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
 			/* Does the record exist? */
-			if ($db->statement->rowCount() >= '1') {
+			if ($db->sth->rowCount() >= '1') {
 				/* Do the hashes match? */
 				if ($user->hash == $_COOKIE['remember_me_hash']) {
 					/* If so Create a new cookie and mysql record */
@@ -312,7 +312,7 @@ class member {
 			/* If so, find the equivilent in the db */
 			$user = $db->query('SELECT id, hash FROM users_logged WHERE id = :id', array(':id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
 			/* Does the record exist? */
-			if ($db->statement->rowCount() >= '1') {
+			if ($db->sth->rowCount() >= '1') {
 				/* Do the hashes match? */
 				if ($user->hash == $_COOKIE['remember_me_hash']) {
 					/* If so Create a new cookie and mysql record */
@@ -498,13 +498,13 @@ class member {
 					} else {
 						$db->query('SELECT id FROM users WHERE username = :username', array(':username' => $check_username));
 						/* Check if user exist in database */
-						if ($db->statement->rowCount() == 0) {
+						if ($db->sth->rowCount() == 0) {
 							/* Require use to validate account */
 							if (Config::read('email_verification') === true) {
 								/* Check if user exist in inactive database */
 								$user = $db->query('SELECT date FROM users_inactive WHERE username = :username', array(':username' => $check_username), 'FETCH_OBJ');
 								/* If user incative is older than 24 hours */
-								if ($db->statement->rowCount() == 0 or time() >= strtotime($user->date) + 86400) {
+								if ($db->sth->rowCount() == 0 or time() >= strtotime($user->date) + 86400) {
 									/* If user incative is older than 24 hours */
 									$username = $_POST['username'];
 								} else {
@@ -555,13 +555,13 @@ class member {
 					if (filter_var($check_email, FILTER_VALIDATE_EMAIL) == true) {
 						$db->query('SELECT id FROM users WHERE email = :email', array(':email' => $check_email));
 						/* Check if user exist with email */
-						if ($db->statement->rowCount() == 0) {
+						if ($db->sth->rowCount() == 0) {
 							/* Require use to validate account */
 							if (Config::read('email_verification') === true) {
 								/* Check if user exist with email in inactive */
 								$user = $db->query('SELECT date FROM users_inactive WHERE email = :email', array(':email' => $check_email), 'FETCH_OBJ');
 								/* If user incative is older than 24 hours */
-								if ($db->statement->rowCount() == 0 or time() >= strtotime($user->date) + 86400) {
+								if ($db->sth->rowCount() == 0 or time() >= strtotime($user->date) + 86400) {
 									$email = $check_email;
 									$email_again = $check_email_again;
 								} else {
@@ -764,7 +764,7 @@ class member {
 			/* Get info on verCode */
 			$recover = $db->query('SELECT user, verCode, requestTime FROM users_recover WHERE verCode = :verCode', array(':verCode' => $_GET['vercode']), 'FETCH_OBJ');
 			/* Does an active record exist? */
-			if ($db->statement->rowCount() >= '1') {
+			if ($db->sth->rowCount() >= '1') {
 				/* Is the request older than 24 hours? */
 				if (time() - strtotime($recover->requestTime) > 60*60*24) {
 					$notice->add('error', 'This recover request is older than 24 hours, please request a new password for recovery');
@@ -787,7 +787,7 @@ class member {
 				/* Get the users info */
 				$user = $db->query('SELECT id, username, email FROM users WHERE email = :email', array(':email' => $_POST['email']), 'FETCH_OBJ');
 				/* Check if user exist */
-				if ($db->statement->rowCount() >= '1') {
+				if ($db->sth->rowCount() >= '1') {
 					/* Set Template Path */
 					$template_path = 'includes/login/email_templates/' . Config::read('email_template') . '.html';
 					/* Can we send a user an E-Mail? */
@@ -935,7 +935,7 @@ class member {
 						if (filter_var($email, FILTER_VALIDATE_EMAIL) == true) {
 							$db->query('SELECT id FROM users WHERE email = :email', array(':email' => $email));
 							/* Check if user exist with email */
-							if ($db->statement->rowCount() != 0) {
+							if ($db->sth->rowCount() != 0) {
 								$notice->add('error', 'E-Mail already in use');
 							}
 						} else {

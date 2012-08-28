@@ -79,6 +79,10 @@ class JSON {
             $db->cache_aphia_records($records, $config['update_species_records']);
 
             foreach ( $records as $sp ) {
+                // Skip species with a specific status
+                if ($sp->status == "nomen nudum") continue;
+                if ($sp->status == "nomen dubium") continue;
+
                 $species[] = array(
                     'label' => $sp->scientificname,
                     'value' => $sp->AphiaID

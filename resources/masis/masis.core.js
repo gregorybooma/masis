@@ -369,6 +369,7 @@ function onFeatureSelect(feature) {
 
     $('#select-species').attr('value', "");
     $('#select-species').autocomplete({
+        delay: 2000,
         source: "load.php?do=get_species",
         create: function(event, ui) {
             // Replace the text field value if the selected feature is already

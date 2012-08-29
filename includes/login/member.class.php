@@ -536,7 +536,7 @@ class member {
 					if ($length >= 8) {
 						$password = $_POST['password'];
 					} else {
-						$notice->add('error', 'Passwords must be atleast than 8 characters');
+						$notice->add('error', 'Passwords must be at least 8 characters');
 					}
 				} else {
 					$notice->add('error', 'Passwords must match');
@@ -854,7 +854,7 @@ class member {
 						if ($length >= 8) {
 							$password = $_POST['password'];
 						} else {
-							$notice->add('error', 'Passwords must be atleast than 8 characters');
+							$notice->add('error', 'Passwords must be at least 8 characters');
 						}
 					} else {
 						$notice->add('error', 'Passwords must match');

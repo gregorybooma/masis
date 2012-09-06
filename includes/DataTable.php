@@ -4,6 +4,8 @@
  * The DataTable class for generating HTML tables.
  */
 class DataTable {
+    public $round_precision = 5;
+
     /**
      * Set table heads from the query output.
      *
@@ -92,6 +94,10 @@ class DataTable {
      * @return string A HTML <tbody> element.
      */
     public function build_tbody_simple($sth, $class="") {
+        $round_fields = array(
+            'species_cover_percent',
+            'species_area',
+            'surface_area');
         $tbody = "<tbody>";
          while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $tbody .= "<tr class='{$class}'>\n";
@@ -99,6 +105,10 @@ class DataTable {
                 $col_class = "";
                 // Show scientific species names in italics.
                 if ($key == 'scientific_name') $col_class .= "text-italic ";
+                // Round some values.
+                if ( in_array($key, $round_fields) ) {
+                    $col_value = round($col_value, $this->round_precision);
+                }
 
                 $tbody .= "<td align='center' class='{$col_class}'>{$col_value}</td>\n";
             }
@@ -154,7 +164,7 @@ class DataTable {
             $sth = $db->dbh->prepare("SELECT s.scientific_name,
                     SUM(a.species_area) AS species_area,
                     (1.0 * :total_surface) AS surface_area,
-                    round( (SUM(a.species_area) / :total_surface * 100), 4 ) AS species_cover_percent
+                    SUM(a.species_area) / :total_surface * 100 AS species_cover_percent
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                     INNER JOIN image_info i ON i.id = a.image_info_id
@@ -184,7 +194,7 @@ class DataTable {
             $sth = $db->dbh->prepare("SELECT s.scientific_name,
                     SUM(a.species_area) as species_area,
                     SUM(a.image_area) as surface_area,
-                    round( (SUM(a.species_area) / SUM(a.image_area) * 100), 4 ) as species_cover_percent
+                    SUM(a.species_area) / SUM(a.image_area) * 100 as species_cover_percent
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                 GROUP BY s.scientific_name;");

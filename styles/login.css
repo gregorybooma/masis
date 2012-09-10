@@ -1,18 +1,7 @@
-/*Import Reset */
-@import url("login-reset.css");
-body {
-	background: #eeeeee url("../images/bg.png");
-	color: #42423d;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	margin: 0 auto;
-	padding: 0px;
-}
-
 /* Notice */
 .notice{
 	background:#efefef;
-	border:1px solid #999999;
+	border-bottom: 1px solid #333;
 	color:#ffffff;
 	padding:9px 10px 11px 40px;
 	margin:10px 0px 10px 0px;
@@ -36,7 +25,7 @@ body {
 	background: #61b832 -moz-repeating-linear-gradient(#61b832, #479619);
 }
 	.notice.success:before {
-		background: url("../images/good.png") no-repeat;
+		background: url("images/good.png") no-repeat;
 		top: 4px;
 	}
 .notice.error {
@@ -45,15 +34,15 @@ body {
 	background: #CE3512 -moz-repeating-linear-gradient(#E6724E, #CE3512);
 }
 	.notice.error:before {
-		background: url("../images/error.png") no-repeat;
+		background: url("images/error.png") no-repeat;
 	}
 .notice.info {
-	background: #74D1F0;
-	background: #74D1F0 -webkit-repeating-linear-gradient(#74D1F0, #50A3BF);
-	background: #74D1F0 -moz-repeating-linear-gradient(#74D1F0, #50A3BF);
+	background: #61B0CA;
+	background: #61B0CA -webkit-repeating-linear-gradient(#61B0CA, #408399);
+	background: #61B0CA -moz-repeating-linear-gradient(#61B0CA, #408399);
 }
 	.notice.info:before {
-		background: url("../images/info.png") no-repeat;
+		background: url("images/info.png") no-repeat;
 	}
 
 /* ClearFix */
@@ -84,22 +73,13 @@ input, select {
 	width: 288px;
 }
 input[type=submit] {
-	width: 300px;
+    width: 300px;
+    padding: 6px;
 }
 #members {
-	background: #ffffff;
 	width: 300px;
 	margin: 0px auto;
 	padding: 0px 20px 20px 20px;
-	border-radius: 0px 0px 3px 3px;
-	-moz-border-radius: 0px 0px 3px 3px;
-	-webkit-border-radius: 0px 0px 3px 3px;
-	-o-border-radius: 0px 0px 3px 3px;
-	-khtml-border-radius: 0px 0px 3px 3px;
-}
-#members h1 {
-	border-bottom: 1px dashed #cccccc;
-	font-size: 28px;
 }
 form p.remember_me {
 	float: left;
@@ -198,16 +178,6 @@ ul#navigation li:hover {
 }
 ul#navigation li a {
 	color: #ffffff;
-}
-
-#body {
-	background: #ffffff;
-	padding: 20px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-khtml-border-radius: 3px;
-	border-radius: 3px;
 }
 
 @media screen and (max-width: 1024px) {

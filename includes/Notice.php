@@ -1,20 +1,19 @@
 <?php
 /*
- * Notice
+ * Originally part of Tutis Login <http://www.firedartstudios.com/labs/tutis-login>
+ * Author: FireDart
+ * License: CC-BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
  *
- * Handels Error reporting for tutis
+ * Modified by Serrano Pereira for MaSIS
  */
-class notice {
-	/*
-	 * @var $_notices
-	 *
-	 * Used to store all the notices
-	 */
+
+/**
+ * The Notice class handles error reporting.
+ */
+class Notice {
 	private $_notices = array();
 
-	/*
-	 * Add Notice
-	 *
+	/**
 	 * Adds a notice to the notice array
 	 *
 	 * @param $type Type of notice (info, error, success)
@@ -24,9 +23,7 @@ class notice {
 		$this->_notice[$type][] = $message;
 	}
 
-	/*
-	 * Report
-	 *
+	/**
 	 * Reports all notices (info, error, success)
 	 */
 	public function report() {
@@ -56,17 +53,13 @@ class notice {
 
 	}
 
-	/*
-	 * errorsExist
-	 *
-	 * Do errors exist?
+	/**
+	 * Check if any errors exist.
+     *
+     * @return boolean TRUE if errors exist, otherwise FALSE.
 	 */
 	public function errorsExist() {
-		if (empty($this->_notice['error'])) {
-			return false;
-		} else {
-			return true;
-		}
+		return !empty($this->_notice['error']);
 	}
 }
-?>
+

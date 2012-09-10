@@ -10,7 +10,9 @@ require("$root/includes/Database.php");
 $db = new Database();
 $db->connect();
 
-require("$root/includes/login/member.inc.php");
+require_once("$root/includes/Member.php");
+$member = new Member();
+
 if ( $member->sessionIsSet() != true ) {
     exit("You must be logged in to use this page.");
 }

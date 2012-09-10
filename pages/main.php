@@ -1,3 +1,6 @@
+<?php
+$user = $member->data();
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
   <head>
@@ -25,25 +28,13 @@
     <div id="header" class="clearfix">
         <h1>MaSIS</h1>
         <div id="user">
-            <?php if ( $member->sessionIsSet() == true ) {
-                $user = $member->data();
-            ?>
             <div id="user-options">
                 <ul>
-                    <li>Hello, <?php echo $user->username; ?></li>
-                    <li><a href="member.php?action=settings" class="button">Account</a></li>
-                    <li><a href="member.php?action=logout" class="button">Logout</a></li>
+                    <li>Hello, <?php print $user->username; ?></li>
+                    <li><a href="?p=settings" class="button">Account</a></li>
+                    <li><a href="?p=logout" class="button">Logout</a></li>
                 </ul>
             </div>
-            <?php } else { ?>
-            <div id="user-options">
-                <ul>
-                    <li>Hello, Guest</li>
-                    <li><a href="member.php?action=login" class="button">Login</a></li>
-                    <li><a href="member.php?action=register" class="button">Register</a></li>
-                </ul>
-            </div>
-            <?php } ?>
         </div>
     </div>
 

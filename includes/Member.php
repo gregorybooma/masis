@@ -115,22 +115,10 @@ class Member {
 	 * @param string $existingHash The current stored hashed password
 	 */
 	public function verify($password, $existingHash) {
-		/* If Sha512 */
-		if (Config::read('hash') == 'sha512') {
-			$salt = substr($existingHash, 0, 22);
-			$hash = $this->genHash($salt, $password);
-		/* Else Bcrypt by default */
-		} else {
-			/* Hash new password with old hash */
-			$hash = crypt($password, $existingHash);
-			/* Do Hashs match? */
-		}
-
-		if ($hash === $existingHash) {
-			return true;
-		} else {
-			return false;
-		}
+        // Hash new password with old hash.
+        $hash = crypt($password, $existingHash);
+        // Check if the hashes match.
+		return $hash == $existingHash;
 	}
 
 	/**
@@ -142,13 +130,6 @@ class Member {
 		$notice = new Notice;
         $username = !empty($_POST['username']) ? $_POST['username'] : null;
         $password = !empty($_POST['password']) ? $_POST['password'] : null;
-
-		if (Config::read('remember') == true) {
-			$remember = '<div class="clearer"> </div><p class="remember_me"><input type="checkbox" name="remember_me" id="remember_me" value="1" /><label for="remember_me">Remember me</label></p>';
-		} else {
-			$remember = "";
-		}
-
 		$form = <<<END
 <form name="login" action="{$this->currentPage()}" method="post" class="group">
 	<label>
@@ -159,16 +140,16 @@ class Member {
 		<span>Password</span>
 		<input type="password" name="password" />
 	</label>
-	$remember
+	<div class="clearer"> </div><p class="remember_me"><input type="checkbox" name="remember_me" id="remember_me" value="1" /><label for="remember_me">Remember me</label></p>
 	<input name="login" type="submit" value="Login" class="button" />
 </form>
 END;
 
-		if (isset($_POST['login'])) {
-			if ($username && $password) {
+		if ( isset($_POST['login']) ) {
+			if ( $username && $password ) {
 				$user = $db->query('SELECT id, password FROM users WHERE username = :username', array(':username' => $username), 'FETCH_OBJ');
 
-				if ($db->sth->rowCount() >= '1') {
+				if ( $db->sth->rowCount() >= '1' ) {
 					if ( $this->verify($password, $user->password) ) {
                         // Set the user session if verified successfully.
 						session_regenerate_id();
@@ -183,7 +164,7 @@ END;
 						$return_form = 0;
 
 						// Redirect
-						$redirect = isset($_COOKIE['redirect']) ? $_COOKIE['redirect'] : '';
+						$redirect = isset($_COOKIE['redirect']) ? $_COOKIE['redirect'] : '/';
 						echo '<meta http-equiv="refresh" content="2;url=' . $redirect . '" />';
 					}
                     else {
@@ -331,20 +312,18 @@ END;
 	public function createNewCookie($id) {
 		global $db;
 
-		if (Config::read('remember') == true) {
-			// Generate random hash
-			$hash = $this->genHash($this->genSalt(), $_SERVER['REMOTE_ADDR']);
+        // Generate random hash
+        $hash = $this->genHash($this->genSalt(), $_SERVER['REMOTE_ADDR']);
 
-			// Set cookies (expire in 1 year)
-			setcookie("remember_me_id", $id, time() + 31536000);
-			setcookie("remember_me_hash", $hash, time() + 31536000);
+        // Set cookies (expire in 1 year)
+        setcookie("remember_me_id", $id, time() + 31536000);
+        setcookie("remember_me_hash", $hash, time() + 31536000);
 
-			// Remove old cookie records from the database.
-			$db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
+        // Remove old cookie records from the database.
+        $db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
 
-			// Set new cookie record in the database.
-			$db->query("INSERT INTO users_logged (id, hash) VALUES (:id, :hash);", array(':id' => $id, ':hash' => $hash));
-		}
+        // Set new cookie record in the database.
+        $db->query("INSERT INTO users_logged (id, hash) VALUES (:id, :hash);", array(':id' => $id, ':hash' => $hash));
 	}
 
 	/**
@@ -359,6 +338,7 @@ END;
 			// Expire the cookies (the browser will delete the expired cookies)
 			setcookie("remember_me_id", "", time() - 31536000);
 			setcookie("remember_me_hash", "", time() - 31536000);
+            setcookie("redirect", "", time() - 31536000);
 
 			// Clear cookie records in the database
 			$db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
@@ -366,7 +346,7 @@ END;
 	}
 
 	/**
-	 * Return use data.
+	 * Return user data.
 	 */
 	public function data() {
 		global $db;

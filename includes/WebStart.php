@@ -20,7 +20,7 @@ class MaSIS {
         }
 
         // Check if the user is logged in.
-        if ( $member->sessionIsSet() != true ) {
+        if ( !$member->sessionIsSet() ) {
             $title   = 'Login to MaSIS';
             $content =  $member->login();
             require(ROOT."/pages/login.php");

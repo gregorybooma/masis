@@ -11,9 +11,11 @@ CREATE FUNCTION round (DOUBLE PRECISION, INTEGER) RETURNS DOUBLE PRECISION AS
 'select cast(round(cast($1 as numeric),$2) as double precision);'
 LANGUAGE SQL with(iscachable);
 
-/* Create tables */
+/* Create data types */
 
 CREATE TYPE annstat AS ENUM ('incomplete','complete','moderate','review');
+
+/* Create tables */
 
 CREATE TABLE image_info
 (
@@ -77,4 +79,21 @@ CREATE TABLE areas_image_grouped
     UNIQUE (image_info_id,aphia_id),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
     FOREIGN KEY (aphia_id) REFERENCES species (aphia_id)
+);
+
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL,
+  username VARCHAR NOT NULL,
+  password VARCHAR NOT NULL,
+  email VARCHAR NOT NULL,
+  "date" DATE NOT NULL,
+
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS users_logged (
+  id INTEGER NOT NULL,
+  hash VARCHAR NOT NULL,
+
+  FOREIGN KEY (id) REFERENCES users (id)
 );

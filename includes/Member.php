@@ -7,45 +7,41 @@
  * Modified by Serrano Pereira for MaSIS
  */
 
+
 class Member {
-	/*
-	 * Member Construct
+
+	/**
+	 * Constructor.
 	 *
-	 * Sets some basic settings for extra security
-	 * Starts the session
-	 * Checks last know ip to prevent hijacking
+	 * - Set some basic settings for extra security.
+	 * - Start the session.
+	 * - Check last know IP to prevent hijacking.
 	 */
 	public function __construct() {
-		/* Prevent JavaScript from reaidng Session cookies */
+		// Prevent JavaScript from reading session cookies.
 		ini_set('session.cookie_httponly', true);
-		/* Start Session */
+
+		// Start session.
 		session_start();
-		/* Check if last session is fromt he same pc */
+
+		// Check if last session was from the same computer.
 		if (!isset($_SESSION['last_ip'])) {
 			$_SESSION['last_ip'] = $_SERVER['REMOTE_ADDR'];
 		}
 		if ($_SESSION['last_ip'] !== $_SERVER['REMOTE_ADDR']) {
-			/* Clear the SESSION */
+			// Clear the session.
 			$_SESSION = array();
-			/* Destroy the SESSION */
+			// Destroy the session.
 			session_unset();
 			session_destroy();
 		}
 
-		/* Include Notice & Mailer Class */
+		// Include Notice class
 		require_once("Notice.php");
 	}
 
-
-	/*
-	 * Basic functions
-	 *
-	 * This area contains basic functions that are very usfull
-	 */
-	/*
-	 * CurrentPath functions
-	 *
-	 * Returns the current path of the url
+	/**
+	 * Return the current URL directory.
 	 */
 	public function currentPath() {
 		$currentPath  = 'http';
@@ -54,10 +50,9 @@ class Member {
 		$currentPath .= dirname($_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"]) . '/';
 		return $currentPath;
 	}
-	/*
-	 * CurrentPage functions
-	 *
-	 * Returns the current page of the url
+
+	/**
+	 * Return the current URL.
 	 */
 	public function currentPage() {
 		/* Current Page */
@@ -68,16 +63,8 @@ class Member {
 		return $currentPage;
 	}
 
-
-	/*
-	 * User Authentication
-	 *
-	 * This section contains all the user authentication
-	 */
-	/*
-	 * genSalt
-	 *
-	 * This generates a random salt to be used in a password hasing
+	/**
+	 * Generate a random salt to be used in a password hasing.
 	 */
 	public function genSalt() {
 		/* openssl_random_pseudo_bytes(16) Fallback */
@@ -90,9 +77,8 @@ class Member {
 		/* Return */
 		return $salt;
 	}
-	/*
-	 * genHash
-	 *
+
+	/**
 	 * This creates a hash of the selected password and
 	 * uses a unique salt provided by genSalt function
 	 *
@@ -121,11 +107,9 @@ class Member {
 		/* Return */
 		return $hash;
 	}
-	/*
-	 * verify
-	 *
-	 * This checks if the suppled password is equal
-	 * to the current stored hashed password
+
+	/**
+	 * Verify the password.
 	 *
 	 * @param string $password The provided password
 	 * @param string $existingHash The current stored hashed password
@@ -148,13 +132,9 @@ class Member {
 			return false;
 		}
 	}
-	/*
-	 * login
-	 *
-	 * Returns a login form that user can login with
-	 * It then checks to see if the login is successful
-	 *
-	 * If so create session and/or remember cookie
+
+	/**
+	 * Handle user login.
 	 */
 	public function login() {
 		global $db;
@@ -239,125 +219,109 @@ END;
 		return $notice->report() . $data;
 	}
 
-	/*
-	 * LoggedIn
-	 *
-	 * Check if the user is logged-in
-	 * Check for session and/or cookie is set then reference it
-	 * in the database to see if it is valid if so allow the
-	 * user to login
+	/**
+	 * Check if the user is logged-in.
+     *
+	 * Check if session and/or cookie is set, then reference it in the database
+     * to see if it is valid. If so, allow the user to login.
 	 */
 	public function LoggedIn() {
 		global $db;
-		/* Is a SESSION set? */
+
+        $status = FALSE;
+
+		// Check if a session is set.
 		if (isset($_SESSION['member_valid']) && $_SESSION['member_valid']) {
-			/* Return true */
-			$status = true;
-		/* Is a COOKIE set? */
-		} elseif (isset($_COOKIE['remember_me_id']) && isset($_COOKIE['remember_me_hash'])) {
-			/* If so, find the equivilent in the db */
+			$status = TRUE;
+        }
+
+		// Check if a cookie is set.
+		elseif (isset($_COOKIE['remember_me_id']) && isset($_COOKIE['remember_me_hash'])) {
+			// If so, find the equivilent in the db
 			$user = $db->query('SELECT id, hash FROM users_logged WHERE id = :id', array(':id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
-			/* Does the record exist? */
+
+            // Does the record exist?
 			if ($db->sth->rowCount() >= '1') {
-				/* Do the hashes match? */
+				// Check if the hashes match
 				if ($user->hash == $_COOKIE['remember_me_hash']) {
-					/* If so Create a new cookie and mysql record */
+					// If so, create a new cookie and database record
 					$this->createNewCookie($user->id);
-					/* Return true */
-					$status = true;
-					/* If correct recreate session */
+
+					// And recreate session
 					session_regenerate_id();
 					$_SESSION['member_id'] = $user->id;
 					$_SESSION['member_valid'] = 1;
-				} else {
-					/* Return false */
-					$status = false;
+
+                    $status = TRUE;
 				}
 			}
-		} else {
-			/* Return false */
-			$status = false;
 		}
-		/* Does the user need to login? */
-		if ($status != true) {
-			/* Redirect Cookie */
-			setcookie("redirect", $this->currentPage(), time() + 31536000);  /* expire in 1 year */
-			/* Go to Login */
-			header("Location: index.php?p=login");
+
+		// Decide whether the user needs to login.
+		if ( !$status ) {
+			// Set the redirect cookie (expire in 1 year)
+			setcookie("redirect", $this->currentPage(), time() + 31536000);
+			// Redirect to the login page
+			header("Location: /?p=login");
 		}
 	}
 
-	/*
-	 * sessionIsSet
-	 *
-	 * Checks and sees if the session is set
-	 * Similar to LoggedIn however it does not
-	 * rediect the user
+	/**
+	 * Checks if the session is set.
+     *
+	 * Similar to LoggedIn, but does not redirect the user.
 	 */
 	public function sessionIsSet() {
 		global $db;
-		/* Is a SESSION set? */
+
+        // Check if a session is set.
 		if (isset($_SESSION['member_valid']) && $_SESSION['member_valid']) {
-			/* Return true */
-			$status = true;
-		/* Is a COOKIE set? */
-		} elseif (isset($_COOKIE['remember_me_id']) && isset($_COOKIE['remember_me_hash'])) {
-			/* If so, find the equivilent in the db */
+			return TRUE;
+		}
+        // Check if a cookie is set.
+        if (isset($_COOKIE['remember_me_id']) && isset($_COOKIE['remember_me_hash'])) {
+			// If so, find the equivilent in the db
 			$user = $db->query('SELECT id, hash FROM users_logged WHERE id = :id', array(':id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
-			/* Does the record exist? */
+			// Does the record exist?
 			if ($db->sth->rowCount() >= '1') {
-				/* Do the hashes match? */
+				// Check if the hashes match
 				if ($user->hash == $_COOKIE['remember_me_hash']) {
-					/* If so Create a new cookie and mysql record */
+					// If so, create a new cookie and database record
 					$this->createNewCookie($user->id);
-					/* Return true */
-					$status = true;
-					/* If correct recreate session */
+
+					// And recreate session
 					session_regenerate_id();
 					$_SESSION['member_id'] = $user->id;
 					$_SESSION['member_valid'] = 1;
-				} else {
-					/* Return false */
-					$status = false;
+
+                    return TRUE;
 				}
 			}
-		} else {
-			/* Return false */
-			$status = false;
 		}
-		/* Is Session Set */
-		return $status;
+		return FALSE;
 	}
 
-	/*
-	 * Logout
-	 *
-	 * Resets Session and destroyes it,
-	 * deletes any cookies and redirects to index
+	/**
+	 * Reset and destroy session, delete cookies, and redirects to main page.
 	 */
 	public function logout() {
-		/* Log */
-		if (isset($_SESSION['member_id'])) {
-			$user_id = $_SESSION['member_id'];
-		} else {
-			$user_id = $_COOKIE['remember_me_id'];
-		}
-		/* Clear the SESSION */
+		// Clear the session
 		$_SESSION = array();
-		/* Destroy the SESSION */
+
+		// Destroy the session
 		session_unset();
 		session_destroy();
-		/* Delete all old cookies and user_logged */
+
+		// Delete all old cookies and user_logged
 		if (isset($_COOKIE['remember_me_id'])) {
 			$this->deleteCookie($_COOKIE['remember_me_id']);
 		}
-		/* Redirect */
-		header('Refresh: 2; url=index.php');
+
+		// Redirect to the main page
+		header('Refresh: 2; url=/');
 	}
 
-	/*
-	 * createNewCookie
-	 *
+	/**
 	 * If the remember me feature is enabled and the
 	 * user has selected it create a cookie for them.
 	 * Log it in the database
@@ -366,61 +330,61 @@ END;
 	 */
 	public function createNewCookie($id) {
 		global $db;
-		/* User Rember me feature? */
+
 		if (Config::read('remember') == true) {
-			/* Gen new Hash */
+			// Generate random hash
 			$hash = $this->genHash($this->genSalt(), $_SERVER['REMOTE_ADDR']);
-			/* Set Cookies */
-			setcookie("remember_me_id", $id, time() + 31536000);  /* expire in 1 year */
-			setcookie("remember_me_hash", $hash, time() + 31536000);  /* expire in 1 year */
-			/* Delete old record, if any */
-			$db->query('DELETE FROM users_logged WHERE id = :id', array(':id' => $id));
-			/* Insert new cookie */
-			$db->query('INSERT INTO users_logged(id, hash) VALUES(:id, :hash)', array(':id' => $id, ':hash' => $hash));
+
+			// Set cookies (expire in 1 year)
+			setcookie("remember_me_id", $id, time() + 31536000);
+			setcookie("remember_me_hash", $hash, time() + 31536000);
+
+			// Remove old cookie records from the database.
+			$db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
+
+			// Set new cookie record in the database.
+			$db->query("INSERT INTO users_logged (id, hash) VALUES (:id, :hash);", array(':id' => $id, ':hash' => $hash));
 		}
 	}
 
-	/*
-	 * deleteCookie
-	 *
+	/**
 	 * Delete the users cookie
 	 *
 	 * @param string $id The users id
 	 */
 	public function deleteCookie($id) {
 		global $db;
-		/* User Rember me feature? */
+
 		if (Config::read('remember') == true) {
-			/* Destroy Cookies */
-			setcookie("remember_me_id", "", time() - 31536000);  /* expire in 1 year */
-			setcookie("remember_me_hash", "", time() - 31536000);  /* expire in 1 year */
-			/* Clear DB */
-			$db->query('DELETE FROM users_logged WHERE id = :id', array(':id' => $id));
+			// Expire the cookies (the browser will delete the expired cookies)
+			setcookie("remember_me_id", "", time() - 31536000);
+			setcookie("remember_me_hash", "", time() - 31536000);
+
+			// Clear cookie records in the database
+			$db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
 		}
 	}
 
-	/*
-	 * Member Data
-	 *
-	 * Loads all the member data
+	/**
+	 * Return use data.
 	 */
 	public function data() {
 		global $db;
+
 		if (isset($_SESSION['member_id'])) {
 			$user_id = $_SESSION['member_id'];
-		} elseif (isset($_COOKIE['remember_me_id'])) {
-			$user_id = $_COOKIE['remember_me_id'];
-		} else {
-			$user_id = null;
 		}
-		if (!isset($user_id)) {
-			$notice = new Notice;
-			$notice->add('error', 'Could not retrive user data becuase no user is logged in!');
-			return $notice->report();
-		} else {
-			$user = $db->query('SELECT id, username, email, date FROM users WHERE id = :id', array(':id' => $user_id), 'FETCH_OBJ');
+        elseif (isset($_COOKIE['remember_me_id'])) {
+			$user_id = $_COOKIE['remember_me_id'];
+		}
+        else {
+			$user_id = NULL;
+		}
+
+		if ( isset($user_id) ) {
+			$user = $db->query("SELECT id, username, email, date FROM users WHERE id = :id;", array(':id' => $user_id), 'FETCH_OBJ');
 			return $user;
 		}
+        return NULL;
 	}
-
 }

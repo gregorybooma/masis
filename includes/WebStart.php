@@ -16,14 +16,14 @@ class MaSIS {
             require(ROOT."/settings.php");
         } else {
             require(ROOT."/includes/Setup.php");
-            exit();
+            return;
         }
 
         // Check if the user is logged in.
         if ( $member->sessionIsSet() != true ) {
             $title   = 'Login to MaSIS';
             $content =  $member->login();
-            $this->member_screen($title, $content);
+            require(ROOT."/pages/login.php");
             return;
         }
 
@@ -32,37 +32,18 @@ class MaSIS {
             echo $member->logout();
             $title = 'Logging user out';
             $content = '<div class="notice info">You are being logged out...</div>';
-            $this->member_screen($title, $content);
+            require(ROOT."/pages/login.php");
         }
         elseif ($p == 'settings') {
             $user = $member->data();
             $title   = 'Settings';
-            $content = '<a href="index.php" class="button full">Main page</a>';
-            $this->member_screen($title, $content);
+            $content = '<a href="/" class="button full">Main page</a>';
+            require(ROOT."/pages/login.php");
         }
         else {
             // Load the main page.
             require(ROOT."/pages/main.php");
         }
-    }
-
-    private function member_screen($title, $content) {
-        print <<<END
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>$title</title>
-    <link rel="stylesheet" href="styles/main.css" type="text/css" />
-    <link rel="stylesheet" href="styles/login.css" type="text/css" />
-</head>
-<body>
-<div id="members" class="group">
-    <h1>$title</h1>
-    $content
-</div>
-</body>
-</html>
-END;
     }
 
     /**

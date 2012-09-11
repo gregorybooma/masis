@@ -67,6 +67,7 @@ label span {
 	float: left;
 	padding: 5px 0px 5px 0px;
 }
+
 input, select {
 	clear: both;
 	float: left;
@@ -76,11 +77,12 @@ input[type=submit] {
     width: 300px;
     padding: 6px;
 }
+
 #members {
 	width: 300px;
 	margin: 0px auto;
-	padding: 0px 20px 20px 20px;
 }
+
 form p.remember_me {
 	float: left;
 	line-height: 1em;
@@ -91,97 +93,10 @@ form p.remember_me input[type=checkbox] {
 	margin: 0px 5px 0px 0px;
 	width: 15px;
 }
-.options {
-	padding: 10px 0px 0px 0px;
-	text-align: center;
-}
-.options a {
-	text-decoration: none;
-}
-#captcha {
-	width: 300px;
-}
-#captcha input {
-	float: left;
-	width: 100px;
-}
-#captcha img {
-	float: right;
-}
 
 .button.full {
 	float: left;
 	width: 290px;
 	margin: 0px 0px 10px 0px;
 	text-align: center;
-}
-
-
-/* Layout */
-#wrapper {
-	margin: 0px auto;
-	width: 960px;
-}
-#header {
-	background: #ffffff;
-	font-size: 16px;
-	padding: 5px 20px 5px 20px;
-	margin: 0px 0px 10px 0px;
-	-webkit-border-radius: 0px 0px 3px 3px;
-	-moz-border-radius: 0px 0px 3px 3px;
-	-o-border-radius: 0px 0px 3px 3px;
-	-khtml-border-radius: 0px 0px 3px 3px;
-	border-radius: 0px 0px 3px 3px;
-}
-#header h1#logo {
-	float: left;
-	font-size: 25px;
-}
-#header #user {
-	float: right;
-}
-#header #user #user-info {
-	display: block;
-	text-align: right;
-}
-#header #user ul#user-ops {
-	float: right;
-}
-#header #user ul#user-ops li {
-	float: left;
-	margin: 0px 0px 0px 10px;
-}
-
-ul#navigation {
-	background: #74D1F0;
-	background: #74D1F0 -webkit-repeating-linear-gradient(#74D1F0, #50A3BF);
-	background: #74D1F0 -moz-repeating-linear-gradient(#74D1F0, #50A3BF);
-	border: 1px solid #50A3BF;
-	width: 100%;
-	margin: 0px 0px 10px 0px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	-khtml-border-radius: 3px;
-	border-radius: 3px;
-}
-ul#navigation li {
-	border-right: 1px solid #50A3BF;
-	float: left;
-	padding: 10px;
-
-}
-ul#navigation li:hover {
-	background: #50A3BF;
-	background: #50A3BF -webkit-repeating-linear-gradient(#50A3BF, #74D1F0);
-	background: #50A3BF -moz-repeating-linear-gradient(#50A3BF, #74D1F0);
-}
-ul#navigation li a {
-	color: #ffffff;
-}
-
-@media screen and (max-width: 1024px) {
-	#wrapper {
-		width: 90%;
-	}
 }

@@ -64,17 +64,15 @@ class Member {
     }
 
     /**
-     * Generate a random salt to be used in a password hasing.
+     * Generate a random salt to be used in password hasing.
      */
     public function genSalt() {
-        /* openssl_random_pseudo_bytes(16) Fallback */
+        // openssl_random_pseudo_bytes(16) fallback
         $seed = '';
         for($i = 0; $i < 16; $i++) {
             $seed .= chr(mt_rand(0, 255));
         }
-        /* GenSalt */
         $salt = substr(strtr(base64_encode($seed), '+', '.'), 0, 22);
-        /* Return */
         return $salt;
     }
 
@@ -84,27 +82,11 @@ class Member {
      *
      * @param string $salt The random salt for the password
      * @param string $password The provided password
+     * @param int $rounds Cost parameter for the blowfish algorithm (must be in range 04-31)
      */
-    public function genHash($salt, $password) {
-        /* If Sha512 */
-        if (Config::read('hash') == 'sha512') {
-            /* Hash Password with sha256 */
-            $hash   = $salt . $password;
-            /* ReHash the password */
-            for($i = 0; $i < 100000; $i ++) {
-                $hash = hash('sha512', $hash);
-            }
-            /* Salt + hash = smart */
-            $hash   = $salt . $hash;
-        /* Else Bcrypt by default */
-        } else {
-            /* Explain '$2y$' . $this->rounds . '$' */
-                /* 2a selects bcrypt algorithm */
-                /* $this->rounds is the workload factor */
-            /* GenHash */
-            $hash = crypt($password, '$2y$' . Config::read('bcryptRounds') . '$' . $this->genSalt());
-        }
-        /* Return */
+    public function genHash($salt, $password, $rounds=12) {
+        // 2y selects the bcrypt algorithm
+        $hash = crypt($password, '$2y$' . $rounds . '$' . $this->genSalt());
         return $hash;
     }
 
@@ -201,56 +183,7 @@ END;
     }
 
     /**
-     * Check if the user is logged-in.
-     *
-     * Check if session and/or cookie is set, then reference it in the database
-     * to see if it is valid. If so, allow the user to login.
-     */
-    public function LoggedIn() {
-        global $db;
-
-        $status = FALSE;
-
-        // Check if a session is set.
-        if (isset($_SESSION['member_valid']) && $_SESSION['member_valid']) {
-            $status = TRUE;
-        }
-
-        // Check if a cookie is set.
-        elseif (isset($_COOKIE['remember_me_id']) && isset($_COOKIE['remember_me_hash'])) {
-            // If so, find the equivilent in the db
-            $user = $db->query('SELECT id, hash FROM users_logged WHERE id = :id', array(':id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
-
-            // Does the record exist?
-            if ($db->sth->rowCount() >= '1') {
-                // Check if the hashes match
-                if ($user->hash == $_COOKIE['remember_me_hash']) {
-                    // If so, create a new cookie and database record
-                    $this->createNewCookie($user->id);
-
-                    // And recreate session
-                    session_regenerate_id();
-                    $_SESSION['member_id'] = $user->id;
-                    $_SESSION['member_valid'] = 1;
-
-                    $status = TRUE;
-                }
-            }
-        }
-
-        // Decide whether the user needs to login.
-        if ( !$status ) {
-            // Set the redirect cookie (expire in 1 year)
-            setcookie("redirect", $this->currentPage(), time() + 31536000);
-            // Redirect to the login page
-            header("Location: /?p=login");
-        }
-    }
-
-    /**
      * Checks if the session is set.
-     *
-     * Similar to LoggedIn, but does not redirect the user.
      */
     public function sessionIsSet() {
         global $db;
@@ -334,15 +267,13 @@ END;
     public function deleteCookie($id) {
         global $db;
 
-        if (Config::read('remember') == true) {
-            // Expire the cookies (the browser will delete the expired cookies)
-            setcookie("remember_me_id", "", time() - 31536000);
-            setcookie("remember_me_hash", "", time() - 31536000);
-            setcookie("redirect", "", time() - 31536000);
+        // Expire the cookies (the browser will delete the expired cookies)
+        setcookie("remember_me_id", "", time() - 31536000);
+        setcookie("remember_me_hash", "", time() - 31536000);
+        setcookie("redirect", "", time() - 31536000);
 
-            // Clear cookie records in the database
-            $db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
-        }
+        // Clear cookie records in the database
+        $db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
     }
 
     /**

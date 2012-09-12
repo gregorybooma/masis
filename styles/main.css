@@ -16,6 +16,11 @@ html {
     font-size: 13px;
 }
 
+input {
+    font-family: 'Open Sans','Droid Sans',Arial,sans-serif;
+    font-size: 13px;
+}
+
 dt {
     font-weight: bold;
 }

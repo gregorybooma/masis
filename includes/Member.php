@@ -10,6 +10,8 @@
 
 class Member {
 
+    public $username_suffix = "@mit.edu";
+
     /**
      * Constructor.
      *
@@ -116,23 +118,28 @@ class Member {
 <form name="login" action="{$this->currentPage()}" method="post" class="group">
     <label>
         <span>Username</span>
-        <input type="text" name="username" value="$username" />
+        <br/>
+        <input type="text" name="username" value="{$username}" class="username" /> @mit.edu
     </label>
     <label>
         <span>Password</span>
+        <br/>
         <input type="password" name="password" />
     </label>
-    <div class="clearer"> </div><p class="remember_me"><input type="checkbox" name="remember_me" id="remember_me" value="1" /><label for="remember_me">Remember me</label></p>
+    <label>
+        <input type="checkbox" name="remember_me" value="1" /> <span>Remember me</span>
+    </label>
     <input name="login" type="submit" value="Login" class="button" />
 </form>
 END;
 
         if ( isset($_POST['login']) ) {
             if ( $username && $password ) {
-                $user = $db->query('SELECT id, password FROM users WHERE username = :username', array(':username' => $username), 'FETCH_OBJ');
+                $user = $db->query("SELECT user_id as id, pass_hash FROM users WHERE user_id = :user_id;",
+                    array(':user_id' => $username . $this->username_suffix), 'FETCH_OBJ');
 
                 if ( $db->sth->rowCount() >= '1' ) {
-                    if ( $this->verify($password, $user->password) ) {
+                    if ( $this->verify($password, $user->pass_hash) ) {
                         // Set the user session if verified successfully.
                         session_regenerate_id();
                         $_SESSION['member_id'] = $user->id;
@@ -195,7 +202,7 @@ END;
         // Check if a cookie is set.
         if (isset($_COOKIE['remember_me_id']) && isset($_COOKIE['remember_me_hash'])) {
             // If so, find the equivilent in the db
-            $user = $db->query('SELECT id, hash FROM users_logged WHERE id = :id', array(':id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
+            $user = $db->query("SELECT user_id as id, hash FROM users_logged WHERE user_id = :user_id;", array(':user_id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
             // Does the record exist?
             if ($db->sth->rowCount() >= '1') {
                 // Check if the hashes match
@@ -240,31 +247,31 @@ END;
      * user has selected it create a cookie for them.
      * Log it in the database
      *
-     * @param string $id The users id
+     * @param string $user_id The users id
      */
-    public function createNewCookie($id) {
+    public function createNewCookie($user_id) {
         global $db;
 
         // Generate random hash
         $hash = $this->genHash($this->genSalt(), $_SERVER['REMOTE_ADDR']);
 
         // Set cookies (expire in 1 year)
-        setcookie("remember_me_id", $id, time() + 31536000);
+        setcookie("remember_me_id", $user_id, time() + 31536000);
         setcookie("remember_me_hash", $hash, time() + 31536000);
 
         // Remove old cookie records from the database.
-        $db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
+        $db->query("DELETE FROM users_logged WHERE user_id = :user_id;", array(':user_id' => $user_id));
 
         // Set new cookie record in the database.
-        $db->query("INSERT INTO users_logged (id, hash) VALUES (:id, :hash);", array(':id' => $id, ':hash' => $hash));
+        $db->query("INSERT INTO users_logged (user_id, hash) VALUES (:user_id, :hash);", array(':user_id' => $user_id, ':hash' => $hash));
     }
 
     /**
      * Delete the users cookie
      *
-     * @param string $id The users id
+     * @param string $user_id The users id
      */
-    public function deleteCookie($id) {
+    public function deleteCookie($user_id) {
         global $db;
 
         // Expire the cookies (the browser will delete the expired cookies)
@@ -273,7 +280,7 @@ END;
         setcookie("redirect", "", time() - 31536000);
 
         // Clear cookie records in the database
-        $db->query("DELETE FROM users_logged WHERE id = :id;", array(':id' => $id));
+        $db->query("DELETE FROM users_logged WHERE user_id = :user_id;", array(':user_id' => $user_id));
     }
 
     /**
@@ -293,7 +300,10 @@ END;
         }
 
         if ( isset($user_id) ) {
-            $user = $db->query("SELECT id, username, email, date FROM users WHERE id = :id;", array(':id' => $user_id), 'FETCH_OBJ');
+            $user = $db->query("SELECT * FROM users WHERE user_id = :user_id;", array(':user_id' => $user_id), 'FETCH_OBJ');
+            if ($user) {
+                $user->id = $user_id;
+            }
             return $user;
         }
         return NULL;

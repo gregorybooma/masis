@@ -82,18 +82,16 @@ CREATE TABLE areas_image_grouped
 );
 
 CREATE TABLE IF NOT EXISTS users (
-  id SERIAL,
-  username VARCHAR NOT NULL,
-  password VARCHAR NOT NULL,
-  email VARCHAR NOT NULL,
-  "date" DATE NOT NULL,
+  user_id VARCHAR NOT NULL, -- this is an email address (user@mit.edu)
+  pass_hash VARCHAR NOT NULL, -- preferably bcrypt hash
+  first_name VARCHAR,
 
-  PRIMARY KEY (id)
+  PRIMARY KEY (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS users_logged (
-  id INTEGER NOT NULL,
-  hash VARCHAR NOT NULL,
+  user_id VARCHAR NOT NULL,
+  hash VARCHAR NOT NULL, -- remember_me_hash cookie hash for the login session
 
-  FOREIGN KEY (id) REFERENCES users (id)
+  FOREIGN KEY (user_id) REFERENCES users (user_id)
 );

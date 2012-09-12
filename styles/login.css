@@ -1,3 +1,48 @@
+#members {
+    width: 300px;
+    margin: 0px auto;
+}
+
+/* ClearFix */
+.group:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+/* Forms + Labels */
+label {
+    border-right: 0px;
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    display: block;
+    padding-bottom: 10px;
+}
+label span {
+    line-height: 1.5em;
+}
+
+input, select {
+    width: 288px;
+}
+input.username {
+    width: 200px;
+}
+input[type=submit] {
+    width: 300px;
+    padding: 6px;
+}
+
+.button.full {
+    float: left;
+    width: 290px;
+    margin: 0px 0px 10px 0px;
+    text-align: center;
+}
+
 /* Notice */
 .notice{
     background:#efefef;
@@ -44,59 +89,3 @@
     .notice.info:before {
         background: url("images/info.png") no-repeat;
     }
-
-/* ClearFix */
-.group:after {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-}
-
-/* Forms + Labels */
-label {
-    border-right: 0px;
-    clear: clear;
-    float: left;
-    font-weight: bold;
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
-}
-label span {
-    float: left;
-    padding: 5px 0px 5px 0px;
-}
-
-input, select {
-    clear: both;
-    float: left;
-    width: 288px;
-}
-input[type=submit] {
-    width: 300px;
-    padding: 6px;
-}
-
-#members {
-    width: 300px;
-    margin: 0px auto;
-}
-
-form p.remember_me {
-    float: left;
-    line-height: 1em;
-    padding: 0px 0px 10px 0px;
-}
-form p.remember_me input[type=checkbox] {
-    float: left;
-    margin: 0px 5px 0px 0px;
-    width: 15px;
-}
-
-.button.full {
-    float: left;
-    width: 290px;
-    margin: 0px 0px 10px 0px;
-    text-align: center;
-}

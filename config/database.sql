@@ -59,6 +59,9 @@ CREATE TABLE vectors
     vector_wkt VARCHAR NOT NULL,
     area_pixels INTEGER,
     area_m2 DOUBLE PRECISION,
+    created_by VARCHAR NOT NULL, -- creator user ID
+    updated_by VARCHAR, -- updater user ID
+    updated_on TIMESTAMP NOT NULL DEFAULT NOW(), -- create/update time
     remarks VARCHAR(50),
 
     PRIMARY KEY (id),

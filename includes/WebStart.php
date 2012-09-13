@@ -9,6 +9,9 @@ class MaSIS {
     public $page_title;
     public $page_content;
 
+    /**
+     * Load the web content.
+     */
     public function start() {
         global $member;
 
@@ -44,6 +47,13 @@ class MaSIS {
         $this->load_page($p);
     }
 
+    /**
+     * Load a page.
+     *
+     * The file /pages/{$page}.php will be included.
+     *
+     * @param string $page The page to be loaded.
+     */
     public function load_page($page) {
         global $member;
 

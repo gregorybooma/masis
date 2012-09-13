@@ -274,6 +274,11 @@ class Database {
     }
 
     public function save_vectors($vectors) {
+        global $member;
+
+        // Get user info.
+        $user = $member->data();
+
         // Start a database transaction.
         $this->dbh->beginTransaction();
 
@@ -310,6 +315,7 @@ class Database {
                         vector_wkt,
                         area_pixels,
                         area_m2,
+                        created_by,
                         remarks)
                     VALUES (
                         :image_id,
@@ -318,6 +324,7 @@ class Database {
                         :vector_wkt,
                         :area_pixels,
                         :area_m2,
+                        :user_id,
                         :species_name);";
             }
             else {
@@ -326,25 +333,30 @@ class Database {
                         vector_wkt,
                         area_pixels,
                         area_m2,
+                        updated_by,
+                        updated_on,
                         remarks
                     ) = (
                         :aphia_id,
                         :vector_wkt,
                         :area_pixels,
                         :area_m2,
+                        :user_id,
+                        NOW(),
                         :species_name)
                     WHERE image_info_id = :image_id
                         AND vector_id = :id;";
             }
             try {
                 $sth = $this->dbh->prepare($query);
+                $sth->bindParam(":id", $vector['id'], PDO::PARAM_STR);
+                $sth->bindParam(":image_id", $vector['image_id'], PDO::PARAM_INT);
                 $sth->bindParam(":aphia_id", $vector['species_id'], PDO::PARAM_INT);
                 $sth->bindParam(":vector_wkt", $vector['vector_wkt'], PDO::PARAM_STR);
                 $sth->bindParam(":area_pixels", $vector['area_pixels'], PDO::PARAM_INT);
                 $sth->bindParam(":area_m2", $vector['area_m2'], PDO::PARAM_STR);
+                $sth->bindParam(":user_id", $user->id, PDO::PARAM_STR);
                 $sth->bindParam(":species_name", $vector['species_name'], PDO::PARAM_STR);
-                $sth->bindParam(":image_id", $vector['image_id'], PDO::PARAM_INT);
-                $sth->bindParam(":id", $vector['id'], PDO::PARAM_STR);
                 $sth->execute();
             }
             catch (Exception $e) {

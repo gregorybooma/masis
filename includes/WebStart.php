@@ -6,6 +6,8 @@ define('MASIS', true);
 class MaSIS {
     public $lens_angle_x = 0.510472157;
     public $lens_angle_y = 0.386512004;
+    public $page_title;
+    public $page_content;
 
     public function start() {
         global $member;
@@ -21,28 +23,38 @@ class MaSIS {
 
         // Check if the user is logged in.
         if ( !$member->sessionIsSet() ) {
-            $title   = 'Login to MaSIS';
-            $content =  $member->login();
-            require(ROOT."/pages/login.php");
+            // If not, show the login screen.
+            $this->page_title   = 'Login to MaSIS';
+            $this->page_content =  $member->login();
+            $this->load_page('login');
             return;
         }
 
-        $p = isset($_GET['p']) ? $_GET['p'] : null;
+        $p = isset($_GET['p']) ? $_GET['p'] : 'main';
+
         if ($p == 'logout') {
+            // Show the logout screen.
             echo $member->logout();
-            $title = 'Logging user out';
-            $content = '<div class="notice info">You are being logged out...</div>';
-            require(ROOT."/pages/login.php");
+            $this->page_title = 'Logging user out';
+            $this->page_content = '<div class="notice info">You are being logged out...</div>';
+            $this->load_page('login');
+            return;
         }
-        elseif ($p == 'settings') {
-            $user = $member->data();
-            $title   = 'Settings';
-            $content = '<a href="/" class="button full">Main page</a>';
-            require(ROOT."/pages/login.php");
-        }
-        else {
-            // Load the main page.
-            require(ROOT."/pages/main.php");
+
+        $this->load_page($p);
+    }
+
+    public function load_page($page) {
+        global $member;
+
+        $path = ROOT.'/pages/'.$page.'.php';
+        if ( is_file($path) ) {
+            require_once($path);
+        } else {
+            header('HTTP/1.x 404 Not Found');
+            print "<h1>Page Not Found</h1>";
+            print "<p>That page doesn't seem to exist.</p>";
+            print "<p>Return to the <a href=\"/\">main page</a>.</p>";
         }
     }
 

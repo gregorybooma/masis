@@ -31,7 +31,6 @@ $user = $member->data();
             <div id="user-options">
                 <ul>
                     <li>Hello, <?php print $user->first_name; ?></li>
-                    <li><a href="?p=settings" class="button">Account</a></li>
                     <li><a href="?p=logout" class="button">Logout</a></li>
                 </ul>
             </div>

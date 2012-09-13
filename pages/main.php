@@ -42,7 +42,6 @@ $user = $member->data();
         <ul>
             <li><a href="#tab-workspace">Workspace</a></li>
             <li><a href="#tab-statistics">Statistics</a></li>
-            <li><a href="#tab-maintenance">Maintenance</a></li>
         </ul>
 
         <!-- tab workspace -->
@@ -159,15 +158,6 @@ $user = $member->data();
             <p>Coverage based on images where the species was found.</p>
             <div id="species-coverage-where-present">Loading...</div>
         </div> <!-- end tab statistics -->
-
-        <!-- tab maintenance -->
-        <div id="tab-maintenance">
-            <div class="action-buttons">
-                <ul>
-                    <li><a href="#" onclick="onSetDatabaseAreas(); return false;" class="button">Set Areas in the Database</a></li>
-                </ul>
-            </div>
-        </div> <!-- end tab maintenance -->
 
     </div> <!-- end tabs -->
     </div> <!-- end content-wrapper -->

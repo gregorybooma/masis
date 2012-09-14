@@ -41,10 +41,10 @@ class HTML {
                     foreach ($file as $filename) {
                         if ( file_exists($dir . $filename) ) {
                             $ext = preg_replace('/^.*\./', '', $filename);
-                            $icons = "";
-                            $icons .= !empty($row['annotation_status']) ? "<span class='icon icon-annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
-                            $icons .= "<span class='icon icon-vector' title='Total selections: {$row['n_vectors']}'>{$row['n_vectors']}</span>";
-                            echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><div class='icon-indicators'>{$icons}</div></li>";
+                            $indicators = "";
+                            $indicators .= !empty($row['annotation_status']) ? "<span class='icon annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
+                            $indicators .= $row['n_vectors'] > 0 ? "<span class='vector-count' title='{$row['n_vectors']} selection(s)'>{$row['n_vectors']}</span>" : "";
+                            echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><span class='indicators'>{$indicators}</span></li>";
                             break;
                         }
                     }

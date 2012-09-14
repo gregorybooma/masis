@@ -14,6 +14,7 @@ LANGUAGE SQL with(iscachable);
 /* Create data types */
 
 CREATE TYPE annstat AS ENUM ('incomplete','complete','moderate','review');
+CREATE TYPE substrdom AS ENUM ('dominant','subdominant');
 
 /* Create tables */
 
@@ -31,6 +32,27 @@ CREATE TABLE image_info
     UNIQUE (img_dir, file_name)
 );
 CREATE INDEX ON image_info (img_dir);
+
+CREATE TABLE substrate_types
+(
+    id SERIAL,
+    name VARCHAR NOT NULL,
+    description VARCHAR,
+
+    PRIMARY KEY (id),
+    UNIQUE (name)
+);
+
+CREATE TABLE image_substrate
+(
+    image_info_id INTEGER NOT NULL,
+    substrate_types_id INTEGER NOT NULL,
+    dominance substrdom NOT NULL,
+
+    UNIQUE (image_info_id, substrate_types_id),
+    FOREIGN KEY (image_info_id) REFERENCES image_info (id),
+    FOREIGN KEY (substrate_types_id) REFERENCES substrate_types (id)
+);
 
 CREATE TABLE species
 (

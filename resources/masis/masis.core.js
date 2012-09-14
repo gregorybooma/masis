@@ -493,14 +493,14 @@ function onAddCategory(select_id, list_id) {
  * Get the category names from a category list.
  *
  * @param {String} list_id The ID for the category list
- * @returns {Array} Category names
+ * @returns {Array} Unique category names
  */
 function getCategories(list_id) {
     var list = [];
     $('#' + list_id +' li .jellybean .value').each(function (i) {
         list.push( $(this).text() );
     });
-    return list;
+    return $.unique(list);
 }
 
 /**

@@ -117,7 +117,8 @@ $user = $member->data();
                 <!-- buttons -->
                 <div id="workspace-buttons" class="action-buttons">
                     <ul>
-                        <li><a href="#" onclick="onCommit(); return false;" class="button">Commit</a></li>
+                        <li><a href="#" onclick="onCommit(); return false;" class="button">Save Selections</a></li>
+                        <li><a href="#" onclick="onAnnotate(); return false;" class="button">Annotate Image</a></li>
                     </ul>
                 </div>
                 <!-- end buttons -->
@@ -191,6 +192,29 @@ $user = $member->data();
             </fieldset>
             <p>Assigned to: <span id="assign-species-label" class="text-italic"><a href="#">Unassigned</a></span></p>
             </form>
+        </div>
+        <div id="dialog-annotate" title="Annotate">
+            <fieldset>
+                <legend>Dominant Substrate</legend>
+                <select id="select-dominant-substrate">
+                    <option value="">Select substrate type...</option>
+                </select>
+                <a href="#" onclick="onAddCategory('select-dominant-substrate', 'dominant-substrates-list'); return false;" class="button">Add</a>
+                <div class="category-editor">
+                    <ul id="dominant-substrates-list"></ul>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Subdominant Substrate</legend>
+                <select id="select-subdominant-substrate">
+                    <option value="">Select substrate type...</option>
+                </select>
+                <a href="#" onclick="onAddCategory('select-subdominant-substrate', 'subdominant-substrates-list'); return false;" class="button">Add</a>
+                <div class="category-editor">
+                    <ul id="subdominant-substrates-list"></ul>
+                </div>
+            </fieldset>
         </div>
     </div>
     <!-- end dialogs -->

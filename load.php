@@ -39,6 +39,12 @@ switch ($do) {
             $json->get_species_from_worms($_GET['term'], $searchpar);
         }
         break;
+    case 'get_substrate_types':
+        $term = !empty($_GET['term']) ? $_GET['term'] : null;
+        require("$root/includes/JSON.php");
+        $json = new JSON();
+        $json->get_substrate_types($term);
+        break;
     case 'get_vectors':
         if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
         require("$root/includes/JSON.php");

@@ -16,6 +16,11 @@ html {
     font-size: 13px;
 }
 
+fieldset {
+    border: 1px solid #CCCCCC;
+    margin-bottom: 10px;
+}
+
 input {
     font-family: 'Open Sans','Droid Sans',Arial,sans-serif;
     font-size: 13px;
@@ -364,4 +369,51 @@ div.dataTables_wrapper .ui-widget-header {
     font-size: 0;
     height: 0;
     visibility: hidden;
+}
+
+/*----------------------------------------------------
+ * Category editor
+ * Inspired by LinkedIn.com's jellybean-editor
+ *----------------------------------------------------*/
+
+.category-editor ul {
+    background-color: #454545;
+    border: 1px solid #666666;
+    padding: 5px;
+    list-style: none outside none;
+}
+
+.category-editor .category-container-item {
+    display: inline-block;
+    margin: 3px;
+    position: relative;
+    vertical-align: middle;
+}
+
+.category-editor .jellybean {
+    background-color: #666666;
+    border-radius: 3px 3px 3px 3px;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 13px;
+    left: 0;
+    padding: 3px 5px;
+    position: static;
+    vertical-align: bottom;
+}
+.category-editor .jellybean:hover {
+    background-color: #777777;
+}
+
+.category-editor .jellybean .remove {
+    color: #000000;
+    font-size: 11px;
+    font-weight: bold;
+    padding-left: 5px;
+    position: relative;
+    top: -1px;
+}
+.category-editor .jellybean .remove:hover {
+    color: #A52A2A;
 }

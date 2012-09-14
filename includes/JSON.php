@@ -92,6 +92,20 @@ class JSON {
         print json_encode($species);
     }
 
+    public function get_substrate_types($term=null) {
+        global $db;
+
+        $sth = $db->get_substrate_types($term);
+        $types = array();
+        while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
+            $types[] = array(
+                'value' => $row['id'],
+                'label' => $row['name']
+                );
+        }
+        print json_encode($types);
+    }
+
     public function get_vectors($image_id) {
         global $db;
 

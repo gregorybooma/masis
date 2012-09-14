@@ -81,7 +81,7 @@ class Database {
 	}
 
     /**
-     * Get the altitude for an image file.
+     * Get the attributes for an image file.
      *
      * @param string $dir Directory name for the image file (e.g. iCamera_2010-08-18_1924_session0010).
      * @param array $filename File name of the image file (e.g. 004624.jpeg).
@@ -245,6 +245,34 @@ class Database {
         try {
             $sth = $this->dbh->prepare("SELECT * FROM species WHERE scientific_name ~* :term;");
             $sth->bindParam(":term", $term, PDO::PARAM_STR);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth;
+    }
+
+    /**
+     * Return a list of substrate types matching the search term.
+     *
+     * This method can be used for the Autocomplete feature of jQuery UI.
+     *
+     * @param $term The keyword to match against substrate types in the database.
+     * @return A PDO statement handler which returns the results.
+     */
+    public function get_substrate_types($term=null) {
+        if ($term) {
+            $term = "^".$term;
+            $query = "SELECT * FROM substrate_types WHERE name ~* :term;";
+        }
+        else {
+            $query = "SELECT * FROM substrate_types ORDER BY name;";
+        }
+
+        try {
+            $sth = $this->dbh->prepare($query);
+            if ($term) $sth->bindParam(":term", $term, PDO::PARAM_STR);
             $sth->execute();
         }
         catch (Exception $e) {

@@ -90,6 +90,17 @@ function initInterface() {
         );
     });
 
+    // Populate select menu's
+    $.getJSON('load.php?do=get_substrate_types', function(data) {
+        var html = '';
+        var len = data.length;
+        for (var i = 0; i< len; i++) {
+            html += '<option value="' + data[i].value + '">' + data[i].label + '</option>\n';
+        }
+        $('select#select-dominant-substrate').append(html);
+        $('select#select-subdominant-substrate').append(html);
+    });
+
     // Initialize dialogs.
     $( "#dialog-on-commit" ).dialog({
         autoOpen: false,
@@ -141,6 +152,26 @@ function initInterface() {
         },
         close: function() {
             $('#select-species').autocomplete("destroy");
+        }
+    });
+    $( "#dialog-annotate" ).dialog({
+        autoOpen: false,
+        width: 400,
+        modal: true,
+        buttons: {
+            Cancel: function() {
+                $(this).dialog("close");
+            },
+            Save: function() {
+                // TODO
+                $(this).dialog("close");
+            }
+        },
+        close: function() {
+            // Clear the substrate input field.
+            $('#select-substrate-type').val("");
+            // Clear the substrate types list.
+            $('#substrate-types-list').empty();
         }
     });
 }
@@ -425,12 +456,58 @@ function onFeatureSelect(feature) {
     */
 }
 
-// Remove the assign species input field when a vector is unselected.
+/**
+ * Remove the assign-species input field.
+ */
 function onFeatureUnselect(feature) {
     $('#assign-species').remove();
 }
 
-// Load vectors from a vectors object to the vector layer.
+/**
+ * Open the annotate dialog.
+ */
+function onAnnotate() {
+    // Open dialog.
+    $("#dialog-annotate").dialog('open');
+}
+
+/**
+ * Add a category item to a catefory-editor.
+ *
+ * @param {String} select_id The ID for the category selector
+ * @param {String} list_id The ID for the category list to add the selected category to
+ */
+function onAddCategory(select_id, list_id) {
+    // Get the selected category name.
+    var e = document.getElementById(select_id);
+    var value = e.options[e.selectedIndex].value;
+    var label = e.options[e.selectedIndex].text;
+
+    // Add the category to the category list.
+    if (value) {
+        $('#'+list_id).append('<li class="category-container-item"><span class="jellybean"><span class="value">' + label + '</span><span class="remove">×</span></span></li>');
+    }
+}
+
+/**
+ * Get the category names from a category list.
+ *
+ * @param {String} list_id The ID for the category list
+ * @returns {Array} Category names
+ */
+function getCategories(list_id) {
+    var list = [];
+    $('#' + list_id +' li .jellybean .value').each(function (i) {
+        list.push( $(this).text() );
+    });
+    return list;
+}
+
+/**
+ * Load vectors from a vectors object to the vector layer.
+ *
+ * @param {Object} vectors An object with vector objects from the database
+ */
 function onLoadVectors(vectors) {
     var Feature = OpenLayers.Feature.Vector;
     var Geometry = OpenLayers.Geometry;

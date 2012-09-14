@@ -308,32 +308,31 @@ ul.jqueryFileTree a:hover {
     background-color: #555555;
 }
 
-/*----------------------------------------------------
- * Indicator icons
- *----------------------------------------------------*/
-
-.icon {
-    line-height: 18px;
-    padding: 0 0 6px 18px;
-}
-
-.icon-indicators {
+.jqueryFileTree .indicators {
     float: right;
     padding: 0 3px;
     position: relative;
     top: -1.5em;
 }
 
-.icon-annotation-complete {
+.jqueryFileTree .indicators .icon {
+    line-height: 18px;
+    padding: 0 0 6px 18px;
+}
+
+.jqueryFileTree .indicators .annotation-complete {
     background: url("images/accept.png") no-repeat;
 }
 
-.icon-annotation-review {
+.jqueryFileTree .indicators .annotation-review {
     background: url("images/exclamation.png") no-repeat;
 }
 
-.icon-vector {
-    background: url("images/select.png") no-repeat;
+.jqueryFileTree .indicators .vector-count {
+    background-color: #555555;
+    border-radius: 3px;
+    cursor: default;
+    padding: 0 4px;
 }
 
 /*----------------------------------------------------

@@ -13,6 +13,7 @@ $user = $member->data();
     <link rel="stylesheet" href="resources/jquery.datatables/css/jquery.dataTables_themeroller.css" type="text/css" />
     <link rel="stylesheet" href="styles/main.css" type="text/css" />
     <!-- javascripts: -->
+    <script src="resources/underscore/underscore-min.js" type="text/javascript"></script>
     <script src="resources/jquery/jquery.min.js" type="text/javascript"></script>
     <script src="resources/jquery.ui/jquery-ui.min.js" type="text/javascript"></script>
     <script src="resources/jquery.filetree/jquery.filetree.js" type="text/javascript"></script>

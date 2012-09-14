@@ -500,7 +500,7 @@ function getCategories(list_id) {
     $('#' + list_id +' li .jellybean .value').each(function (i) {
         list.push( $(this).text() );
     });
-    return $.unique(list);
+    return _.uniq(list);
 }
 
 /**

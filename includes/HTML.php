@@ -46,7 +46,7 @@ class HTML {
                             $indicators = "";
                             $indicators .= $row['n_vectors'] > 0 ? "<span class='vector-count' title='{$row['n_vectors']} selection(s)'>{$row['n_vectors']}</span>" : "";
                             $indicators .= $row['substrate_annotated'] ? "<span class='icon substrate-annotated' title='Substrate is annotated'></span>" : "";
-                            $indicators .= !empty($row['annotation_status']) ? "<span class='icon annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
+                            $indicators .= in_array($row['annotation_status'], array('complete','review')) ? "<span class='icon annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
 
                             echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><span class='indicators'>{$indicators}</span></li>";
                             break;

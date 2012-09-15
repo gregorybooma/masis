@@ -328,10 +328,15 @@ ul.jqueryFileTree a:hover {
     background: url("images/exclamation.png") no-repeat;
 }
 
+.jqueryFileTree .indicators .substrate-annotated {
+    background: url("images/soil_layers.png") no-repeat;
+}
+
 .jqueryFileTree .indicators .vector-count {
     background-color: #555555;
-    border-radius: 3px;
+    border-radius: 3px 3px 3px 3px;
     cursor: default;
+    margin: 0 2px;
     padding: 0 4px;
 }
 

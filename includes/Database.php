@@ -108,9 +108,11 @@ class Database {
         try {
             $sth = $this->dbh->prepare("SELECT i.file_name,
                     i.annotation_status,
-                    COUNT(v.id) AS n_vectors
+                    COUNT(v.id) AS n_vectors,
+                    BIT_OR(s.substrate_types_id) AS substrate_annotated
                 FROM image_info i
                     LEFT OUTER JOIN vectors v ON v.image_info_id = i.id
+                    LEFT OUTER JOIN image_substrate s ON s.image_info_id = i.id
                 WHERE i.img_dir = :dir
                 GROUP BY i.file_name, i.annotation_status
                 ORDER BY i.file_name;");

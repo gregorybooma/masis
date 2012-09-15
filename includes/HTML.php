@@ -40,10 +40,14 @@ class HTML {
                     $file[] = preg_replace($ext_pattern, '.png', $row['file_name']);
                     foreach ($file as $filename) {
                         if ( file_exists($dir . $filename) ) {
+                            // Set the file extension.
                             $ext = preg_replace('/^.*\./', '', $filename);
+                            // Set the indicator icons.
                             $indicators = "";
-                            $indicators .= !empty($row['annotation_status']) ? "<span class='icon annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
                             $indicators .= $row['n_vectors'] > 0 ? "<span class='vector-count' title='{$row['n_vectors']} selection(s)'>{$row['n_vectors']}</span>" : "";
+                            $indicators .= $row['substrate_annotated'] ? "<span class='icon substrate-annotated' title='Substrate is annotated'></span>" : "";
+                            $indicators .= !empty($row['annotation_status']) ? "<span class='icon annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
+
                             echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><span class='indicators'>{$indicators}</span></li>";
                             break;
                         }

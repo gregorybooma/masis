@@ -498,13 +498,14 @@ function onAnnotate() {
     });
 
     // Set the image annotation status input to the right value.
-    var $radios = $('input:radio[name=annotation-status]');
+    var radios = $('input:radio[name=annotation-status]');
     if ( imageObject.annotation_status ) {
-        $radios.filter('[value=' + imageObject.annotation_status + ']').attr('checked', true);
+        radios.filter('[value=' + imageObject.annotation_status + ']').attr('checked', true);
     }
     else {
-        $radios.filter('[value=incomplete]').attr('checked', true);
+        radios.filter('[value=incomplete]').attr('checked', true);
     }
+    $('#image-annotation-status input:radio').button("refresh");
 
     // Open dialog.
     $("#dialog-annotate").dialog('open');

@@ -75,15 +75,12 @@ function initInterface() {
     // Transform feature controls into a jQuery UI button set.
     $("#feature-controls").buttonset();
     $("#regular-polygon-controls").buttonset();
-    //$("#image-annotation-status").buttonset();
+    $("#image-annotation-status").buttonset();
 
     // Disable feature controls.
     $("#feature-controls input:radio").button("disable");
 
     // Set button actions.
-    $("input:radio[name=annotation-status]").change(function() {
-        onSetImageAnnotationStatus(this);
-    });
     $("#select-species-searchpar").change(function() {
         $('#select-species').autocomplete(
             "option", "source", "load.php?do=get_species&searchpar=" + $("#select-species-searchpar option:selected").val()
@@ -164,6 +161,7 @@ function initInterface() {
             },
             Save: function() {
                 onSaveSubstrateAnnotations();
+                onSetImageAnnotationStatus();
                 $(this).dialog("close");
             }
         },
@@ -245,16 +243,21 @@ function onSetDatabaseAreas() {
     });
 }
 
-function onSetImageAnnotationStatus(element) {
+function onSetImageAnnotationStatus() {
     if (!imageObject) return;
+    var element = $("input:radio[name=annotation-status]:checked");
     $.ajax({
         type: "GET",
         url: "fetch.php?do=set_annotation_status",
         dataType: "json",
-        data: {image_id: imageObject.id, status: element.value},
+        data: {image_id: imageObject.id, status: element.val()},
         success: function(data) {
             if (data.result != 'success') {
                 $("#dialog-unknown-error").dialog('open');
+            }
+            else {
+                // Update the imageObject annotation status.
+                imageObject.annotation_status = element.val();
             }
         }
     });
@@ -493,6 +496,15 @@ function onAnnotate() {
             });
         }
     });
+
+    // Set the image annotation status input to the right value.
+    var $radios = $('input:radio[name=annotation-status]');
+    if ( imageObject.annotation_status ) {
+        $radios.filter('[value=' + imageObject.annotation_status + ']').attr('checked', true);
+    }
+    else {
+        $radios.filter('[value=incomplete]').attr('checked', true);
+    }
 
     // Open dialog.
     $("#dialog-annotate").dialog('open');
@@ -759,15 +771,6 @@ function loadImage(img) {
             onLoadVectors(vectors);
         }
     });
-
-    // Set the image annotation status input to the right value.
-    var $radios = $('input:radio[name=annotation-status]');
-    if ( img.annotation_status ) {
-        $radios.filter('[value=' + img.annotation_status + ']').attr('checked', true);
-    }
-    else {
-        $radios.filter('[value=incomplete]').attr('checked', true);
-    }
 }
 
 function updatePageImageInfo(img) {

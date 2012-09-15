@@ -91,16 +91,6 @@ $user = $member->data();
                     <h1><a href="#">Image Information</a></h1>
                     <div>
                         <div id="image-info"></div>
-
-                        <h3>Annotation status:</h3>
-                        <div id="image-annotation-status">
-                            <input type="radio" name="annotation-status" value="incomplete" id="annotation-status-incomplete" checked="checked" />
-                            <label for="annotation-status-incomplete">Incomplete</label><br/>
-                            <input type="radio" name="annotation-status" value="review" id="annotation-status-review" />
-                            <label for="annotation-status-review">Needs Review</label><br/>
-                            <input type="radio" name="annotation-status" value="complete" id="annotation-status-complete" />
-                            <label for="annotation-status-complete">Complete</label><br/>
-                        </div>
                     </div>
                 </div>
                 <!-- end image info -->
@@ -214,6 +204,18 @@ $user = $member->data();
                 <a href="#" onclick="onAddCategory('select-subdominant-substrate', 'subdominant-substrates-list'); return false;" class="button">Add</a>
                 <div class="category-editor">
                     <ul id="subdominant-substrates-list"></ul>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Annotation status</legend>
+                <div id="image-annotation-status">
+                    <input type="radio" name="annotation-status" value="incomplete" id="annotation-status-incomplete" checked="checked" />
+                    <label for="annotation-status-incomplete">Incomplete</label>
+                    <input type="radio" name="annotation-status" value="review" id="annotation-status-review" />
+                    <label for="annotation-status-review">Needs Review</label>
+                    <input type="radio" name="annotation-status" value="complete" id="annotation-status-complete" />
+                    <label for="annotation-status-complete">Complete</label>
                 </div>
             </fieldset>
         </div>

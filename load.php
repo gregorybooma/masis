@@ -25,6 +25,7 @@ switch ($do) {
         $html = new HTML();
         $html->get_file_list($dir);
         break;
+
     case 'get_image_info':
         if ( empty($_GET['path']) ) exit("Parameter `path` is not set.");
         require("$root/includes/JSON.php");
@@ -51,6 +52,13 @@ switch ($do) {
         $json = new JSON();
         $json->get_vectors($_GET['image_id']);
         break;
+    case 'get_substrate_annotations':
+        if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
+        require("$root/includes/JSON.php");
+        $json = new JSON();
+        $json->get_substrate_annotations($_GET['image_id']);
+        break;
+
     case 'table_image_vectors':
         if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
         require("$root/includes/DataTable.php");

@@ -163,7 +163,7 @@ function initInterface() {
                 $(this).dialog("close");
             },
             Save: function() {
-                // TODO
+                onSaveSubstrateAnnotations();
                 $(this).dialog("close");
             }
         },
@@ -464,9 +464,36 @@ function onFeatureUnselect(feature) {
 }
 
 /**
- * Open the annotate dialog.
+ * Prepare and open the annotate dialog.
+ *
+ * Preparations:
+ *  - Load the substrate annotations from the database and populate the
+ *    substrate lists.
  */
 function onAnnotate() {
+    if (!imageObject) return;
+
+    // Load and set the substrate annotations.
+    $('#dominant-substrates-list').empty();
+    $('#subdominant-substrates-list').empty();
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=get_substrate_annotations",
+        dataType: "json",
+        data: {image_id: imageObject.id},
+        success: function(data) {
+            for (i in data) {
+                var o = data[i];
+                $('#'+o.dominance+'-substrates-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.name + '</span><span class="remove">×</span></span></li>');
+            }
+
+            // Set the callback function for the remove buttons.
+            $(".jellybean span.remove").click(function() {
+                $(this).parents('li.category-container-item').remove();
+            });
+        }
+    });
+
     // Open dialog.
     $("#dialog-annotate").dialog('open');
 }
@@ -486,14 +513,19 @@ function onAddCategory(select_id, list_id) {
     // Add the category to the category list.
     if (value) {
         $('#'+list_id).append('<li class="category-container-item"><span class="jellybean"><span class="value">' + label + '</span><span class="remove">×</span></span></li>');
+
+        // Set the callback function for the remove button.
+        $(".jellybean span.remove").click(function() {
+            $(this).parents('li.category-container-item').remove();
+        });
     }
 }
 
 /**
- * Get the category names from a category list.
+ * Return a unique list of category names from a category list.
  *
  * @param {String} list_id The ID for the category list
- * @returns {Array} Unique category names
+ * @return {Array} Category names
  */
 function getCategories(list_id) {
     var list = [];
@@ -501,6 +533,43 @@ function getCategories(list_id) {
         list.push( $(this).text() );
     });
     return _.uniq(list);
+}
+
+/**
+ * Return a object containing all category lists with selections.
+ *
+ * The object contains selections for each following category list. Each
+ * attribute in the object is a list. The name of each attribute corresponds
+ * to the list ID. Each attribute is an array containing the selections.
+ *
+ * @param {Array} lists ID's of the category lists
+ * @return {Object} Object with category selections
+ */
+function getCategorySelections(lists) {
+    var categories = {};
+    for (i in lists) {
+        categories[lists[i]] = getCategories(lists[i]);
+    }
+    return categories;
+}
+
+/**
+ * Set the substrate annotations for the current image in the database.
+ */
+function onSaveSubstrateAnnotations() {
+    if (!imageObject) return;
+    $.ajax({
+        type: "POST",
+        url: "fetch.php?do=set_substrate_annotations",
+        dataType: "json",
+        data: {image_id: imageObject.id,
+            annotations: getCategorySelections(['dominant-substrates-list', 'subdominant-substrates-list'])},
+        success: function(data) {
+            if (data.result != 'success') {
+                $("#dialog-unknown-error").dialog('open');
+            }
+        }
+    });
 }
 
 /**

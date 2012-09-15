@@ -106,6 +106,14 @@ class JSON {
         print json_encode($types);
     }
 
+    public function get_substrate_annotations($image_id) {
+        global $db;
+
+        $sth = $db->get_substrate_annotations($image_id);
+        $annotations = $sth->fetchAll(PDO::FETCH_OBJ);
+        print json_encode($annotations);
+    }
+
     public function get_vectors($image_id) {
         global $db;
 

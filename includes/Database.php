@@ -506,4 +506,79 @@ class Database {
         }
     }
 
+    public function get_substrate_annotations($image_id) {
+        try {
+            $sth = $this->dbh->prepare("SELECT s.id, s.name, i.dominance
+                FROM image_substrate i
+                    INNER JOIN substrate_types s ON s.id = i.substrate_types_id
+                WHERE i.image_info_id = :image_id;");
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth;
+    }
+
+    /**
+     * Set the substrate annotations for an image.
+     *
+     * @param int $image_id The id for the image (image_info.id).
+     * @param array $annotations The annotations.
+     */
+    public function set_substrate_annotations($image_id, $annotations) {
+        // Map substrate name to substrate ID.
+        $name2id = array();
+        try {
+            $sth = $this->dbh->prepare("SELECT id, name FROM substrate_types;");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        while ( $cat = $sth->fetch(PDO::FETCH_OBJ) ) {
+            $name2id[$cat->name] = $cat->id;
+        }
+
+        // Start a database transaction.
+        $this->dbh->beginTransaction();
+
+        // Delete all substrate annotations for this image.
+        try {
+            $sth = $this->dbh->prepare("DELETE FROM image_substrate WHERE image_info_id = :id;");
+            $sth->bindParam(":id", $image_id, PDO::PARAM_INT);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        // Set the new substrate annotations.
+        foreach ( $annotations as $id => $items ) {
+            $parts = explode('-', $id);
+            $dominance = $parts[0];
+
+            foreach ( $items as $cat_name ) {
+                // Check if the dominance is set ok.
+                if ( !in_array($dominance, array('dominant','subdominant')) ) {
+                    throw new Exception("Failed to get substrate dominance from category list ID.");
+                }
+
+                try {
+                    $sth = $this->dbh->prepare("INSERT INTO image_substrate VALUES (:image_id, :substrate_id, :dominance);");
+                    $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+                    $sth->bindParam(":substrate_id", $name2id[$cat_name], PDO::PARAM_INT);
+                    $sth->bindParam(":dominance", $dominance, PDO::PARAM_STR);
+                    $sth->execute();
+                }
+                catch (Exception $e) {
+                    throw new Exception( $e->getMessage() );
+                }
+            }
+        }
+
+        // Commit the transaction.
+        $this->dbh->commit();
+    }
 }

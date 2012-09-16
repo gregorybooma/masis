@@ -43,6 +43,19 @@ CREATE TABLE substrate_types
     UNIQUE (name)
 );
 
+INSERT INTO substrate_types (name) VALUES ('boulder');
+INSERT INTO substrate_types (name) VALUES ('cobble');
+INSERT INTO substrate_types (name) VALUES ('Didemnum');
+INSERT INTO substrate_types (name) VALUES ('epifauna (unspecified)');
+INSERT INTO substrate_types (name) VALUES ('gravel');
+INSERT INTO substrate_types (name) VALUES ('manmade object');
+INSERT INTO substrate_types (name) VALUES ('mud');
+INSERT INTO substrate_types (name) VALUES ('mussels');
+INSERT INTO substrate_types (name) VALUES ('pebble');
+INSERT INTO substrate_types (name) VALUES ('sand');
+INSERT INTO substrate_types (name) VALUES ('shells');
+INSERT INTO substrate_types (name) VALUES ('silt');
+
 CREATE TABLE image_substrate
 (
     image_info_id INTEGER NOT NULL,

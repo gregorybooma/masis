@@ -223,8 +223,6 @@ $user = $member->data();
                 <div id="image-annotation-status">
                     <input type="radio" name="annotation-status" value="incomplete" id="annotation-status-incomplete" checked="checked" />
                     <label for="annotation-status-incomplete">Incomplete</label>
-                    <input type="radio" name="annotation-status" value="review" id="annotation-status-review" />
-                    <label for="annotation-status-review">Needs Review</label>
                     <input type="radio" name="annotation-status" value="complete" id="annotation-status-complete" />
                     <label for="annotation-status-complete">Complete</label>
                 </div>

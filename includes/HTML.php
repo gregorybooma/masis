@@ -42,11 +42,16 @@ class HTML {
                         if ( file_exists($dir . $filename) ) {
                             // Set the file extension.
                             $ext = preg_replace('/^.*\./', '', $filename);
+                            // Set the image tags.
+                            $tags = explode(',', $row['tags']);
                             // Set the indicator icons.
                             $indicators = "";
                             $indicators .= $row['n_vectors'] > 0 ? "<span class='vector-count' title='{$row['n_vectors']} selection(s)'>{$row['n_vectors']}</span>" : "";
                             $indicators .= $row['substrate_annotated'] ? "<span class='icon substrate-annotated' title='Substrate is annotated'></span>" : "";
-                            $indicators .= in_array($row['annotation_status'], array('complete','review')) ? "<span class='icon annotation-{$row['annotation_status']}' title='Annotation status: {$row['annotation_status']}'></span>" : "";
+                            $indicators .= $row['annotation_status'] == 'complete' ? "<span class='icon annotation-complete' title='Annotation complete'></span>" : "";
+                            $indicators .= in_array('flag for review', $tags) ? "<span class='icon needs-review' title='Flagged for review'></span>" : "";
+                            $indicators .= in_array('unusable', $tags) ? "<span class='icon unusable' title='Marked unusable'></span>" : "";
+                            $indicators .= in_array('highlight', $tags) ? "<span class='icon highlight' title='Highlighted image'></span>" : "";
 
                             echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><span class='indicators'>{$indicators}</span></li>";
                             break;

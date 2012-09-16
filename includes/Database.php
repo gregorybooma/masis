@@ -112,7 +112,9 @@ class Database {
                     -- This is put in a subquery because when image_substrate
                     -- returns multiple records, the corresponding record from
                     -- image_info is repeated.
-                    (SELECT BIT_OR(substrate_types_id) AS substrate_annotated FROM image_substrate WHERE image_info_id = i.id) as substrate_annotated
+                    (SELECT BIT_OR(substrate_types_id) FROM image_substrate WHERE image_info_id = i.id) AS substrate_annotated,
+                    -- Get comma separated list of image tags.
+                    (SELECT STRING_AGG(t.name, ',') FROM image_tags j INNER JOIN image_tag_types t ON t.id = j.image_tag_types_id WHERE j.image_info_id = i.id) AS tags
                 FROM image_info i
                     LEFT OUTER JOIN vectors v ON v.image_info_id = i.id
                 WHERE i.img_dir = :dir

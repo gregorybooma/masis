@@ -333,15 +333,23 @@ ul.jqueryFileTree a:hover {
 }
 
 .jqueryFileTree .indicators .annotation-complete {
-    background: url("images/accept.png") no-repeat;
+    background: url("images/icons/accept.png") no-repeat;
 }
 
-.jqueryFileTree .indicators .annotation-review {
-    background: url("images/exclamation.png") no-repeat;
+.jqueryFileTree .indicators .needs-review {
+    background: url("images/icons/exclamation.png") no-repeat;
+}
+
+.jqueryFileTree .indicators .unusable {
+    background: url("images/icons/cross.png") no-repeat;
+}
+
+.jqueryFileTree .indicators .highlight {
+    background: url("images/icons/flag_blue.png") no-repeat;
 }
 
 .jqueryFileTree .indicators .substrate-annotated {
-    background: url("images/soil_layers.png") no-repeat;
+    background: url("images/icons/soil_layers.png") no-repeat;
 }
 
 .jqueryFileTree .indicators .vector-count {

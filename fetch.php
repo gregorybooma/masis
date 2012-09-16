@@ -30,6 +30,9 @@ switch ($do) {
         break;
     case 'delete_vector':
         try {
+            if ( empty($_GET['image_id']) ) throw new Exception( "Parameter `image_id` is not set." );
+            if ( empty($_GET['vector_id']) ) throw new Exception( "Parameter `vector_id` is not set." );
+
             $db->delete_vector($_GET['image_id'], $_GET['vector_id']);
             print json_encode( array('result' => 'success') );
         }
@@ -48,6 +51,9 @@ switch ($do) {
         break;
     case 'set_annotation_status':
         try {
+            if ( empty($_GET['image_id']) ) throw new Exception( "Parameter `image_id` is not set." );
+            if ( empty($_GET['status']) ) throw new Exception( "Parameter `status` is not set." );
+
             $count = $db->set_annotation_status($_GET['image_id'], $_GET['status']);
             print json_encode( array('result' => 'success') );
         }
@@ -57,7 +63,10 @@ switch ($do) {
         break;
     case 'set_substrate_annotations':
         try {
-            $db->set_substrate_annotations($_POST['image_id'], $_POST['annotations']);
+            if ( empty($_POST['image_id']) ) throw new Exception( "Parameter `image_id` is not set." );
+            $annotations = isset($_POST['annotations']) ? $_POST['annotations'] : array();
+
+            $db->set_substrate_annotations($_POST['image_id'], $annotations);
             print json_encode( array('result' => 'success') );
         }
         catch (Exception $e) {
@@ -66,7 +75,10 @@ switch ($do) {
         break;
     case 'set_image_tags':
         try {
-            $db->set_image_tags($_POST['image_id'], $_POST['tags']);
+            if ( empty($_POST['image_id']) ) throw new Exception( "Parameter `image_id` is not set." );
+            $tags = isset($_POST['tags']) ? $_POST['tags'] : array();
+
+            $db->set_image_tags($_POST['image_id'], $tags);
             print json_encode( array('result' => 'success') );
         }
         catch (Exception $e) {

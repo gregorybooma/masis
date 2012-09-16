@@ -109,12 +109,14 @@ class Database {
             $sth = $this->dbh->prepare("SELECT i.file_name,
                     i.annotation_status,
                     COUNT(v.id) AS n_vectors,
-                    BIT_OR(s.substrate_types_id) AS substrate_annotated
+                    -- This is put in a subquery because when image_substrate
+                    -- returns multiple records, the corresponding record from
+                    -- image_info is repeated.
+                    (SELECT BIT_OR(substrate_types_id) AS substrate_annotated FROM image_substrate WHERE image_info_id = i.id) as substrate_annotated
                 FROM image_info i
                     LEFT OUTER JOIN vectors v ON v.image_info_id = i.id
-                    LEFT OUTER JOIN image_substrate s ON s.image_info_id = i.id
                 WHERE i.img_dir = :dir
-                GROUP BY i.file_name, i.annotation_status
+                GROUP BY i.id, i.file_name, i.annotation_status
                 ORDER BY i.file_name;");
             $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
             $sth->execute();

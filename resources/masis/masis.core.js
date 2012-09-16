@@ -97,6 +97,14 @@ function initInterface() {
         $('select#select-dominant-substrate').append(html);
         $('select#select-subdominant-substrate').append(html);
     });
+    $.getJSON('load.php?do=get_image_tag_types', function(data) {
+        var html = '';
+        var len = data.length;
+        for (var i = 0; i< len; i++) {
+            html += '<option value="' + data[i].value + '">' + data[i].label + '</option>\n';
+        }
+        $('select#select-image-tag').append(html);
+    });
 
     // Initialize dialogs.
     $( "#dialog-on-commit" ).dialog({
@@ -161,6 +169,7 @@ function initInterface() {
             },
             Save: function() {
                 onSaveSubstrateAnnotations();
+                onSaveImageTags();
                 onSetImageAnnotationStatus();
                 $(this).dialog("close");
             }
@@ -497,6 +506,26 @@ function onAnnotate() {
         }
     });
 
+    // Load and set the image tags.
+    $('#image-tags-list').empty();
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=get_image_tags",
+        dataType: "json",
+        data: {image_id: imageObject.id},
+        success: function(data) {
+            for (i in data) {
+                var o = data[i];
+                $('#image-tags-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.name + '</span><span class="remove">×</span></span></li>');
+            }
+
+            // Set the callback function for the remove buttons.
+            $(".jellybean span.remove").click(function() {
+                $(this).parents('li.category-container-item').remove();
+            });
+        }
+    });
+
     // Set the image annotation status input to the right value.
     var radios = $('input:radio[name=annotation-status]');
     if ( imageObject.annotation_status ) {
@@ -577,6 +606,25 @@ function onSaveSubstrateAnnotations() {
         dataType: "json",
         data: {image_id: imageObject.id,
             annotations: getCategorySelections(['dominant-substrates-list', 'subdominant-substrates-list'])},
+        success: function(data) {
+            if (data.result != 'success') {
+                $("#dialog-unknown-error").dialog('open');
+            }
+        }
+    });
+}
+
+/**
+ * Set the image tags for the current image in the database.
+ */
+function onSaveImageTags() {
+    if (!imageObject) return;
+    $.ajax({
+        type: "POST",
+        url: "fetch.php?do=set_image_tags",
+        dataType: "json",
+        data: {image_id: imageObject.id,
+            tags: getCategories('image-tags-list')},
         success: function(data) {
             if (data.result != 'success') {
                 $("#dialog-unknown-error").dialog('open');

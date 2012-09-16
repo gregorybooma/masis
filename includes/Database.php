@@ -243,7 +243,7 @@ class Database {
      * This method can be used for the Autocomplete feature of jQuery UI.
      *
      * @param $term The keyword to match against species names in the database.
-     * @return A PDO statement handler which returns the results.
+     * @return A PDO statement handler.
      */
     public function get_species($term) {
         try {
@@ -258,25 +258,29 @@ class Database {
     }
 
     /**
-     * Return a list of substrate types matching the search term.
+     * Return all substrate types.
      *
-     * This method can be used for the Autocomplete feature of jQuery UI.
-     *
-     * @param $term The keyword to match against substrate types in the database.
-     * @return A PDO statement handler which returns the results.
+     * @return A PDO statement handler.
      */
-    public function get_substrate_types($term=null) {
-        if ($term) {
-            $term = "^".$term;
-            $query = "SELECT * FROM substrate_types WHERE name ~* :term;";
-        }
-        else {
-            $query = "SELECT * FROM substrate_types ORDER BY name;";
-        }
-
+    public function get_substrate_types() {
         try {
-            $sth = $this->dbh->prepare($query);
-            if ($term) $sth->bindParam(":term", $term, PDO::PARAM_STR);
+            $sth = $this->dbh->prepare("SELECT * FROM substrate_types ORDER BY name;");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth;
+    }
+
+    /**
+     * Return all image tag types.
+     *
+     * @return A PDO statement handler.
+     */
+    public function get_image_tag_types() {
+        try {
+            $sth = $this->dbh->prepare("SELECT * FROM image_tag_types ORDER BY name;");
             $sth->execute();
         }
         catch (Exception $e) {
@@ -510,6 +514,12 @@ class Database {
         }
     }
 
+    /**
+     * Return the substrate annotations for an image.
+     *
+     * @param int $image_id The id for the image
+     * @return A PDO statement handler.
+     */
     public function get_substrate_annotations($image_id) {
         try {
             $sth = $this->dbh->prepare("SELECT s.id, s.name, i.dominance
@@ -526,10 +536,33 @@ class Database {
     }
 
     /**
+     * Return the tags for an image.
+     *
+     * @param int $image_id The id for the image
+     * @return A PDO statement handler.
+     */
+    public function get_image_tags($image_id) {
+        try {
+            $sth = $this->dbh->prepare("SELECT t.id, t.name
+                FROM image_tags i
+                    INNER JOIN image_tag_types t ON t.id = i.image_tag_types_id
+                WHERE i.image_info_id = :image_id;");
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        return $sth;
+    }
+
+    /**
      * Set the substrate annotations for an image.
      *
-     * @param int $image_id The id for the image (image_info.id).
-     * @param array $annotations The annotations.
+     * @param int $image_id The id for the image
+     * @param array $annotations Associative array of the annotations. The keys
+     *      are the category-list element ID's, the values are arrays of
+     *      strings/substrate types.
      */
     public function set_substrate_annotations($image_id, $annotations) {
         // Map substrate name to substrate ID.
@@ -579,6 +612,56 @@ class Database {
                 catch (Exception $e) {
                     throw new Exception( $e->getMessage() );
                 }
+            }
+        }
+
+        // Commit the transaction.
+        $this->dbh->commit();
+    }
+
+    /**
+     * Set tags for an image.
+     *
+     * @param int $image_id The id for the image
+     * @param array $tags Array of strings/tag names
+     */
+    public function set_image_tags($image_id, $tags) {
+        // Map tag name to tag ID.
+        $name2id = array();
+        try {
+            $sth = $this->dbh->prepare("SELECT id, name FROM image_tag_types;");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        while ( $cat = $sth->fetch(PDO::FETCH_OBJ) ) {
+            $name2id[$cat->name] = $cat->id;
+        }
+
+        // Start a database transaction.
+        $this->dbh->beginTransaction();
+
+        // Delete all tags for this image.
+        try {
+            $sth = $this->dbh->prepare("DELETE FROM image_tags WHERE image_info_id = :id;");
+            $sth->bindParam(":id", $image_id, PDO::PARAM_INT);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        // Set the new substrate annotations.
+        foreach ( $tags as $tag ) {
+            try {
+                $sth = $this->dbh->prepare("INSERT INTO image_tags VALUES (:image_id, :tag_id);");
+                $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+                $sth->bindParam(":tag_id", $name2id[$tag], PDO::PARAM_INT);
+                $sth->execute();
+            }
+            catch (Exception $e) {
+                throw new Exception( $e->getMessage() );
             }
         }
 

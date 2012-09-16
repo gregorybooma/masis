@@ -184,7 +184,7 @@ $user = $member->data();
             <p>Assigned to: <span id="assign-species-label" class="text-italic"><a href="#">Unassigned</a></span></p>
             </form>
         </div>
-        <div id="dialog-annotate" title="Annotate">
+        <div id="dialog-annotate" title="Annotate Image">
             <fieldset>
                 <legend>Dominant Substrate</legend>
                 <select id="select-dominant-substrate">
@@ -204,6 +204,17 @@ $user = $member->data();
                 <a href="#" onclick="onAddCategory('select-subdominant-substrate', 'subdominant-substrates-list'); return false;" class="button">Add</a>
                 <div class="category-editor">
                     <ul id="subdominant-substrates-list"></ul>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Image Tags</legend>
+                <select id="select-image-tag">
+                    <option value="">Select tag...</option>
+                </select>
+                <a href="#" onclick="onAddCategory('select-image-tag', 'image-tags-list'); return false;" class="button">Add</a>
+                <div class="category-editor">
+                    <ul id="image-tags-list"></ul>
                 </div>
             </fieldset>
 

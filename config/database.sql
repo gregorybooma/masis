@@ -67,6 +67,38 @@ CREATE TABLE image_substrate
     FOREIGN KEY (substrate_types_id) REFERENCES substrate_types (id)
 );
 
+CREATE TABLE image_tag_types
+(
+    id SERIAL,
+    name VARCHAR NOT NULL,
+    description VARCHAR,
+
+    PRIMARY KEY (id),
+    UNIQUE (name)
+);
+
+INSERT INTO image_tag_types (name) VALUES ('altitude too high');
+INSERT INTO image_tag_types (name) VALUES ('cannot see seafloor');
+INSERT INTO image_tag_types (name) VALUES ('difficult image');
+INSERT INTO image_tag_types (name) VALUES ('flag for review');
+INSERT INTO image_tag_types (name) VALUES ('highlight');
+INSERT INTO image_tag_types (name) VALUES ('image corrupt');
+INSERT INTO image_tag_types (name) VALUES ('out of focus');
+INSERT INTO image_tag_types (name) VALUES ('reviewed');
+INSERT INTO image_tag_types (name) VALUES ('turbid');
+INSERT INTO image_tag_types (name) VALUES ('unusable');
+INSERT INTO image_tag_types (name) VALUES ('usable');
+
+CREATE TABLE image_tags
+(
+    image_info_id INTEGER NOT NULL,
+    image_tag_types_id INTEGER NOT NULL,
+
+    UNIQUE (image_info_id, image_tag_types_id),
+    FOREIGN KEY (image_info_id) REFERENCES image_info (id),
+    FOREIGN KEY (image_tag_types_id) REFERENCES image_tag_types (id)
+);
+
 CREATE TABLE species
 (
     aphia_id INTEGER NOT NULL,

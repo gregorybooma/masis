@@ -41,10 +41,14 @@ switch ($do) {
         }
         break;
     case 'get_substrate_types':
-        $term = !empty($_GET['term']) ? $_GET['term'] : null;
         require("$root/includes/JSON.php");
         $json = new JSON();
-        $json->get_substrate_types($term);
+        $json->get_substrate_types();
+        break;
+    case 'get_image_tag_types':
+        require("$root/includes/JSON.php");
+        $json = new JSON();
+        $json->get_image_tag_types();
         break;
     case 'get_vectors':
         if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
@@ -57,6 +61,12 @@ switch ($do) {
         require("$root/includes/JSON.php");
         $json = new JSON();
         $json->get_substrate_annotations($_GET['image_id']);
+        break;
+    case 'get_image_tags':
+        if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
+        require("$root/includes/JSON.php");
+        $json = new JSON();
+        $json->get_image_tags($_GET['image_id']);
         break;
 
     case 'table_image_vectors':

@@ -92,10 +92,18 @@ class JSON {
         print json_encode($species);
     }
 
-    public function get_substrate_types($term=null) {
+    /**
+     * Return all substrate types prepared for HTML select input options.
+     *
+     * Each object in the array has two attributes: value and label. To be
+     * used as value and text for the <option> elements.
+     *
+     * @return Substrate types in JSON format
+     */
+    public function get_substrate_types() {
         global $db;
 
-        $sth = $db->get_substrate_types($term);
+        $sth = $db->get_substrate_types();
         $types = array();
         while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $types[] = array(
@@ -106,12 +114,54 @@ class JSON {
         print json_encode($types);
     }
 
+    /**
+     * Return all image tag types prepared for HTML select input options.
+     *
+     * Each object in the array has two attributes: value and label. To be
+     * used as value and text for the <option> elements.
+     *
+     * @return Substrate types in JSON format
+     */
+    public function get_image_tag_types() {
+        global $db;
+
+        $sth = $db->get_image_tag_types();
+        $types = array();
+        while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
+            $types[] = array(
+                'value' => $row['id'],
+                'label' => $row['name']
+                );
+        }
+        print json_encode($types);
+    }
+
+    /**
+     * Return the substrate annotations for an image.
+     *
+     * @param int $image_id The id for the image
+     * @return The substrate annotations in JSON format
+     */
     public function get_substrate_annotations($image_id) {
         global $db;
 
         $sth = $db->get_substrate_annotations($image_id);
         $annotations = $sth->fetchAll(PDO::FETCH_OBJ);
         print json_encode($annotations);
+    }
+
+    /**
+     * Return the tags for an image.
+     *
+     * @param int $image_id The id for the image
+     * @return The image tags in JSON format
+     */
+    public function get_image_tags($image_id) {
+        global $db;
+
+        $sth = $db->get_image_tags($image_id);
+        $tags = $sth->fetchAll(PDO::FETCH_OBJ);
+        print json_encode($tags);
     }
 
     public function get_vectors($image_id) {

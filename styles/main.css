@@ -54,12 +54,12 @@ h1, h2, h3, h4, h5, h6 {
 .button,
 .button.disabled:hover,
 .button:disabled:hover {
-    -moz-border-bottom-colors: none;
-    -moz-border-image: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background: -moz-linear-gradient(#4E4E4E, #222222) repeat scroll 0 0 transparent;
+    background-color: #4E4E4E;
+    background-image: -webkit-linear-gradient(top, #4E4E4E, #222222);
+    background-image:    -moz-linear-gradient(top, #4E4E4E, #222222);
+    background-image:     -ms-linear-gradient(top, #4E4E4E, #222222);
+    background-image:      -o-linear-gradient(top, #4E4E4E, #222222);
+    background-image:         linear-gradient(to bottom, #4E4E4E, #222222);
     border-color: #333333 #2E2E2E #171717;
     border-style: solid;
     border-width: 1px;
@@ -74,6 +74,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .button {
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
     border-radius: 3px 3px 3px 3px;
     cursor: pointer;
     display: inline-block;
@@ -87,7 +89,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .button:hover {
-    background: -moz-linear-gradient(#0A81BA, #06567D) repeat scroll 0 0 transparent;
+    background-color: #0A81BA;
+    background-image: -webkit-linear-gradient(top, #0A81BA, #06567D);
+    background-image:    -moz-linear-gradient(top, #0A81BA, #06567D);
+    background-image:     -ms-linear-gradient(top, #0A81BA, #06567D);
+    background-image:      -o-linear-gradient(top, #0A81BA, #06567D);
+    background-image:         linear-gradient(to bottom, #0A81BA, #06567D);
     border-color: #2C4E6E #213B54 #112A45;
     color: #FFFFFF;
     text-decoration: none;
@@ -99,7 +106,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .button:active {
-    background: -moz-linear-gradient(#0B97D9, #066B9C) repeat scroll 0 0 transparent;
+    background-color: #0B97D9;
+    background-image: -webkit-linear-gradient(top, #0B97D9, #066B9C);
+    background-image:    -moz-linear-gradient(top, #0B97D9, #066B9C);
+    background-image:     -ms-linear-gradient(top, #0B97D9, #066B9C);
+    background-image:      -o-linear-gradient(top, #0B97D9, #066B9C);
+    background-image:         linear-gradient(to bottom, #0B97D9, #066B9C);
 }
 
 /*----------------------------------------------------
@@ -174,9 +186,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .control-buttons .ui-button {
-    border-radius: 0;
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
+    border-radius: 0;
     margin-right: 0;
 }
 
@@ -299,9 +311,9 @@ span.headerlink:hover {
 
 ul.jqueryFileTree a {
     color: #FFFFFF;
-    border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
 
 ul.jqueryFileTree a:hover {
@@ -334,6 +346,8 @@ ul.jqueryFileTree a:hover {
 
 .jqueryFileTree .indicators .vector-count {
     background-color: #555555;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
     border-radius: 3px 3px 3px 3px;
     cursor: default;
     margin: 0 2px;
@@ -395,6 +409,8 @@ div.dataTables_wrapper .ui-widget-header {
 
 .category-editor .jellybean {
     background-color: #666666;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
     border-radius: 3px 3px 3px 3px;
     color: #ffffff;
     cursor: pointer;

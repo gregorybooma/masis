@@ -29,7 +29,7 @@ label span {
     line-height: 1.5em;
 }
 
-input, select {
+input.expand, select.expand {
     width: 288px;
 }
 input.username {
@@ -55,11 +55,9 @@ input[type=submit] {
     padding:9px 10px 11px 40px;
     margin:10px 0px 10px 0px;
     position: relative;
-    border-radius:3px;
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
-    -o-border-radius:3px;
-    -khtml-border-radius:3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
 .notice.success:before, .notice.error:before, .notice.info:before {
     content: '';
@@ -69,26 +67,35 @@ input[type=submit] {
     padding: 16px;
 }
 .notice.success{
-    background: #61b832;
-    background: #61b832 -webkit-repeating-linear-gradient(#61b832, #479619);
-    background: #61b832 -moz-repeating-linear-gradient(#61b832, #479619);
+    background-color: #61B832;
+    background-image: -webkit-linear-gradient(top, #61B832, #479619);
+    background-image:    -moz-linear-gradient(top, #61B832, #479619);
+    background-image:     -ms-linear-gradient(top, #61B832, #479619);
+    background-image:      -o-linear-gradient(top, #61B832, #479619);
+    background-image:         linear-gradient(to bottom, #61B832, #479619);
 }
     .notice.success:before {
         background: url("images/good.png") no-repeat;
         top: 4px;
     }
 .notice.error {
-    background: #CE3512;
-    background: #CE3512 -webkit-repeating-linear-gradient(#E6724E, #CE3512);
-    background: #CE3512 -moz-repeating-linear-gradient(#E6724E, #CE3512);
+    background-color: #CE3512;
+    background-image: -webkit-repeating-linear-gradient(top, #E6724E, #CE3512);
+    background-image:    -moz-repeating-linear-gradient(top, #E6724E, #CE3512);
+    background-image:     -ms-repeating-linear-gradient(top, #E6724E, #CE3512);
+    background-image:      -o-repeating-linear-gradient(top, #E6724E, #CE3512);
+    background-image:         repeating-linear-gradient(to bottom, #E6724E, #CE3512);
 }
     .notice.error:before {
         background: url("images/error.png") no-repeat;
     }
 .notice.info {
-    background: #61B0CA;
-    background: #61B0CA -webkit-repeating-linear-gradient(#61B0CA, #408399);
-    background: #61B0CA -moz-repeating-linear-gradient(#61B0CA, #408399);
+    background-color: #61B0CA;
+    background-image: -webkit-repeating-linear-gradient(top, #61B0CA, #408399);
+    background-image:    -moz-repeating-linear-gradient(top, #61B0CA, #408399);
+    background-image:     -ms-repeating-linear-gradient(top, #61B0CA, #408399);
+    background-image:      -o-repeating-linear-gradient(top, #61B0CA, #408399);
+    background-image:         repeating-linear-gradient(to bottom, #61B0CA, #408399);
 }
     .notice.info:before {
         background: url("images/info.png") no-repeat;

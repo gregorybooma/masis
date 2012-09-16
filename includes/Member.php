@@ -124,12 +124,12 @@ class Member {
     <label>
         <span>Password</span>
         <br/>
-        <input type="password" name="password" />
+        <input type="password" name="password" class="expand" />
     </label>
     <label>
         <input type="checkbox" name="remember_me" value="1" /> <span>Remember me</span>
     </label>
-    <input name="login" type="submit" value="Login" class="button" />
+    <input name="login" type="submit" value="Login" class="button expand" />
 </form>
 END;
 

@@ -13,7 +13,7 @@ class MaSIS {
      * Load the web content.
      */
     public function start() {
-        global $member;
+        global $db, $member;
 
         // Load settings. If the settings file doesn't exist, give directions
         // to create one.
@@ -23,6 +23,9 @@ class MaSIS {
             require(ROOT."/includes/Setup.php");
             return;
         }
+
+        // Connect with the database.
+        $db->connect();
 
         // Check if the user is logged in.
         if ( !$member->sessionIsSet() ) {

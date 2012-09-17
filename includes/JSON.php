@@ -40,7 +40,7 @@ class JSON {
         if ( !empty($info['area']) && !empty($width) && !empty($height) ) {
             $info['area_per_pixel'] = $info['area'] / ($width * $height);
         }
-        print json_encode($info);
+        return json_encode($info);
     }
 
     /**
@@ -88,7 +88,7 @@ class JSON {
                     );
             }
         }
-        print json_encode($species);
+        return json_encode($species);
     }
 
     /**
@@ -110,7 +110,7 @@ class JSON {
                 'label' => $row['name']
                 );
         }
-        print json_encode($types);
+        return json_encode($types);
     }
 
     /**
@@ -132,7 +132,7 @@ class JSON {
                 'label' => $row['name']
                 );
         }
-        print json_encode($types);
+        return json_encode($types);
     }
 
     /**
@@ -146,7 +146,7 @@ class JSON {
 
         $sth = $db->get_substrate_annotations($image_id);
         $annotations = $sth->fetchAll(PDO::FETCH_OBJ);
-        print json_encode($annotations);
+        return json_encode($annotations);
     }
 
     /**
@@ -160,7 +160,7 @@ class JSON {
 
         $sth = $db->get_image_tags($image_id);
         $tags = $sth->fetchAll(PDO::FETCH_OBJ);
-        print json_encode($tags);
+        return json_encode($tags);
     }
 
     public function get_vectors($image_id) {
@@ -171,6 +171,6 @@ class JSON {
         while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $vectors[] = $row;
         }
-        print json_encode($vectors);
+        return json_encode($vectors);
     }
 }

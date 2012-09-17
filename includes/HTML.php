@@ -17,15 +17,16 @@ class HTML {
     public function get_file_list($base_path, $dir) {
         global $db;
 
+        $html = "";
         if ( file_exists($base_path . $dir) ) {
             $files = scandir($base_path . $dir);
             natcasesort($files);
             if ( count($files) > 2 ) { /* The 2 accounts for . and .. */
-                echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
+                $html .= "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
                 // List dirs
                 foreach( $files as $file ) {
                     if ( file_exists($base_path . $dir . $file) && $file != '.' && $file != '..' && is_dir($base_path . $dir . $file) ) {
-                        echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($dir . $file) . "/\">{$file}</a></li>";
+                        $html .= "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($dir . $file) . "/\">{$file}</a></li>";
                     }
                 }
                 // List files
@@ -60,14 +61,15 @@ class HTML {
                             $indicators .= in_array('unusable', $tags) ? "<span class='icon unusable' title='Marked unusable'></span>" : "";
                             $indicators .= in_array('highlight', $tags) ? "<span class='icon highlight' title='Highlighted image'></span>" : "";
 
-                            echo "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><span class='indicators'>{$indicators}</span></li>";
+                            $html .= "<li class=\"file ext_{$ext}\"><a href=\"#\" rel=\"" . htmlentities($dir . $filename) . "\">{$filename}</a><span class='indicators'>{$indicators}</span></li>";
                             break;
                         }
                     }
                 }
-                echo "</ul>";
+                $html .= "</ul>";
             }
         }
+        return $html;
     }
 }
 

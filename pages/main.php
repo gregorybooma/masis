@@ -19,7 +19,6 @@ $user = $member->data();
     <script src="resources/jquery.filetree/jquery.filetree.js" type="text/javascript"></script>
     <script src="resources/jquery.datatables/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="resources/openlayers/lib/OpenLayers.js" type="text/javascript"></script>
-    <script src="resources/masis/masis.config.js.php" type="text/javascript"></script>
     <script src="resources/masis/masis.std.js" type="text/javascript"></script>
     <script src="resources/masis/masis.core.js" type="text/javascript"></script>
   </head>

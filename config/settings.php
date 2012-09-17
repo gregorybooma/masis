@@ -15,11 +15,11 @@ Config::write('username', '');
 Config::write('password', '');
 Config::write('drivers', array(PDO::ATTR_PERSISTENT => true));
 
-// Base path for the location of image data (must end with forward slash).
-Config::write('image_path', '/public_html/masis/data/');
+// Base path for the web content (must end with forward slash).
+Config::write('base_path', dirname(__FILE__) . '/');
 
-// Base URL for the location of image data (must end with forward slash).
-Config::write('image_base_url', 'http://masis/data/');
+// Base URL for the website (must end with forward slash).
+Config::write('base_url', 'http://' . $_SERVER['SERVER_NAME'] . '/' );
 
 // Whether to update existing species records in the database each time
 // records are retrieved from the WoRMS web service.

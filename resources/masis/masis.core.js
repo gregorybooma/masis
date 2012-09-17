@@ -223,7 +223,7 @@ function initWorkspace() {
 
 function onLoadDirTree() {
     $('#photo-library').fileTree({
-            root: config.image_path,
+            root: '/data/',
             script: 'load.php?do=get_file_list',
             folderEvent: 'click',
             expandSpeed: 750,

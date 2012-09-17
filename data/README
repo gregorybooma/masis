@@ -1,0 +1,4 @@
+Put image files in this folder. MaSIS will look in this folder for images.
+Keep the original name of the image directories and file names. MaSIS uses
+the image directory name and the file name to obtain information about an
+image from the database.

@@ -4,5 +4,5 @@
 require('../../settings.php');
 
 print "var config = {};";
-print "config.image_path = '". Config::read('image_path') ."';";
-print "config.image_base_url = '". Config::read('image_base_url') ."';";
+print "config.base_path = '". Config::read('base_path') ."';";
+print "config.base_url = '". Config::read('base_url') ."';";

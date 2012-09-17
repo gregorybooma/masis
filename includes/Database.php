@@ -10,8 +10,6 @@ class Database {
      * Connect with the PostgreSQL database.
      */
     public function connect() {
-        global $config;
-
         try {
             $this->dbh = new PDO("pgsql:dbname=" . Config::read('database') . ";host=" . Config::read('hostname'),
                 Config::read('username'),

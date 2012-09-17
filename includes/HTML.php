@@ -2,22 +2,29 @@
 
 /**
  * The HTML class for generating HTML.
- *
- * Requires that config.php is imported.
  */
 class HTML {
 
-    public function get_file_list($dir) {
-        global $config, $db;
+    /**
+     * Print the file list for a directory.
+     *
+     * @param string $base_path The base path. This is the directory path to
+     *      the website root path and will be put in front of the images
+     *      directory path $dir
+     * @param string $dir The path to the image directory relative to the
+     *      base path $base_path
+     */
+    public function get_file_list($base_path, $dir) {
+        global $db;
 
-        if ( file_exists($dir) ) {
-            $files = scandir($dir);
+        if ( file_exists($base_path . $dir) ) {
+            $files = scandir($base_path . $dir);
             natcasesort($files);
             if ( count($files) > 2 ) { /* The 2 accounts for . and .. */
                 echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
                 // List dirs
                 foreach( $files as $file ) {
-                    if ( file_exists($dir . $file) && $file != '.' && $file != '..' && is_dir($dir . $file) ) {
+                    if ( file_exists($base_path . $dir . $file) && $file != '.' && $file != '..' && is_dir($base_path . $dir . $file) ) {
                         echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($dir . $file) . "/\">{$file}</a></li>";
                     }
                 }
@@ -39,7 +46,7 @@ class HTML {
                     $file[] = preg_replace($ext_pattern, '.jpg', $row['file_name']);
                     $file[] = preg_replace($ext_pattern, '.png', $row['file_name']);
                     foreach ($file as $filename) {
-                        if ( file_exists($dir . $filename) ) {
+                        if ( file_exists($base_path . $dir . $filename) ) {
                             // Set the file extension.
                             $ext = preg_replace('/^.*\./', '', $filename);
                             // Set the image tags.

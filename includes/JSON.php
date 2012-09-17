@@ -9,11 +9,10 @@ class JSON {
      * Prints info for an image file.
      *
      * @param string $path Path to the image file.
-     * @uses array $config Configuration array from config.php.
      * @uses $db Database object.
      */
     public function get_image_info($path) {
-        global $config, $db;
+        global $db;
 
         if ( !is_file($path) ) {
             throw new Exception( "Not a file: {$path}" );
@@ -29,7 +28,7 @@ class JSON {
         $info['dir'] = array_pop($stack);
         $info['width'] = $width;
         $info['height'] = $height;
-        $info['url'] = Config::read('image_base_url') . $info['dir'] . '/' . $info['name'];
+        $info['url'] = Config::read('base_url') . 'data/' . $info['dir'] . '/' . $info['name'];
         $info['path'] = $path;
 
         $arr = $db->get_image_attributes($info['dir'], $info['name']);
@@ -54,7 +53,7 @@ class JSON {
      * @param $searchpar Search by 0 = scientific name, 1 = common name.
      */
     public function get_species_from_worms($term, $searchpar=0) {
-        global $config, $db;
+        global $db;
 
         // Call the WoRMS webservice.
         $client = new SoapClient("http://www.marinespecies.org/aphia.php?p=soap&wsdl=1");

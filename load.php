@@ -20,17 +20,17 @@ if ( $member->sessionIsSet() != true ) {
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
 switch ($do) {
     case 'get_file_list':
-        $dir = urldecode($_POST['dir']);
+        $dir = !empty($_POST['dir']) ? urldecode($_POST['dir']) : '/';
         require("$root/includes/HTML.php");
         $html = new HTML();
-        $html->get_file_list($dir);
+        $html->get_file_list(Config::read('base_path'), $dir);
         break;
 
     case 'get_image_info':
         if ( empty($_GET['path']) ) exit("Parameter `path` is not set.");
         require("$root/includes/JSON.php");
         $json = new JSON();
-        $json->get_image_info($_GET['path']);
+        $json->get_image_info(Config::read('base_path') . $_GET['path']);
         break;
     case 'get_species':
         if ( !empty($_GET['term']) ) {

@@ -1,15 +1,6 @@
-# MaSIS
+The MIT License (MIT)
 
-MaSIS (Marine Species Identification System) is a web application for the
-manual annotation of marine species captured on photographs.
-
-## License
-
-The source code for MaSIS is licensed under the MIT License.
-
-### The MIT License (MIT)
-
-Copyright (c) 2012 Serrano Pereira <<serranop@mit.edu>>
+Copyright (c) 2012 Serrano Pereira <serranop@mit.edu>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

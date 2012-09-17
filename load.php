@@ -20,7 +20,7 @@ if ( $member->sessionIsSet() != true ) {
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
 switch ($do) {
     case 'get_file_list':
-        $dir = !empty($_POST['dir']) ? urldecode($_POST['dir']) : '/';
+        $dir = !empty($_POST['dir']) ? urldecode($_POST['dir']) : '/data/';
         require("$root/includes/HTML.php");
         $html = new HTML();
         $html->get_file_list(Config::read('base_path'), $dir);

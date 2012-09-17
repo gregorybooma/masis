@@ -315,9 +315,25 @@ ul.jqueryFileTree a {
     -webkit-border-radius: 3px;
     border-radius: 3px;
 }
-
-ul.jqueryFileTree a:hover {
-    background-color: #555555;
+ul.jqueryFileTree a:hover,
+ul.jqueryFileTree a.selected {
+    background-color: #367FA5;
+    background-image: -webkit-linear-gradient(top, #367FA5, #2B6685);
+    background-image:    -moz-linear-gradient(top, #367FA5, #2B6685);
+    background-image:     -ms-linear-gradient(top, #367FA5, #2B6685);
+    background-image:      -o-linear-gradient(top, #367FA5, #2B6685);
+    background-image:         linear-gradient(to bottom, #367FA5, #2B6685);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+ul.jqueryFileTree a.selected:hover {
+    background-color: #4097C5;
+    background-image: -webkit-linear-gradient(top, #4097C5, #2F6F91);
+    background-image:    -moz-linear-gradient(top, #4097C5, #2F6F91);
+    background-image:     -ms-linear-gradient(top, #4097C5, #2F6F91);
+    background-image:      -o-linear-gradient(top, #4097C5, #2F6F91);
+    background-image:         linear-gradient(to bottom, #4097C5, #2F6F91);
 }
 
 .jqueryFileTree .indicators {

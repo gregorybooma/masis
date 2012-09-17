@@ -1,103 +1,138 @@
-// jQuery File Tree Plugin
-//
-// Version 1.01
-//
-// Cory S.N. LaViska
-// A Beautiful Site (http://abeautifulsite.net/)
-// 24 March 2008
-//
-// Visit http://abeautifulsite.net/notebook.php?article=58 for more information
-//
-// Usage: $('.fileTreeDemo').fileTree( options, callback )
-//
-// Options:  root           - root folder to display; default = /
-//           script         - location of the serverside AJAX file to use; default = jqueryFileTree.php
-//           folderEvent    - event to trigger expand/collapse; default = click
-//           expandSpeed    - default = 500 (ms); use -1 for no animation
-//           collapseSpeed  - default = 500 (ms); use -1 for no animation
-//           expandEasing   - easing function to use on expand (optional)
-//           collapseEasing - easing function to use on collapse (optional)
-//           multiFolder    - whether or not to limit the browser to one subfolder at a time
-//           loadMessage    - Message to display while initial tree loads (can be HTML)
-//
-// History:
-//
-// 1.01 - updated to work with foreign characters in directory/file names (12 April 2008)
-// 1.00 - released (24 March 2008)
-//
-// TERMS OF USE
-//
-// This plugin is dual-licensed under the GNU General Public License and the MIT License and
-// is copyright 2008 A Beautiful Site, LLC.
-//
+/**
+* jQuery File Tree Plugin
+*
+* Version 1.02
+*
+* Cory S.N. LaViska
+* A Beautiful Site (http:*abeautifulsite.net/)
+* 24 March 2008
+*
+* Visit http:*abeautifulsite.net/notebook.php?article=58 for more information
+*
+* Usage: $('.fileTreeDemo').fileTree( options, callback )
+*
+* Options:  root           - root folder to display; default = /
+*           script         - location of the serverside AJAX file to use; default = jqueryFileTree.php
+*           folderEvent    - event to trigger expand/collapse; default = click
+*           expandSpeed    - default = 500 (ms); use -1 for no animation
+*           collapseSpeed  - default = 500 (ms); use -1 for no animation
+*           expandEasing   - easing function to use on expand (optional)
+*           collapseEasing - easing function to use on collapse (optional)
+*           multiFolder    - whether or not to limit the browser to one subfolder at a time
+*           loadMessage    - Message to display while initial tree loads (can be HTML)
+*
+* History:
+*
+* 1.02 - Updated by Serrano Pereira for MaSIS (17 Sept 2012)
+*        - Comments and function descriptions added.
+*        - The selected file is highlighted with a 'selected' class.
+*        - The link element is also passed to the file handler.
+*        - Other minor code updates.
+* 1.01 - updated to work with foreign characters in directory/file names (12 April 2008)
+* 1.00 - released (24 March 2008)
+*
+* TERMS OF USE
+*
+* This plugin is dual-licensed under the GNU General Public License and the MIT License and
+* is copyright 2008 A Beautiful Site, LLC.
+*/
+
 if (jQuery) (function($){
 
 	$.extend($.fn, {
-		fileTree: function(o, h) {
+		fileTree: function(options, callback) {
 			// Defaults
-			if ( !o ) var o = {};
-			if ( o.root == undefined ) o.root = '/';
-			if ( o.script == undefined ) o.script = 'jqueryFileTree.php';
-			if ( o.folderEvent == undefined ) o.folderEvent = 'click';
-			if ( o.expandSpeed == undefined ) o.expandSpeed= 500;
-			if ( o.collapseSpeed == undefined ) o.collapseSpeed= 500;
-			if ( o.expandEasing == undefined ) o.expandEasing = null;
-			if ( o.collapseEasing == undefined ) o.collapseEasing = null;
-			if ( o.multiFolder == undefined ) o.multiFolder = true;
-			if ( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
+			if ( !options ) var options = {};
+			if ( options.root == undefined ) options.root = '/';
+			if ( options.script == undefined ) options.script = 'jqueryFileTree.php';
+			if ( options.folderEvent == undefined ) options.folderEvent = 'click';
+			if ( options.expandSpeed == undefined ) options.expandSpeed= 500;
+			if ( options.collapseSpeed == undefined ) options.collapseSpeed= 500;
+			if ( options.expandEasing == undefined ) options.expandEasing = null;
+			if ( options.collapseEasing == undefined ) options.collapseEasing = null;
+			if ( options.multiFolder == undefined ) options.multiFolder = true;
+			if ( options.loadMessage == undefined ) options.loadMessage = 'Loading...';
 
 			$(this).each( function() {
 
-				function showTree(c, t) {
-					$(c).addClass('wait');
+                /**
+                 * Open a directory tree.
+                 *
+                 * @param {Object} li_dir The directory element li.directory
+                 * @param {String} dir_path The directory path
+                 */
+				function showTree(li_dir, dir_path) {
+					$(li_dir).addClass('wait');
 					$(".jqueryFileTree.start").remove();
+
                     $.ajax({
                       type: 'POST',
-                      url: o.script,
-                      data: { dir: t },
+                      url: options.script,
+                      data: { dir: dir_path },
                       success: function(data) {
-                            $(c).find('.start').html('');
-                            $(c).removeClass('wait').append(data);
-                            if ( o.root == t ) {
-                                $(c).find('UL:hidden').show();
+                            $(li_dir).find('.start').html('');
+                            $(li_dir).removeClass('wait').append(data);
+
+                            if ( options.root == dir_path ) {
+                                // Open the root directory by default.
+                                $(li_dir).find('ul:hidden').show();
                             }
                             else {
-                                $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
+                                // Open the directory with an animation.
+                                $(li_dir).find('ul:hidden').slideDown({ duration: options.expandSpeed, easing: options.expandEasing });
                             }
-                            bindTree(c);
+                            bindTree(li_dir);
                         }
                     });
 				}
 
-				function bindTree(t) {
-					$(t).find('LI A').bind(o.folderEvent, function() {
+                /**
+                 * Bind events and handlers to the directory links.
+                 *
+                 * @param {Object} li_dir The directory element li.directory
+                 * @param {String} dir_path The directory path
+                 */
+				function bindTree(li_dir) {
+					$(li_dir).find('li a').bind(options.folderEvent, function() {
+                        // Check if the current link is a directory link.
 						if ( $(this).parent().hasClass('directory') ) {
+                            // Directory. Decide whether to expand or callapse.
 							if ( $(this).parent().hasClass('collapsed') ) {
 								// Expand
-								if ( !o.multiFolder ) {
-									$(this).parent().parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
-									$(this).parent().parent().find('LI.directory').removeClass('expanded').addClass('collapsed');
+								if ( !options.multiFolder ) {
+                                    // If multi folder is disabled, collapse all directories
+                                    // and removed the `expanded` classes.
+									$(this).parent().parent().find('ul').slideUp({ duration: options.collapseSpeed, easing: options.collapseEasing });
+									$(this).parent().parent().find('li.directory').removeClass('expanded').addClass('collapsed');
 								}
-								$(this).parent().find('UL').remove(); // cleanup
+								$(this).parent().find('ul').remove(); // cleanup
 								showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
 								$(this).parent().removeClass('collapsed').addClass('expanded');
 							} else {
 								// Collapse
-								$(this).parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
+								$(this).parent().find('ul').slideUp({ duration: options.collapseSpeed, easing: options.collapseEasing });
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
-							h($(this).attr('rel'));
+                            // Not a directory, but a file was clicked. So call
+                            // the file handler with two arguments:
+                            //  - the file path
+                            //  - the link element
+							callback($(this).attr('rel'), this);
+
+                            // Highlight the selected file by adding a `selected` to the a element.
+                            $(this).parent().parent().find('li.file a').removeClass('selected');
+                            $(this).addClass('selected');
 						}
 						return false;
 					});
-					// Prevent A from triggering the # on non-click events
-					if ( o.folderEvent.toLowerCase != 'click' ) $(t).find('LI A').bind('click', function() { return false; });
+					// Prevent a from triggering the # on non-click events
+					if ( options.folderEvent.toLowerCase != 'click' ) $(li_dir).find('li a').bind('click', function() { return false; });
 				}
 				// Loading message
-				$(this).html('<ul class="jqueryFileTree start"><li class="wait">' + o.loadMessage + '<li></ul>');
+				$(this).html('<ul class="jqueryFileTree start"><li class="wait">' + options.loadMessage + '<li></ul>');
 				// Get the initial file list
-				showTree( $(this), escape(o.root) );
+				showTree( $(this), escape(options.root) );
 			});
 		}
 	});

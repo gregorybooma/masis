@@ -230,7 +230,7 @@ function onLoadDirTree() {
             collapseSpeed: 750,
             multiFolder: false
         },
-        function(file) {
+        function(file, e) {
             setImage(file);
         }
     );

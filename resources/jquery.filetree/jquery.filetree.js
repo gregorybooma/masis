@@ -39,21 +39,21 @@
 
 if (jQuery) (function($){
 
-	$.extend($.fn, {
-		fileTree: function(options, callback) {
-			// Defaults
-			if ( !options ) var options = {};
-			if ( options.root == undefined ) options.root = '/';
-			if ( options.script == undefined ) options.script = 'jqueryFileTree.php';
-			if ( options.folderEvent == undefined ) options.folderEvent = 'click';
-			if ( options.expandSpeed == undefined ) options.expandSpeed= 500;
-			if ( options.collapseSpeed == undefined ) options.collapseSpeed= 500;
-			if ( options.expandEasing == undefined ) options.expandEasing = null;
-			if ( options.collapseEasing == undefined ) options.collapseEasing = null;
-			if ( options.multiFolder == undefined ) options.multiFolder = true;
-			if ( options.loadMessage == undefined ) options.loadMessage = 'Loading...';
+    $.extend($.fn, {
+        fileTree: function(options, callback) {
+            // Defaults
+            if ( !options ) var options = {};
+            if ( options.root == undefined ) options.root = '/';
+            if ( options.script == undefined ) options.script = 'jqueryFileTree.php';
+            if ( options.folderEvent == undefined ) options.folderEvent = 'click';
+            if ( options.expandSpeed == undefined ) options.expandSpeed= 500;
+            if ( options.collapseSpeed == undefined ) options.collapseSpeed= 500;
+            if ( options.expandEasing == undefined ) options.expandEasing = null;
+            if ( options.collapseEasing == undefined ) options.collapseEasing = null;
+            if ( options.multiFolder == undefined ) options.multiFolder = true;
+            if ( options.loadMessage == undefined ) options.loadMessage = 'Loading...';
 
-			$(this).each( function() {
+            $(this).each( function() {
 
                 /**
                  * Open a directory tree.
@@ -61,9 +61,9 @@ if (jQuery) (function($){
                  * @param {Object} li_dir The directory element li.directory
                  * @param {String} dir_path The directory path
                  */
-				function showTree(li_dir, dir_path) {
-					$(li_dir).addClass('wait');
-					$(".jqueryFileTree.start").remove();
+                function showTree(li_dir, dir_path) {
+                    $(li_dir).addClass('wait');
+                    $(".jqueryFileTree.start").remove();
 
                     $.ajax({
                       type: 'POST',
@@ -84,7 +84,7 @@ if (jQuery) (function($){
                             bindTree(li_dir);
                         }
                     });
-				}
+                }
 
                 /**
                  * Bind events and handlers to the directory links.
@@ -92,49 +92,49 @@ if (jQuery) (function($){
                  * @param {Object} li_dir The directory element li.directory
                  * @param {String} dir_path The directory path
                  */
-				function bindTree(li_dir) {
-					$(li_dir).find('li a').bind(options.folderEvent, function() {
+                function bindTree(li_dir) {
+                    $(li_dir).find('li a').bind(options.folderEvent, function() {
                         // Check if the current link is a directory link.
-						if ( $(this).parent().hasClass('directory') ) {
+                        if ( $(this).parent().hasClass('directory') ) {
                             // Directory. Decide whether to expand or callapse.
-							if ( $(this).parent().hasClass('collapsed') ) {
-								// Expand
-								if ( !options.multiFolder ) {
+                            if ( $(this).parent().hasClass('collapsed') ) {
+                                // Expand
+                                if ( !options.multiFolder ) {
                                     // If multi folder is disabled, collapse all directories
                                     // and removed the `expanded` classes.
-									$(this).parent().parent().find('ul').slideUp({ duration: options.collapseSpeed, easing: options.collapseEasing });
-									$(this).parent().parent().find('li.directory').removeClass('expanded').addClass('collapsed');
-								}
-								$(this).parent().find('ul').remove(); // cleanup
-								showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
-								$(this).parent().removeClass('collapsed').addClass('expanded');
-							} else {
-								// Collapse
-								$(this).parent().find('ul').slideUp({ duration: options.collapseSpeed, easing: options.collapseEasing });
-								$(this).parent().removeClass('expanded').addClass('collapsed');
-							}
-						} else {
+                                    $(this).parent().parent().find('ul').slideUp({ duration: options.collapseSpeed, easing: options.collapseEasing });
+                                    $(this).parent().parent().find('li.directory').removeClass('expanded').addClass('collapsed');
+                                }
+                                $(this).parent().find('ul').remove(); // cleanup
+                                showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
+                                $(this).parent().removeClass('collapsed').addClass('expanded');
+                            } else {
+                                // Collapse
+                                $(this).parent().find('ul').slideUp({ duration: options.collapseSpeed, easing: options.collapseEasing });
+                                $(this).parent().removeClass('expanded').addClass('collapsed');
+                            }
+                        } else {
                             // Not a directory, but a file was clicked. So call
                             // the file handler with two arguments:
                             //  - the file path
                             //  - the link element
-							callback($(this).attr('rel'), this);
+                            callback($(this).attr('rel'), this);
 
                             // Highlight the selected file by adding a `selected` to the a element.
                             $(this).parent().parent().find('li.file a').removeClass('selected');
                             $(this).addClass('selected');
-						}
-						return false;
-					});
-					// Prevent a from triggering the # on non-click events
-					if ( options.folderEvent.toLowerCase != 'click' ) $(li_dir).find('li a').bind('click', function() { return false; });
-				}
-				// Loading message
-				$(this).html('<ul class="jqueryFileTree start"><li class="wait">' + options.loadMessage + '<li></ul>');
-				// Get the initial file list
-				showTree( $(this), escape(options.root) );
-			});
-		}
-	});
+                        }
+                        return false;
+                    });
+                    // Prevent a from triggering the # on non-click events
+                    if ( options.folderEvent.toLowerCase != 'click' ) $(li_dir).find('li a').bind('click', function() { return false; });
+                }
+                // Loading message
+                $(this).html('<ul class="jqueryFileTree start"><li class="wait">' + options.loadMessage + '<li></ul>');
+                // Get the initial file list
+                showTree( $(this), escape(options.root) );
+            });
+        }
+    });
 
 })(jQuery);

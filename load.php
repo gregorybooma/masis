@@ -14,7 +14,7 @@ require_once("$root/includes/Member.php");
 $member = new Member();
 
 if ( $member->sessionIsSet() != true ) {
-    exit("You must be logged in to use this page.");
+    exit("Permission denied. Please login.");
 }
 
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;

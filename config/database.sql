@@ -13,7 +13,7 @@ LANGUAGE SQL with(iscachable);
 
 /* Create data types */
 
-CREATE TYPE annstat AS ENUM ('incomplete','complete','moderate','review');
+CREATE TYPE annstat AS ENUM ('incomplete','complete');
 CREATE TYPE substrdom AS ENUM ('dominant','subdominant');
 
 /* Create tables */

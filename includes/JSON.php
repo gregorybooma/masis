@@ -106,7 +106,7 @@ class JSON {
         $types = array();
         while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $types[] = array(
-                'value' => $row['id'],
+                'value' => $row['name'],
                 'label' => $row['name']
                 );
         }
@@ -128,7 +128,7 @@ class JSON {
         $types = array();
         while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $types[] = array(
-                'value' => $row['id'],
+                'value' => $row['name'],
                 'label' => $row['name']
                 );
         }

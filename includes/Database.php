@@ -110,9 +110,9 @@ class Database {
                     -- This is put in a subquery because when image_substrate
                     -- returns multiple records, the corresponding record from
                     -- image_info is repeated.
-                    (SELECT BIT_OR(substrate_types_id) FROM image_substrate WHERE image_info_id = i.id) AS substrate_annotated,
+                    (SELECT MAX(substrate_type) FROM image_substrate WHERE image_info_id = i.id) AS substrate_annotated,
                     -- Get comma separated list of image tags.
-                    (SELECT STRING_AGG(t.name, ',') FROM image_tags j INNER JOIN image_tag_types t ON t.id = j.image_tag_types_id WHERE j.image_info_id = i.id) AS tags
+                    (SELECT STRING_AGG(image_tag, ',') FROM image_tags WHERE image_info_id = i.id) AS tags
                 FROM image_info i
                     LEFT OUTER JOIN vectors v ON v.image_info_id = i.id
                 WHERE i.img_dir = :dir
@@ -264,7 +264,7 @@ class Database {
      */
     public function get_substrate_types() {
         try {
-            $sth = $this->dbh->prepare("SELECT * FROM substrate_types ORDER BY name;");
+            $sth = $this->dbh->prepare("SELECT name FROM substrate_types ORDER BY name;");
             $sth->execute();
         }
         catch (Exception $e) {
@@ -280,7 +280,7 @@ class Database {
      */
     public function get_image_tag_types() {
         try {
-            $sth = $this->dbh->prepare("SELECT * FROM image_tag_types ORDER BY name;");
+            $sth = $this->dbh->prepare("SELECT name FROM image_tag_types ORDER BY name;");
             $sth->execute();
         }
         catch (Exception $e) {
@@ -522,10 +522,9 @@ class Database {
      */
     public function get_substrate_annotations($image_id) {
         try {
-            $sth = $this->dbh->prepare("SELECT s.id, s.name, i.dominance
-                FROM image_substrate i
-                    INNER JOIN substrate_types s ON s.id = i.substrate_types_id
-                WHERE i.image_info_id = :image_id;");
+            $sth = $this->dbh->prepare("SELECT substrate_type, dominance
+                FROM image_substrate
+                WHERE image_info_id = :image_id;");
             $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
             $sth->execute();
         }
@@ -543,10 +542,9 @@ class Database {
      */
     public function get_image_tags($image_id) {
         try {
-            $sth = $this->dbh->prepare("SELECT t.id, t.name
-                FROM image_tags i
-                    INNER JOIN image_tag_types t ON t.id = i.image_tag_types_id
-                WHERE i.image_info_id = :image_id;");
+            $sth = $this->dbh->prepare("SELECT image_tag
+                FROM image_tags
+                WHERE image_info_id = :image_id;");
             $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
             $sth->execute();
         }
@@ -565,26 +563,13 @@ class Database {
      *      strings/substrate types.
      */
     public function set_substrate_annotations($image_id, $annotations) {
-        // Map substrate name to substrate ID.
-        $name2id = array();
-        try {
-            $sth = $this->dbh->prepare("SELECT id, name FROM substrate_types;");
-            $sth->execute();
-        }
-        catch (Exception $e) {
-            throw new Exception( $e->getMessage() );
-        }
-        while ( $cat = $sth->fetch(PDO::FETCH_OBJ) ) {
-            $name2id[$cat->name] = $cat->id;
-        }
-
         // Start a database transaction.
         $this->dbh->beginTransaction();
 
         // Delete all substrate annotations for this image.
         try {
-            $sth = $this->dbh->prepare("DELETE FROM image_substrate WHERE image_info_id = :id;");
-            $sth->bindParam(":id", $image_id, PDO::PARAM_INT);
+            $sth = $this->dbh->prepare("DELETE FROM image_substrate WHERE image_info_id = :image_id;");
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
             $sth->execute();
         }
         catch (Exception $e) {
@@ -592,20 +577,17 @@ class Database {
         }
 
         // Set the new substrate annotations.
-        foreach ( $annotations as $id => $items ) {
-            $parts = explode('-', $id);
-            $dominance = $parts[0];
+        foreach ( $annotations as $dominance => $substrates ) {
+            // Check if the dominance is set ok.
+            if ( !in_array($dominance, array('dominant','subdominant')) ) {
+                throw new Exception("Invalid dominance type. Must be 'dominant' or 'subdominant', but got '{$dominance}'.");
+            }
 
-            foreach ( $items as $cat_name ) {
-                // Check if the dominance is set ok.
-                if ( !in_array($dominance, array('dominant','subdominant')) ) {
-                    throw new Exception("Failed to get substrate dominance from category list ID.");
-                }
-
+            foreach ( $substrates as $substrate_type ) {
                 try {
-                    $sth = $this->dbh->prepare("INSERT INTO image_substrate VALUES (:image_id, :substrate_id, :dominance);");
+                    $sth = $this->dbh->prepare("INSERT INTO image_substrate VALUES (:image_id, :substrate_type, :dominance);");
                     $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
-                    $sth->bindParam(":substrate_id", $name2id[$cat_name], PDO::PARAM_INT);
+                    $sth->bindParam(":substrate_type", $substrate_type, PDO::PARAM_INT);
                     $sth->bindParam(":dominance", $dominance, PDO::PARAM_STR);
                     $sth->execute();
                 }
@@ -626,26 +608,13 @@ class Database {
      * @param array $tags Array of strings/tag names
      */
     public function set_image_tags($image_id, $tags) {
-        // Map tag name to tag ID.
-        $name2id = array();
-        try {
-            $sth = $this->dbh->prepare("SELECT id, name FROM image_tag_types;");
-            $sth->execute();
-        }
-        catch (Exception $e) {
-            throw new Exception( $e->getMessage() );
-        }
-        while ( $cat = $sth->fetch(PDO::FETCH_OBJ) ) {
-            $name2id[$cat->name] = $cat->id;
-        }
-
         // Start a database transaction.
         $this->dbh->beginTransaction();
 
         // Delete all tags for this image.
         try {
-            $sth = $this->dbh->prepare("DELETE FROM image_tags WHERE image_info_id = :id;");
-            $sth->bindParam(":id", $image_id, PDO::PARAM_INT);
+            $sth = $this->dbh->prepare("DELETE FROM image_tags WHERE image_info_id = :image_id;");
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
             $sth->execute();
         }
         catch (Exception $e) {
@@ -655,9 +624,9 @@ class Database {
         // Set the new substrate annotations.
         foreach ( $tags as $tag ) {
             try {
-                $sth = $this->dbh->prepare("INSERT INTO image_tags VALUES (:image_id, :tag_id);");
+                $sth = $this->dbh->prepare("INSERT INTO image_tags VALUES (:image_id, :tag);");
                 $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
-                $sth->bindParam(":tag_id", $name2id[$tag], PDO::PARAM_INT);
+                $sth->bindParam(":tag", $tag, PDO::PARAM_INT);
                 $sth->execute();
             }
             catch (Exception $e) {

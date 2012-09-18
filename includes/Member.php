@@ -202,7 +202,8 @@ END;
         // Check if a cookie is set.
         if (isset($_COOKIE['remember_me_id']) && isset($_COOKIE['remember_me_hash'])) {
             // If so, find the equivilent in the db
-            $user = $db->query("SELECT user_id as id, hash FROM users_logged WHERE user_id = :user_id;", array(':user_id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
+            $user = $db->query("SELECT user_id as id, hash FROM users_logged WHERE user_id = :user_id;",
+                array(':user_id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
             // Does the record exist?
             if ($db->sth->rowCount() >= '1') {
                 // Check if the hashes match

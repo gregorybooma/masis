@@ -496,7 +496,7 @@ function onAnnotate() {
         success: function(data) {
             for (i in data) {
                 var o = data[i];
-                $('#'+o.dominance+'-substrates-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.name + '</span><span class="remove">×</span></span></li>');
+                $('#'+o.dominance+'-substrates-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.substrate_type + '</span><span class="remove">×</span></span></li>');
             }
 
             // Set the callback function for the remove buttons.
@@ -516,7 +516,7 @@ function onAnnotate() {
         success: function(data) {
             for (i in data) {
                 var o = data[i];
-                $('#image-tags-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.name + '</span><span class="remove">×</span></span></li>');
+                $('#image-tags-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.image_tag + '</span><span class="remove">×</span></span></li>');
             }
 
             // Set the callback function for the remove buttons.
@@ -578,24 +578,6 @@ function getCategories(list_id) {
 }
 
 /**
- * Return a object containing all category lists with selections.
- *
- * The object contains selections for each following category list. Each
- * attribute in the object is a list. The name of each attribute corresponds
- * to the list ID. Each attribute is an array containing the selections.
- *
- * @param {Array} lists ID's of the category lists
- * @return {Object} Object with category selections
- */
-function getCategorySelections(lists) {
-    var categories = {};
-    for (i in lists) {
-        categories[lists[i]] = getCategories(lists[i]);
-    }
-    return categories;
-}
-
-/**
  * Set the substrate annotations for the current image in the database.
  */
 function onSaveSubstrateAnnotations() {
@@ -604,8 +586,12 @@ function onSaveSubstrateAnnotations() {
         type: "POST",
         url: "fetch.php?do=set_substrate_annotations",
         dataType: "json",
-        data: {image_id: imageObject.id,
-            annotations: getCategorySelections(['dominant-substrates-list', 'subdominant-substrates-list'])},
+        data: { image_id: imageObject.id,
+                annotations: {
+                    dominant: getCategories('dominant-substrates-list'),
+                    subdominant: getCategories('subdominant-substrates-list')
+                    }
+        },
         success: function(data) {
             if (data.result != 'success') {
                 $("#dialog-unknown-error").dialog('open');

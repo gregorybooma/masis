@@ -5,12 +5,6 @@ CREATE DATABASE masis
        LC_CTYPE = 'en_US.UTF-8'
        CONNECTION LIMIT = -1;
 
-/* Create functions */
-
-CREATE FUNCTION round (DOUBLE PRECISION, INTEGER) RETURNS DOUBLE PRECISION AS
-'select cast(round(cast($1 as numeric),$2) as double precision);'
-LANGUAGE SQL with(iscachable);
-
 /* Create data types */
 
 CREATE TYPE annstat AS ENUM ('incomplete','complete');

@@ -7,30 +7,36 @@ CREATE DATABASE masis
 
 /* Create data types */
 
-CREATE TYPE annstat AS ENUM ('incomplete','complete');
-CREATE TYPE substrdom AS ENUM ('dominant','subdominant');
+CREATE TYPE annstat AS ENUM (
+    'incomplete',
+    'complete'
+);
+
+CREATE TYPE substrdom AS ENUM (
+    'dominant',
+    'subdominant'
+);
 
 /* Create tables */
 
 CREATE TABLE image_info
 (
     id SERIAL,
-    altitude DOUBLE PRECISION NOT NULL,
-    "depth" DOUBLE PRECISION NOT NULL,
-    area DOUBLE PRECISION,
-    img_dir VARCHAR NOT NULL,
-    file_name VARCHAR NOT NULL,
+    altitude double precision NOT NULL,
+    depth double precision NOT NULL,
+    area double precision,
+    img_dir varchar NOT NULL,
+    file_name varchar NOT NULL,
     annotation_status annstat,
 
     PRIMARY KEY (id),
     UNIQUE (img_dir, file_name)
 );
-CREATE INDEX ON image_info (img_dir);
 
 CREATE TABLE substrate_types
 (
-    name VARCHAR NOT NULL,
-    description VARCHAR,
+    name varchar NOT NULL,
+    description varchar,
 
     PRIMARY KEY (name)
 );
@@ -50,8 +56,8 @@ INSERT INTO substrate_types (name) VALUES ('silt');
 
 CREATE TABLE image_substrate
 (
-    image_info_id INTEGER NOT NULL,
-    substrate_type VARCHAR NOT NULL,
+    image_info_id integer NOT NULL,
+    substrate_type varchar NOT NULL,
     dominance substrdom NOT NULL,
 
     UNIQUE (image_info_id, substrate_type),
@@ -61,8 +67,8 @@ CREATE TABLE image_substrate
 
 CREATE TABLE image_tag_types
 (
-    name VARCHAR NOT NULL,
-    description VARCHAR,
+    name varchar NOT NULL,
+    description varchar,
 
     PRIMARY KEY (name)
 );
@@ -77,12 +83,11 @@ INSERT INTO image_tag_types (name) VALUES ('out of focus');
 INSERT INTO image_tag_types (name) VALUES ('reviewed');
 INSERT INTO image_tag_types (name) VALUES ('turbid');
 INSERT INTO image_tag_types (name) VALUES ('unusable');
-INSERT INTO image_tag_types (name) VALUES ('usable');
 
 CREATE TABLE image_tags
 (
-    image_info_id INTEGER NOT NULL,
-    image_tag VARCHAR NOT NULL,
+    image_info_id integer NOT NULL,
+    image_tag varchar NOT NULL,
 
     UNIQUE (image_info_id, image_tag),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
@@ -91,18 +96,18 @@ CREATE TABLE image_tags
 
 CREATE TABLE species
 (
-    aphia_id INTEGER NOT NULL,
-    lsid VARCHAR,
-    scientific_name VARCHAR NOT NULL,
-    status VARCHAR,
-    valid_aphia_id INTEGER,
-    valid_name VARCHAR,
-    kingdom VARCHAR,
-    phylum VARCHAR,
-    class VARCHAR,
-    "order" VARCHAR,
-    family VARCHAR,
-    genus VARCHAR,
+    aphia_id integer NOT NULL,
+    lsid varchar,
+    scientific_name varchar NOT NULL,
+    status varchar,
+    valid_aphia_id integer,
+    valid_name varchar,
+    kingdom varchar,
+    phylum varchar,
+    class varchar,
+    "order" varchar,
+    family varchar,
+    genus varchar,
 
     PRIMARY KEY (aphia_id)
 );
@@ -110,16 +115,16 @@ CREATE TABLE species
 CREATE TABLE vectors
 (
     id SERIAL,
-    image_info_id INTEGER NOT NULL,
-    aphia_id INTEGER,
-    vector_id VARCHAR NOT NULL,
-    vector_wkt VARCHAR NOT NULL,
-    area_pixels INTEGER,
-    area_m2 DOUBLE PRECISION,
-    created_by VARCHAR NOT NULL, -- creator user ID
-    updated_by VARCHAR, -- updater user ID
-    updated_on TIMESTAMP NOT NULL DEFAULT NOW(), -- create/update time
-    remarks VARCHAR(50),
+    image_info_id integer NOT NULL,
+    aphia_id integer,
+    vector_id varchar NOT NULL,
+    vector_wkt varchar NOT NULL,
+    area_pixels integer,
+    area_m2 double precision,
+    created_by varchar NOT NULL, -- creator user ID
+    updated_by varchar, -- updater user ID
+    updated_on timestamp DEFAULT now() NOT NULL, -- creation/update time
+    remarks varchar(50),
 
     PRIMARY KEY (id),
     UNIQUE (image_info_id,vector_id),
@@ -129,29 +134,31 @@ CREATE TABLE vectors
 
 CREATE TABLE areas_image_grouped
 (
-    id SERIAL,
-    image_info_id INTEGER NOT NULL,
-    aphia_id INTEGER NOT NULL,
-    species_area DOUBLE PRECISION NOT NULL,
-    image_area DOUBLE PRECISION NOT NULL,
+    image_info_id integer NOT NULL,
+    aphia_id integer NOT NULL,
+    species_area double precision NOT NULL,
+    image_area double precision NOT NULL
 
-    PRIMARY KEY (id),
-    UNIQUE (image_info_id,aphia_id),
+    PRIMARY KEY (image_info_id, aphia_id),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
     FOREIGN KEY (aphia_id) REFERENCES species (aphia_id)
 );
 
 CREATE TABLE IF NOT EXISTS users (
-  user_id VARCHAR NOT NULL, -- this is an email address (user@mit.edu)
-  pass_hash VARCHAR NOT NULL, -- preferably bcrypt hash
-  first_name VARCHAR,
+  user_id varchar NOT NULL, -- this is an email address (user@mit.edu)
+  pass_hash varchar NOT NULL, -- preferably bcrypt hash
+  first_name varchar,
 
   PRIMARY KEY (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS users_logged (
-  user_id VARCHAR NOT NULL,
-  hash VARCHAR NOT NULL, -- remember_me_hash cookie hash for the login session
+  user_id varchar NOT NULL,
+  hash varchar NOT NULL, -- remember_me_hash cookie hash for the login session
 
   FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
+
+/* Creatie indexes */
+
+CREATE INDEX ON image_info (img_dir);

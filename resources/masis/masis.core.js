@@ -202,8 +202,12 @@ function initWorkspace() {
     var container = document.getElementById("olControlLayerSwitcher");
     map.addControl(new OpenLayers.Control.LayerSwitcher({div: container}));
 
-    // Set stroke width.
-    OpenLayers.Feature.Vector.style['default']['strokeWidth'] = '2';
+    // Set vector styles.
+    OpenLayers.Feature.Vector.style['default']['strokeWidth'] = 2;
+    OpenLayers.Feature.Vector.style['default']['strokeOpacity'] = 1;
+    OpenLayers.Feature.Vector.style['default']['strokeColor'] = "#EE9900";
+    OpenLayers.Feature.Vector.style['default']['fillColor'] = "#EE9900";
+    OpenLayers.Feature.Vector.style['default']['fillOpacity'] = 0.3;
 
     // Set controls.
     controls = {

@@ -19,7 +19,10 @@ class JSON {
         }
 
         // Get file info.
-        list($width, $height, $type, $dim_attr) = getimagesize($path);
+        $size = getimagesize($path);
+        $width = $size[0];
+        $height = $size[1];
+        $type = $size[2];
         $stack = explode('/', $path);
 
         // Set info array.
@@ -28,8 +31,10 @@ class JSON {
         $info['dir'] = array_pop($stack);
         $info['width'] = $width;
         $info['height'] = $height;
+        $info['mime'] = $size['mime'];
         $info['url'] = Config::read('base_url') . 'data/' . $info['dir'] . '/' . $info['name'];
         $info['path'] = $path;
+        $info['exif'] = exif_read_data($path);
 
         $arr = $db->get_image_attributes($info['dir'], $info['name']);
         $info = array_merge($info, $arr);

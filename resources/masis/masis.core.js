@@ -61,7 +61,7 @@ function initInterface() {
 		return false;
 	}).next().hide();
     */
-    $("#sidebar-left").accordion({ header: "h1", active: 3, fillSpace: false });
+    $("#sidebar-left").accordion({ header: "h1", active: 2, fillSpace: false });
 
     // Make the map element resizable.
     $( "#map" ).resizable({
@@ -179,6 +179,17 @@ function initInterface() {
             $('#select-substrate-type').val("");
             // Clear the substrate types list.
             $('#substrate-types-list').empty();
+        }
+    });
+    $( "#dialog-image-info" ).dialog({
+        autoOpen: false,
+        width: 400,
+        resizable: true,
+        modal: false,
+        buttons: {
+            Close: function() {
+                $(this).dialog("close");
+            }
         }
     });
 }
@@ -477,6 +488,14 @@ function onFeatureSelect(feature) {
  */
 function onFeatureUnselect(feature) {
     $('#assign-species').remove();
+}
+
+/**
+ * Display the Image Information dialog.
+ */
+function onShowImageInformation() {
+    if (!imageObject) return;
+    $("#dialog-image-info").dialog('open');
 }
 
 /**
@@ -813,12 +832,22 @@ function loadImage(img) {
 }
 
 function updatePageImageInfo(img) {
-    $('#image-info').empty();
-    $('#image-info').append("<dl></dl>");
-    $('#image-info dl').append("<dt>File:</dt><dd>" + img.url + "</dd>");
-    $('#image-info dl').append("<dt>Depth:</dt><dd>" + img.depth + " m</dd>");
-    $('#image-info dl').append("<dt>Altitude:</dt><dd>" + roundNumber(img.altitude, 2) + " m</dd>");
-    $('#image-info dl').append("<dt>Area:</dt><dd>" + roundNumber(img.area, 2) + " m<sup>2</sup></dd>");
+    $('#dialog-image-info table').empty();
+
+    $('#image-info-file').append("<tr><th>Location:</th><td>" + img.url + "</td></tr>");
+    $('#image-info-file').append("<tr><th>Image Type:</th><td>" + img.mime + "</td></tr>");
+    $('#image-info-file').append("<tr><th>Date Taken:</th><td>" + img.timestamp + "</td></tr>");
+    $('#image-info-file').append("<tr><th>Width:</th><td>" + img.width + " pixels</td></tr>");
+    $('#image-info-file').append("<tr><th>Height:</th><td>" + img.height + " pixels</td></tr>");
+    $('#image-info-file').append("<tr><th>Image Area:</th><td>" + roundNumber(img.area, 2) + " m<sup>2</sup></td></tr>");
+
+    if (img.event_id) $('#image-info-event').append("<tr><th>Event ID:</th><td>" + img.event_id + "</td></tr>");
+    if (img.mission_id) $('#image-info-event').append("<tr><th>Mission ID:</th><td>" + img.mission_id + "</td></tr>");
+    if (img.latitude && img.longitude) $('#image-info-event').append("<tr><th>Location:</th><td><a href=\"https://maps.google.com/maps?q=" + img.latitude + "," + img.longitude + " (" + img.event_id + ")&iwloc=A&hl=en\" target=\"_blank\">" + img.latitude + ":" + img.longitude + "</a></td></tr>");
+    if (img.depth) $('#image-info-event').append("<tr><th>Depth:</th><td>" + img.depth + " m</td></tr>");
+    if (img.altitude) $('#image-info-event').append("<tr><th>Altitude:</th><td>" + roundNumber(img.altitude, 2) + " m</td></tr>");
+    if (img.salinity) $('#image-info-event').append("<tr><th>Salinity:</th><td>" + img.salinity + " PSU</td></tr>");
+    if (img.temperature) $('#image-info-event').append("<tr><th>Temperature:</th><td>" + img.temperature + " &deg;C</td></tr>");
 }
 
 // Functions for testing purposes.

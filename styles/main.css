@@ -213,8 +213,15 @@ h1, h2, h3, h4, h5, h6 {
  * Image info
  *----------------------------------------------------*/
 
-#image-info dd {
-    margin: 0.3em 0.5em;
+#dialog-image-info th,
+#dialog-image-info td {
+    vertical-align: top;
+}
+
+#dialog-image-info th {
+    padding: 0 3px;
+    text-align: right;
+    min-width: 80px;
 }
 
 /*----------------------------------------------------

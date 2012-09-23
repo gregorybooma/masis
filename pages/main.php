@@ -85,15 +85,6 @@ $user = $member->data();
                 </div>
                 <!-- end layer switcher -->
 
-                <!-- image info -->
-                <div>
-                    <h1><a href="#">Image Information</a></h1>
-                    <div>
-                        <div id="image-info"></div>
-                    </div>
-                </div>
-                <!-- end image info -->
-
                 <!-- photo library -->
                 <div>
                     <h1><a href="#">Photo Library</a></h1>
@@ -109,6 +100,7 @@ $user = $member->data();
                     <ul>
                         <li><a href="#" onclick="onCommit(); return false;" class="button">Save Selections</a></li>
                         <li><a href="#" onclick="onAnnotate(); return false;" class="button">Annotate Image</a></li>
+                        <li><a href="#" onclick="onShowImageInformation(); return false;" class="button">Image Information</a></li>
                     </ul>
                 </div>
                 <!-- end buttons -->
@@ -158,20 +150,25 @@ $user = $member->data();
         <div id="dialog-on-commit" title="Commit changes?">
             <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You are about to save all changes. Are you sure?</p>
         </div>
+
         <div id="dialog-remove-selection" title="Remove selection?">
             <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>The selection will be permanently deleted. Are you sure?</p>
         </div>
+
         <div id="dialog-selections-save-success" title="Selections saved">
             <p><span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 20px 0;"></span>All selections have been saved.</p>
         </div>
+
         <div id="error-dialogs">
             <div id="dialog-unknown-error" title="Error">
                 <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>An unknown error has occured. Please contact the website administrator about this problem.</p>
             </div>
+
             <div id="dialog-error-image-area-unknown" title="Error">
                 <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>The area for this image is unknown. Cannot work with this image.</p>
             </div>
         </div>
+
         <div id="dialog-assign-species" title="Assign species">
             <p>To assign a species to the selection, enter a species name in the search
             field and wait for a list of matches to appear. Select a species from
@@ -188,6 +185,7 @@ $user = $member->data();
             <p>Assigned to: <span id="assign-species-label" class="text-italic"><a href="#">Unassigned</a></span></p>
             </form>
         </div>
+
         <div id="dialog-annotate" title="Annotate Image">
             <fieldset>
                 <legend>Dominant Substrate</legend>
@@ -230,6 +228,17 @@ $user = $member->data();
                     <input type="radio" name="annotation-status" value="complete" id="annotation-status-complete" />
                     <label for="annotation-status-complete">Complete</label>
                 </div>
+            </fieldset>
+        </div>
+
+        <div id="dialog-image-info" title="Image Information">
+            <fieldset>
+                <legend>Image Information</legend>
+                <table id="image-info-file"></table>
+            </fieldset>
+            <fieldset>
+                <legend>Event Information</legend>
+                <table id="image-info-event"></table>
             </fieldset>
         </div>
     </div>

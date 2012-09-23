@@ -6,6 +6,9 @@ var imageObject;
 var selectedFeature;
 var controls;
 
+/**
+ * Class for collecting image information in a single object.
+ */
 function ImageInfo() {
     // Properties
     this.name;
@@ -28,6 +31,12 @@ function ImageInfo() {
     };
 }
 
+/**
+ * When the HTML page has finished loading, do the following:
+ * - Initialize the interface
+ * - Initialize the workspace
+ * - Load the photo library
+ */
 $(document).ready(function() {
     // Initialize the interface.
     initInterface();
@@ -36,9 +45,12 @@ $(document).ready(function() {
     initWorkspace();
 
     // Load the directory tree.
-    onLoadDirTree();
+    onLoadPhotoLibrary();
 });
 
+/**
+ * Initialize the user interface.
+ */
 function initInterface() {
     // Set the tabs widget.
     $( "#tabs" ).tabs({
@@ -107,7 +119,7 @@ function initInterface() {
     });
 
     // Initialize dialogs.
-    $( "#dialog-on-commit" ).dialog({
+    $( "#dialog-on-save-selections" ).dialog({
         autoOpen: false,
         resizable: false,
         modal: true,
@@ -159,7 +171,7 @@ function initInterface() {
             $('#select-species').autocomplete("destroy");
         }
     });
-    $( "#dialog-annotate" ).dialog({
+    $( "#dialog-annotate-image" ).dialog({
         autoOpen: false,
         width: 400,
         modal: true,
@@ -194,6 +206,9 @@ function initInterface() {
     });
 }
 
+/**
+ * Initialize the workspace.
+ */
 function initWorkspace() {
     // Create a map.
     map = new OpenLayers.Map('map', {
@@ -227,7 +242,7 @@ function initWorkspace() {
         modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
         drag: new OpenLayers.Control.DragFeature(vectorLayer),
         annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
-            {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect}),
+            {onSelect: onFeatureAnnotateSelect, onUnselect: onFeatureAnnotateUnselect}),
         remove: new OpenLayers.Control.SelectFeature(vectorLayer,
             {onSelect: onFeatureRemove})
     };
@@ -236,7 +251,10 @@ function initWorkspace() {
     }
 }
 
-function onLoadDirTree() {
+/**
+ * Load the photo library.
+ */
+function onLoadPhotoLibrary() {
     $('#photo-library').fileTree({
             root: '/data/',
             script: 'load.php?do=get_file_list',
@@ -251,6 +269,9 @@ function onLoadDirTree() {
     );
 }
 
+/**
+ * Set the empty image area fields in the database.
+ */
 function onSetDatabaseAreas() {
     $.ajax({
         type: "GET",
@@ -267,6 +288,9 @@ function onSetDatabaseAreas() {
     });
 }
 
+/**
+ * Set the annotation status for the current image in the database.
+ */
 function onSetImageAnnotationStatus() {
     if (!imageObject) return;
     var element = $("input:radio[name=annotation-status]:checked");
@@ -276,17 +300,20 @@ function onSetImageAnnotationStatus() {
         dataType: "json",
         data: {image_id: imageObject.id, status: element.val()},
         success: function(data) {
-            if (data.result != 'success') {
-                $("#dialog-unknown-error").dialog('open');
-            }
-            else {
+            if (data.result == 'success') {
                 // Update the imageObject annotation status.
                 imageObject.annotation_status = element.val();
+            }
+            else {
+                $("#dialog-unknown-error").dialog('open');
             }
         }
     });
 }
 
+/**
+ * Load a table showing the coverage per species based on all fully annotated images.
+ */
 function onLoadTableSpeciesCoverageOverall() {
     $.ajax({
         type: "GET",
@@ -304,6 +331,9 @@ function onLoadTableSpeciesCoverageOverall() {
     });
 }
 
+/**
+ * Load a table showing the coverage per species on images where they were found.
+ */
 function onLoadTableSpeciesCoverageWherePresent() {
     $.ajax({
         type: "GET",
@@ -321,6 +351,9 @@ function onLoadTableSpeciesCoverageWherePresent() {
     });
 }
 
+/**
+ * Load a table showing a list of all saved vectors for the current image.
+ */
 function onLoadVectorsTable() {
     if (!imageObject) return;
     $.ajax({
@@ -340,11 +373,17 @@ function onLoadVectorsTable() {
     });
 }
 
-function onCommit() {
+/**
+ * Show a confirmation dialog before saving the vectors to the database.
+ */
+function onSaveSelections() {
     if (!imageObject) return;
-    $("#dialog-on-commit").dialog('open');
+    $("#dialog-on-save-selections").dialog('open');
 }
 
+/**
+ * Save all workspace vectors to the database.
+ */
 function saveVectors() {
     var vectors = {};
     for (f in vectorLayer.features) {
@@ -379,10 +418,15 @@ function saveVectors() {
     });
 }
 
+/**
+ * Delete a vector from the workspace and the database.
+ *
+ * @param {Object} feature The vector to be removed
+ */
 function onFeatureRemove(feature) {
     var checked = document.getElementById("removePolygon").checked;
     if (checked) {
-        // Set button options for the dialog.
+        // Contruct the confirmation dialog.
         $("#dialog-remove-selection").dialog("option", 'buttons', {
                 "Delete selection": function() {
                     $( this ).dialog( "close" );
@@ -395,10 +439,11 @@ function onFeatureRemove(feature) {
                         data: {image_id: imageObject.id, vector_id: feature.id},
                         success: function(data) {
                             if (data.result == 'success') {
-                                // Destroy the vector object.
+                                // Remove the vector from the workspace.
                                 feature.destroy();
                             }
                             else {
+                                // Display error message on failure.
                                 $("#dialog-unknown-error").dialog('open');
                             }
                         }
@@ -408,12 +453,17 @@ function onFeatureRemove(feature) {
                     $( this ).dialog( "close" );
                 }
             });
-        // Open the dialog.
+        // Open the confirmation dialog.
         $("#dialog-remove-selection").dialog('open');
     }
 }
 
-function onFeatureSelect(feature) {
+/**
+ * Add a category item to a catefory-editor.
+ *
+ * @param {Object} feature The vector to be annotated
+ */
+function onFeatureAnnotateSelect(feature) {
     selectedFeature = feature;
 
     $('#select-species').attr('value', "");
@@ -430,14 +480,18 @@ function onFeatureSelect(feature) {
         select: function(event, ui) {
             var id = ui.item.value;
             var name = ui.item.label;
-            // The default action of select is to replace the text field's
-            // value with the value of the selected item. This is not desired.
-            event.preventDefault();
+
             // Set the species ID and name for the selected feature.
             selectedFeature.species_id = id;
             selectedFeature.species_name = name;
-            // Replace the text field value with the label.
+
+            // The default action of select is to replace the text field's
+            // value with the value of the selected item. This is not desired.
+            event.preventDefault();
+
+            // Replace the text field value with the label instead.
             $("#select-species").val(name);
+
             // Update dialog label.
             if ( id ) {
                 $('#assign-species-label a').attr('href', "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + id);
@@ -449,6 +503,7 @@ function onFeatureSelect(feature) {
             }
         }
     });
+
     // Update dialog label.
     if ( feature.species_id ) {
         $('#assign-species-label a').attr('href', "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + feature.species_id);
@@ -458,35 +513,18 @@ function onFeatureSelect(feature) {
         $('#assign-species-label a').attr('href', "#");
         $('#assign-species-label a').text("Unassigned");
     }
+
     // Reset the search parameter (sets it to "Scientific Name").
      $("#select-species-searchpar").val(0);
+
     // Open dialog.
     $("#dialog-assign-species").dialog('open');
-
-    /*
-    loadSelectList($('#select-species'),
-        'load.php?do=get_species',
-        function() {
-            // Preselect the correct option if the selected feature is already
-            // assigned to a species.
-            if (selectedFeature.species_id) {
-                $("#select-species").val(selectedFeature.species_id);
-            }
-        }
-    );
-
-    // Set the species ID and name for the selected feature.
-    $("#select-species").change(function() {
-        selectedFeature.species_id = $(this).val();
-        selectedFeature.species_name = $("#select-species option:selected").text();
-    });
-    */
 }
 
 /**
  * Remove the assign-species input field.
  */
-function onFeatureUnselect(feature) {
+function onFeatureAnnotateUnselect(feature) {
     $('#assign-species').remove();
 }
 
@@ -505,7 +543,7 @@ function onShowImageInformation() {
  *  - Load the substrate annotations from the database and populate the
  *    substrate lists.
  */
-function onAnnotate() {
+function onAnnotateImage() {
     if (!imageObject) return;
 
     // Load and set the substrate annotations.
@@ -560,7 +598,7 @@ function onAnnotate() {
     $('#image-annotation-status input:radio').button("refresh");
 
     // Open dialog.
-    $("#dialog-annotate").dialog('open');
+    $("#dialog-annotate-image").dialog('open');
 }
 
 /**
@@ -589,7 +627,7 @@ function onAddCategory(select_id, list_id) {
 /**
  * Return a unique list of category names from a category list.
  *
- * @param {String} list_id The ID for the category list
+ * @param {String} list_id The ID for the category list element
  * @return {Array} Category names
  */
 function getCategories(list_id) {
@@ -761,7 +799,12 @@ function setModifyMode() {
     }
 }
 
-// Set and load image from path.
+/**
+ * Load a new image in the workspace.
+ *
+ * @param {String} path The relative path to the image file. This is the path
+ *      from the root of the web folder.
+ */
 function setImage(path) {
     $.ajax({
         type: "GET",
@@ -774,12 +817,17 @@ function setImage(path) {
             // Load new image.
             loadImage(imageObject);
             // Update image info on page.
-            updatePageImageInfo(imageObject);
+            updateImageInfoDialog(imageObject);
         }
     });
 }
 
-// Set image object from imago info object.
+/**
+ * Set the image information object `imageObject`.
+ *
+ * @param {String} info The relative path to the image file. This is the path
+ *      from the root of the web folder.
+ */
 function setImageObject(info) {
     var to_float = ['altitude','area','area_per_pixel','depth'];
 
@@ -796,7 +844,11 @@ function setImageObject(info) {
     }
 }
 
-// Load new image into the workspace.
+/**
+ * Load a new image into the workspace.
+ *
+ * @param {String} img An ImageInfo object
+ */
 function loadImage(img) {
     // Check the image object.
     if (! img instanceof ImageInfo) {
@@ -857,11 +909,11 @@ function loadImage(img) {
     // programatically.
     $("#feature-controls input:radio").button( "refresh" );
 
-    // Activate the right control.
+    // Activate the default control.
     toggleControl(e);
 
-    // Reset other page elements (e.g. assign species input field).
-    onFeatureUnselect();
+    // Reset other page elements.
+    $('#assign-species').remove();
 
     // Load existing vectors from the database.
     $.ajax({
@@ -875,7 +927,12 @@ function loadImage(img) {
     });
 }
 
-function updatePageImageInfo(img) {
+/**
+ * Update the image information in the Image Information dialog.
+ *
+ * @param {String} img An ImageInfo object
+ */
+function updateImageInfoDialog(img) {
     $('#dialog-image-info table').empty();
 
     $('#image-info-file').append("<tr><th>Location:</th><td>" + img.url + "</td></tr>");
@@ -894,7 +951,9 @@ function updatePageImageInfo(img) {
     if (img.temperature) $('#image-info-event').append("<tr><th>Temperature:</th><td>" + img.temperature + " &deg;C</td></tr>");
 }
 
-// Functions for testing purposes.
+/**
+ * Draw a 100x100px box in the workspace.
+ */
 function test1() {
     bounds = new OpenLayers.Bounds(0, imageObject.height-100, 100, imageObject.height);
     box = new OpenLayers.Feature.Vector(bounds.toGeometry());

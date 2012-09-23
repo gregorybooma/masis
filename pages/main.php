@@ -96,8 +96,8 @@ $user = $member->data();
                 <!-- buttons -->
                 <div id="workspace-buttons" class="action-buttons">
                     <ul>
-                        <li><a href="#" onclick="onCommit(); return false;" class="button">Save Selections</a></li>
-                        <li><a href="#" onclick="onAnnotate(); return false;" class="button">Annotate Image</a></li>
+                        <li><a href="#" onclick="onSaveSelections(); return false;" class="button">Save Selections</a></li>
+                        <li><a href="#" onclick="onAnnotateImage(); return false;" class="button">Annotate Image</a></li>
                         <li><a href="#" onclick="onShowImageInformation(); return false;" class="button">Image Information</a></li>
                     </ul>
                 </div>
@@ -147,7 +147,7 @@ $user = $member->data();
 
     <!-- dialogs -->
     <div class="hidden">
-        <div id="dialog-on-commit" title="Commit changes?">
+        <div id="dialog-on-save-selections" title="Commit changes?">
             <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You are about to save all changes. Are you sure?</p>
         </div>
 
@@ -186,7 +186,7 @@ $user = $member->data();
             </form>
         </div>
 
-        <div id="dialog-annotate" title="Annotate Image">
+        <div id="dialog-annotate-image" title="Annotate Image">
             <fieldset>
                 <legend>Dominant Substrate</legend>
                 <select id="select-dominant-substrate">

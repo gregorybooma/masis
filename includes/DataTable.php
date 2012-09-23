@@ -146,12 +146,13 @@ class DataTable {
         $db->set_areas_image_grouped();
 
         try {
-            $sth = $db->dbh->prepare("SELECT sum(area)
-                FROM image_info
+            $sth = $db->dbh->prepare("SELECT sum(i.img_area)
+                FROM image_info i
+                    INNER JOIN image_annotation_status a ON a.image_info_id = i.id
                 -- Images marked as 'complete' are fully reviewed and
                 -- annotated. Only for these images can be said that a species
                 -- is not present on the image if no vectors are set.
-                WHERE annotation_status = 'complete';");
+                WHERE a.annotation_status = 'complete';");
             $sth->execute();
         }
         catch (Exception $e) {
@@ -168,10 +169,11 @@ class DataTable {
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                     INNER JOIN image_info i ON i.id = a.image_info_id
+                    INNER JOIN image_annotation_status y ON y.image_info_id = i.id
                 -- Images marked as 'complete' are fully reviewed and
                 -- annotated. Only for these images can be said that a species
                 -- is not present on the image if no vectors are set.
-                WHERE i.annotation_status = 'complete'
+                WHERE y.annotation_status = 'complete'
                 GROUP BY s.scientific_name;");
             $sth->bindParam(":total_surface", $total_surface, PDO::PARAM_STR);
             $sth->execute();

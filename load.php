@@ -27,10 +27,15 @@ switch ($do) {
         break;
 
     case 'get_image_info':
-        if ( empty($_GET['path']) ) exit("Parameter `path` is not set.");
-        require("$root/includes/JSON.php");
-        $json = new JSON();
-        print $json->get_image_info(Config::read('base_path') . $_GET['path']);
+        try {
+            if ( empty($_GET['path']) ) throw new Exception( "Parameter `path` is not set." );
+            require("$root/includes/JSON.php");
+            $json = new JSON();
+            print $json->get_image_info(Config::read('base_path') . $_GET['path']);
+        }
+        catch (Exception $e) {
+            print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );
+        }
         break;
     case 'get_species':
         if ( !empty($_GET['term']) ) {

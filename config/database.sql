@@ -5,32 +5,46 @@ CREATE DATABASE masis
        LC_CTYPE = 'en_US.UTF-8'
        CONNECTION LIMIT = -1;
 
-/* Create data types */
-
-CREATE TYPE annstat AS ENUM (
-    'incomplete',
-    'complete'
-);
-
-CREATE TYPE substrdom AS ENUM (
-    'dominant',
-    'subdominant'
-);
-
 /* Create tables */
 
 CREATE TABLE image_info
 (
     id SERIAL,
-    altitude double precision NOT NULL,
-    depth double precision NOT NULL,
-    area double precision,
     img_dir varchar NOT NULL,
     file_name varchar NOT NULL,
-    annotation_status annstat,
+    event_id varchar,
+    mission_id varchar,
+    longitude double precision,
+    latitude double precision,
+    "timestamp" timestamp,
+    nav_depth double precision NOT NULL, -- in meters
+    nav_altitude double precision NOT NULL, -- in meters
+    img_area double precision, -- in square meters
+    temperature double precision, -- in degrees Celcius
+    salinity double precision,
 
     PRIMARY KEY (id),
     UNIQUE (img_dir, file_name)
+);
+
+CREATE TABLE annotation_status_types
+(
+    name varchar NOT NULL,
+    description varchar,
+
+    PRIMARY KEY (name)
+);
+
+INSERT INTO annotation_status_types (name) VALUES ('incomplete');
+INSERT INTO annotation_status_types (name) VALUES ('complete');
+
+CREATE TABLE image_annotation_status
+(
+    image_info_id integer,
+    annotation_status varchar NOT NULL,
+
+    PRIMARY KEY (image_info_id),
+    FOREIGN KEY (annotation_status) REFERENCES annotation_status_types (name)
 );
 
 CREATE TABLE substrate_types
@@ -58,7 +72,7 @@ CREATE TABLE image_substrate
 (
     image_info_id integer NOT NULL,
     substrate_type varchar NOT NULL,
-    dominance substrdom NOT NULL,
+    dominance varchar NOT NULL,
 
     UNIQUE (image_info_id, substrate_type),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
@@ -124,7 +138,7 @@ CREATE TABLE vectors
     created_by varchar NOT NULL, -- creator user ID
     updated_by varchar, -- updater user ID
     updated_on timestamp DEFAULT now() NOT NULL, -- creation/update time
-    remarks varchar(50),
+    remarks varchar,
 
     PRIMARY KEY (id),
     UNIQUE (image_info_id,vector_id),
@@ -137,7 +151,7 @@ CREATE TABLE areas_image_grouped
     image_info_id integer NOT NULL,
     aphia_id integer NOT NULL,
     species_area double precision NOT NULL,
-    image_area double precision NOT NULL
+    image_area double precision NOT NULL,
 
     PRIMARY KEY (image_info_id, aphia_id),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),

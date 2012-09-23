@@ -24,12 +24,13 @@ class Database {
         $this->dbh->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
     }
 
-	/*
-	 * Create a new database prepared query
+	/**
+	 * Create a new database prepared query.
 	 *
 	 * @param string $query The prepared statement query to the database
 	 * @param array|string $bind All the variables to bind to the prepared statement
-	 * @return return the executed string
+	 * @return The return value of this function on success depends on the
+     *      fetch type. In all cases, FALSE is returned on failure.
 	 */
 	public function query($query, $bind = null, $fetch = 'FETCH_ASSOC') {
 		/* Prepare the query statement */
@@ -49,13 +50,12 @@ class Database {
 				} else {
 					$param = FALSE;
 				}
-				/* Bid value */
 				if ($param) {
 					$this->sth->bindValue($select, $value, $param);
 				}
 			}
 		}
-		/* Execute Query & check for any errors */
+
 		if (!$this->sth->execute()){
 			$result = array(
 				1 => 'false',
@@ -63,16 +63,20 @@ class Database {
 			);
 			return $result;
 		}
-		/* Return all content */
+
 		if ($fetch == 'FETCH_ASSOC') {
 			$result = $this->sth->fetch(PDO::FETCH_ASSOC);
-		} elseif ($fetch == 'FETCH_BOTH') {
+		}
+        elseif ($fetch == 'FETCH_BOTH') {
 			$result = $this->sth->fetch(PDO::FETCH_BOTH);
-		} elseif ($fetch == 'FETCH_LAZY') {
+		}
+        elseif ($fetch == 'FETCH_LAZY') {
 			$result = $this->sth->fetch(PDO::FETCH_LAZY);
-		} elseif ($fetch == 'FETCH_OBJ') {
+		}
+        elseif ($fetch == 'FETCH_OBJ') {
 			$result = $this->sth->fetch(PDO::FETCH_OBJ);
-		} elseif ($fetch == 'fetchAll') {
+		}
+        elseif ($fetch == 'fetchAll') {
 			$result = $this->sth->fetchAll();
 		}
 		return $result;
@@ -90,8 +94,24 @@ class Database {
         $filename = $filename[0] . ".%";
 
         try {
-            $sth = $this->dbh->prepare("SELECT * FROM image_info
-                WHERE img_dir = :dir AND file_name SIMILAR TO :filename;");
+            $sth = $this->dbh->prepare("SELECT i.id,
+                    i.img_dir,
+                    i.file_name,
+                    i.event_id,
+                    i.mission_id,
+                    i.longitude,
+                    i.latitude,
+                    i.timestamp,
+                    i.nav_depth AS depth,
+                    i.nav_altitude AS altitude,
+                    i.img_area AS area,
+                    i.temperature,
+                    i.salinity,
+                    a.annotation_status
+                FROM image_info i
+                    LEFT OUTER JOIN image_annotation_status a ON a.image_info_id = i.id
+                WHERE i.img_dir = :dir
+                    AND i.file_name SIMILAR TO :filename;");
             $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
             $sth->bindParam(":filename", $filename, PDO::PARAM_STR);
             $sth->execute();
@@ -105,7 +125,7 @@ class Database {
     public function get_files_for_dir($dir) {
         try {
             $sth = $this->dbh->prepare("SELECT i.file_name,
-                    i.annotation_status,
+                    a.annotation_status,
                     COUNT(v.id) AS n_vectors,
                     -- This is put in a subquery because when image_substrate
                     -- returns multiple records, the corresponding record from
@@ -115,8 +135,9 @@ class Database {
                     (SELECT STRING_AGG(image_tag, ',') FROM image_tags WHERE image_info_id = i.id) AS tags
                 FROM image_info i
                     LEFT OUTER JOIN vectors v ON v.image_info_id = i.id
+                    LEFT OUTER JOIN image_annotation_status a ON a.image_info_id = i.id
                 WHERE i.img_dir = :dir
-                GROUP BY i.id, i.file_name, i.annotation_status
+                GROUP BY i.id, i.file_name, a.annotation_status
                 ORDER BY i.file_name;");
             $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
             $sth->execute();
@@ -440,7 +461,7 @@ class Database {
                 SELECT i.id,
                     s.aphia_id,
                     sum(v.area_m2),
-                    i.area
+                    i.img_area
                 FROM vectors v
                     INNER JOIN species s ON s.aphia_id = v.aphia_id
                     INNER JOIN image_info i ON i.id = v.image_info_id
@@ -499,14 +520,36 @@ class Database {
      * Set the annotation status for an image.
      *
      * @param int $image_id The id for the image (image_info.id).
-     * @param string $status The status ('incomplete','complete','moderate','review').
+     * @param string $status The status, e.g. 'incomplete' or 'complete'.
      */
     public function set_annotation_status($image_id, $status) {
         try {
-            $sth = $this->dbh->prepare("UPDATE image_info SET annotation_status = :status
-                WHERE id = :id;");
+            $sth = $this->dbh->prepare("SELECT annotation_status
+                FROM image_annotation_status WHERE image_info_id = :image_id;");
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        $row = $sth->fetch();
+        $annotation_status = $row ? $row[0] : NULL;
+
+        // If the status is already set to the same value, do nothing.
+        if ($annotation_status == $status) return;
+
+        // Set the new record or update the existing.
+        if ($annotation_status == NULL) {
+            $query = "INSERT INTO image_annotation_status VALUES (:image_id, :status);";
+        }
+        else {
+            $query = "UPDATE image_annotation_status SET annotation_status = :status
+                WHERE image_info_id = :image_id;";
+        }
+        try {
+            $sth = $this->dbh->prepare($query);
             $sth->bindParam(":status", $status, PDO::PARAM_STR);
-            $sth->bindParam(":id", $image_id, PDO::PARAM_INT);
+            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
             $sth->execute();
         }
         catch (Exception $e) {

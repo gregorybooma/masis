@@ -136,7 +136,7 @@ function initInterface() {
             }
         }
     });
-    $( "#dialog-unknown-error" ).dialog({
+    $( "#error-dialogs div" ).dialog({
         autoOpen: false,
         resizable: false,
         modal: true,
@@ -168,10 +168,10 @@ function initInterface() {
                 $(this).dialog("close");
             },
             Save: function() {
+                $(this).dialog("close");
                 onSaveSubstrateAnnotations();
                 onSaveImageTags();
                 onSetImageAnnotationStatus();
-                $(this).dialog("close");
             }
         },
         close: function() {
@@ -737,15 +737,15 @@ function setImageObject(info) {
 function loadImage(img) {
     // Check the image object.
     if (! img instanceof ImageInfo) {
-        alert("Error: Expected ImageInfo object, got something else.");
+        $("#dialog-unknown-error").dialog('open');
         return;
     }
     if (img.width == undefined || img.height == undefined) {
-        alert("Error: This file type is unsupported: " + img.name);
+        $("#dialog-unknown-error").dialog('open');
         return;
     }
     if (img.area_per_pixel == undefined) {
-        alert("Error: The image area could not be determined.");
+        $("#dialog-error-image-area-unknown").dialog('open');
         return;
     }
 

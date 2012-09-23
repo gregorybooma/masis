@@ -4,8 +4,8 @@
 define('MASIS', true);
 
 class MaSIS {
-    public $lens_angle_x = 0.510472157;
-    public $lens_angle_y = 0.386512004;
+    static $lens_angle_x = 0.510472157;
+    static $lens_angle_y = 0.386512004;
     public $page_title;
     public $page_content;
 

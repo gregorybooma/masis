@@ -22,7 +22,7 @@ switch ($do) {
     case 'save_vectors':
         try {
             $db->save_vectors($_POST);
-            print json_encode(array('result' => 'success'));
+            print json_encode( array('result' => 'success') );
         }
         catch (Exception $e) {
             print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );

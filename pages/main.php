@@ -164,8 +164,13 @@ $user = $member->data();
         <div id="dialog-selections-save-success" title="Selections saved">
             <p><span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 20px 0;"></span>All selections have been saved.</p>
         </div>
-        <div id="dialog-unknown-error" title="Error">
-            <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>An unknown error has occured. Please contact the website administrator about this problem.</p>
+        <div id="error-dialogs">
+            <div id="dialog-unknown-error" title="Error">
+                <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>An unknown error has occured. Please contact the website administrator about this problem.</p>
+            </div>
+            <div id="dialog-error-image-area-unknown" title="Error">
+                <p><span class="ui-icon ui-icon-circle-close" style="float:left; margin:0 7px 20px 0;"></span>The area for this image is unknown. Cannot work with this image.</p>
+            </div>
         </div>
         <div id="dialog-assign-species" title="Assign species">
             <p>To assign a species to the selection, enter a species name in the search

@@ -57,9 +57,7 @@ $user = $member->data();
                             <input type="radio" name="control" value="none" id="navigateToggle" onclick="toggleControl(this);" checked="checked" />
                             <label for="navigateToggle">Navigate</label>
                             <input type="radio" name="control" value="polygon" id="selectToggle" onclick="toggleControl(this);" />
-                            <label for="selectToggle">Draw Polygon</label>
-                            <input type="radio" name="control" value="regular_polygon" id="regularSelectToggle" onclick="toggleControl(this);" />
-                            <label for="regularSelectToggle">Draw Regular Polygon</label>
+                            <label for="selectToggle">Select</label>
                             <input type="radio" name="control" value="annotate" id="annotateToggle" onclick="toggleControl(this);" />
                             <label for="annotateToggle">Annotate</label>
                             <span class="section">Modify selections:</span>
@@ -110,14 +108,16 @@ $user = $member->data();
                 <!-- end map -->
 
                 <div id="context-controls">
-                    <div id="regular-polygon-controls">
-                        <input type="radio" name="sides" value="4" id="polygonSquare" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                    <div id="polygon-controls">
+                        <input type="radio" name="polygon" value="custom" id="polygonCustom" checked="checked" onchange="setPolygonControl(this)" />
+                        <label for="polygonCustom">Custom</label>
+                        <input type="radio" name="polygon" value="square" id="polygonSquare" onchange="setPolygonControl(this)" />
                         <label for="polygonSquare">Square</label>
-                        <input type="radio" name="sides" value="5" id="polygonPentagon" checked="checked" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                        <input type="radio" name="polygon" value="pentagon" id="polygonPentagon" onchange="setPolygonControl(this)" />
                         <label for="polygonPentagon">Pentagon</label>
-                        <input type="radio" name="sides" value="6" id="polygonHexagon" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                        <input type="radio" name="polygon" value="hexagon" id="polygonHexagon" onchange="setPolygonControl(this)" />
                         <label for="polygonHexagon">Hexagon</label>
-                        <input type="radio" name="sides" value="40" id="polygonCircle" onchange="setRegularPolygonOptions({sides: parseInt(this.value)})" />
+                        <input type="radio" name="polygon" value="circle" id="polygonCircle" onchange="setPolygonControl(this)" />
                         <label for="polygonCircle">Circle</label>
                     </div>
                 </div>

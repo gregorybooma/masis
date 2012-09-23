@@ -74,7 +74,7 @@ function initInterface() {
 
     // Transform feature controls into a jQuery UI button set.
     $("#feature-controls").buttonset();
-    $("#regular-polygon-controls").buttonset();
+    $("#polygon-controls").buttonset();
     $("#image-annotation-status").buttonset();
 
     // Disable feature controls.
@@ -661,45 +661,89 @@ function onLoadVectors(vectors) {
     vectorLayer.addFeatures(features);
 }
 
-/*** Other functions ***/
-
-// Activate selected control.
+/**
+ * Activate the selected option from the controls menu.
+ *
+ * @param {Object} element The HTML radio input element that was selected
+ */
 function toggleControl(element) {
+    // Hide/show context control buttons.
     toggleContextControl(element);
+
     for (key in controls) {
         var control = controls[key];
         if (element.value == key && element.checked) {
+            // Activate a control.
             control.activate();
+            // If the activated control is a polygon modify control,
+            // set the modify mode.
             if (key == 'modify')  setModifyMode();
         }
         else {
+            // Deactivate a control.
             control.deactivate();
         }
     }
 }
 
-// Hide or show context controls.
+/**
+ * Hide or show context control buttons.
+ *
+ * @param {Object} element The HTML radio input element that was selected
+ */
 function toggleContextControl(element) {
-    if (element.getAttribute('id') == 'regularSelectToggle' && element.checked) {
-        // Show the controls for drawing regular polygons.
-        $('#regular-polygon-controls').show();
-        setRegularPolygonOptions({sides: 4});
-        $('#polygonSquare').attr('checked', true);
-        $("#regular-polygon-controls input:radio").button("refresh");
+    // Show the context controls for drawing polygons.
+    if (element.getAttribute('id') == 'selectToggle' && element.checked) {
+        $('#polygon-controls').show();
+        setPolygonControl('custom');
+        $('#polygonCustom').attr('checked', true);
+        $("#polygon-controls input:radio").button("refresh");
     }
     else {
         // Hide the controls for drawing regular polygons.
-        $('#regular-polygon-controls').hide();
+        $('#polygon-controls').hide();
     }
 }
 
-// Set the options for drawing regular polygons.
-function setRegularPolygonOptions(options) {
-    options.irregular = true; // Draw irregular polygons by default.
-    controls.regular_polygon.handler.setOptions(options);
+/**
+ * Set and activate the polygon drawing control for the selected option.
+ *
+ * For the regular_polygon control, the option `irregular` is always set to
+ * true to enable drawing of irregular polygons.
+ *
+ * @param {Object} element The HTML radio input element that was selected
+ */
+function setPolygonControl(element) {
+    if (element.value == 'square') {
+        options = {sides: 4, irregular: true};
+        controls.regular_polygon.handler.setOptions(options);
+    }
+    else if (element.value == 'pentagon') {
+        options = {sides: 5, irregular: true};
+        controls.regular_polygon.handler.setOptions(options);
+    }
+    else if (element.value == 'hexagon') {
+        options = {sides: 6, irregular: true};
+        controls.regular_polygon.handler.setOptions(options);
+    }
+    else if (element.value == 'circle') {
+        options = {sides: 40, irregular: true};
+        controls.regular_polygon.handler.setOptions(options);
+    }
+
+    if (element.value == 'custom') {
+        controls.regular_polygon.deactivate();
+        controls.polygon.activate();
+    }
+    else {
+        controls.polygon.deactivate();
+        controls.regular_polygon.activate();
+    }
 }
 
-// Set the modify feature for modifying polygons.
+/**
+ * Set the modify mode for the modify polygon feature.
+ */
 function setModifyMode() {
     var transform = document.getElementById("transformToggle").checked;
     var rotate = document.getElementById("rotateToggle").checked;

@@ -753,19 +753,19 @@ function toggleContextControl(element) {
  */
 function setPolygonControl(element) {
     if (element.value == 'square') {
-        options = {sides: 4, irregular: true};
+        var options = {sides: 4, irregular: true};
         controls.regular_polygon.handler.setOptions(options);
     }
     else if (element.value == 'pentagon') {
-        options = {sides: 5, irregular: true};
+        var options = {sides: 5, irregular: true};
         controls.regular_polygon.handler.setOptions(options);
     }
     else if (element.value == 'hexagon') {
-        options = {sides: 6, irregular: true};
+        var options = {sides: 6, irregular: true};
         controls.regular_polygon.handler.setOptions(options);
     }
     else if (element.value == 'circle') {
-        options = {sides: 40, irregular: true};
+        var options = {sides: 40, irregular: true};
         controls.regular_polygon.handler.setOptions(options);
     }
 
@@ -944,7 +944,7 @@ function updateImageInfoDialog(img) {
 
     if (img.event_id) $('#image-info-event').append("<tr><th>Event ID:</th><td>" + img.event_id + "</td></tr>");
     if (img.mission_id) $('#image-info-event').append("<tr><th>Mission ID:</th><td>" + img.mission_id + "</td></tr>");
-    if (img.latitude && img.longitude) $('#image-info-event').append("<tr><th>Location:</th><td><a href=\"https://maps.google.com/maps?q=" + img.latitude + "," + img.longitude + " (" + img.event_id + ")&iwloc=A&hl=en\" target=\"_blank\">" + img.latitude + ":" + img.longitude + "</a></td></tr>");
+    if (img.location_map_url) $('#image-info-event').append("<tr><th>Location:</th><td>" + img.latitude + ":" + img.longitude + " <a href=\"" + img.location_map_url + "\" target=\"_blank\"><span class='icon map' title='View map'></span></a></td></tr>");
     if (img.depth) $('#image-info-event').append("<tr><th>Depth:</th><td>" + img.depth + " m</td></tr>");
     if (img.altitude) $('#image-info-event').append("<tr><th>Altitude:</th><td>" + roundNumber(img.altitude, 2) + " m</td></tr>");
     if (img.salinity) $('#image-info-event').append("<tr><th>Salinity:</th><td>" + img.salinity + " PSU</td></tr>");

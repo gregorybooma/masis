@@ -45,6 +45,9 @@ class JSON {
         if ( !empty($info['area']) && !empty($width) && !empty($height) ) {
             $info['area_per_pixel'] = $info['area'] / ($width * $height);
         }
+        if ( !empty($info['latitude']) && !empty($info['longitude']) ) {
+            $info['location_map_url'] = htmlentities("https://maps.google.com/maps?q={$info['latitude']},{$info['longitude']}&iwloc=A&hl=en");
+        }
         return json_encode($info);
     }
 

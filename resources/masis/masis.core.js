@@ -494,7 +494,7 @@ function onFeatureAnnotateSelect(feature) {
 
             // Update dialog label.
             if ( id ) {
-                $('#assign-species-label a').attr('href', "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + id);
+                $('#assign-species-label a').attr( {'href': "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + id, 'target': '_blank'} );
                 $('#assign-species-label a').text(name);
             }
             else {
@@ -506,7 +506,7 @@ function onFeatureAnnotateSelect(feature) {
 
     // Update dialog label.
     if ( feature.species_id ) {
-        $('#assign-species-label a').attr('href', "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + feature.species_id);
+        $('#assign-species-label a').attr( {'href': "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + feature.species_id, 'target': '_blank'} );
         $('#assign-species-label a').text(feature.species_name);
     }
     else {

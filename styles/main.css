@@ -330,10 +330,10 @@ span.icon {
 }
 
 ul.jqueryFileTree a {
-    color: #FFFFFF;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+    display: inline;
 }
 ul.jqueryFileTree a:hover,
 ul.jqueryFileTree a.selected {
@@ -357,10 +357,8 @@ ul.jqueryFileTree a.selected:hover {
 }
 
 .jqueryFileTree .indicators {
-    float: right;
     padding: 0 3px;
     position: relative;
-    top: -1.5em;
 }
 
 .jqueryFileTree .indicators .icon {

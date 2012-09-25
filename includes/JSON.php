@@ -8,22 +8,25 @@ class JSON {
     /**
      * Prints info for an image file.
      *
-     * @param string $path Path to the image file.
+     * @param string $path Relative path to the image file. Relative from the
+     *      web page root directory.
      * @uses $db Database object.
      */
-    public function get_image_info($path) {
+    public function get_image_info($rel_path) {
         global $db;
 
-        if ( !is_file($path) ) {
-            throw new Exception( "Not a file: {$path}" );
+        $abs_path = realpath(Config::read('base_path') . $rel_path);
+
+        if ( !is_file($abs_path) ) {
+            throw new Exception( "Not a file: {$abs_path}" );
         }
 
         // Get file info.
-        $size = getimagesize($path);
+        $size = getimagesize($abs_path);
         $width = $size[0];
         $height = $size[1];
         $type = $size[2];
-        $stack = explode('/', $path);
+        $stack = explode('/', $rel_path);
 
         // Set info array.
         $info = array();
@@ -32,9 +35,9 @@ class JSON {
         $info['width'] = $width;
         $info['height'] = $height;
         $info['mime'] = $size['mime'];
-        $info['url'] = Config::read('base_url') . 'data/' . $info['dir'] . '/' . $info['name'];
-        $info['path'] = $path;
-        $info['exif'] = exif_read_data($path);
+        $info['url'] = Config::read('base_url') . $rel_path;
+        $info['path'] = $abs_path;
+        $info['exif'] = exif_read_data($abs_path);
 
         $arr = $db->get_image_attributes($info['dir'], $info['name']);
         $info = array_merge($info, $arr);

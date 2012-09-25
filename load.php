@@ -31,7 +31,7 @@ switch ($do) {
             if ( empty($_GET['path']) ) throw new Exception( "Parameter `path` is not set." );
             require("$root/includes/JSON.php");
             $json = new JSON();
-            print $json->get_image_info(Config::read('base_path') . $_GET['path']);
+            print $json->get_image_info($_GET['path']);
         }
         catch (Exception $e) {
             print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );

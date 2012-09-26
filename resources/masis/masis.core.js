@@ -56,7 +56,11 @@ function initInterface() {
     $( "#tabs" ).tabs({
         select: function(event, ui) {
             // Update the contents of the Statistics tab whenever it's selected
-            if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
+            if ( ui.panel.getAttribute('id') == 'tab-manager' ) {
+                onLoadTableUnassignedVectors();
+                onLoadTableImagesNeedReview();
+            }
+            else if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
                 onLoadTableSpeciesCoverageOverall();
                 onLoadTableSpeciesCoverageWherePresent();
             }
@@ -323,10 +327,11 @@ function onLoadTableSpeciesCoverageOverall() {
         success: function(table) {
             $('#species-coverage-overall').html(table);
             $('#species-coverage-overall table').dataTable({
-                "bJQueryUI" : true, // Enable jQuery UI ThemeRoller support
-                "bSort" : true, // Enable sorting
-                "bFilter" : true, // Enable search box
-                "bLengthChange" : false
+                "bJQueryUI" : true,
+                "bSort" : true,
+                "bFilter" : true,
+                "bLengthChange" : true,
+                "sPaginationType" : "full_numbers"
             });
         }
     });
@@ -343,32 +348,56 @@ function onLoadTableSpeciesCoverageWherePresent() {
         success: function(table) {
             $('#species-coverage-where-present').html(table);
             $('#species-coverage-where-present table').dataTable({
-                "bJQueryUI" : true, // Enable jQuery UI ThemeRoller support
-                "bSort" : true, // Enable sorting
-                "bFilter" : true, // Enable search box
-                "bLengthChange" : false
+                "bJQueryUI" : true,
+                "bSort" : true,
+                "bFilter" : true,
+                "bLengthChange" : true,
+                "sPaginationType" : "full_numbers"
             });
         }
     });
 }
 
 /**
- * Load a table showing a list of all saved vectors for the current image.
+ * Load a table showing a list of images with vectors that are not assigned to
+ * a species.
  */
-function onLoadVectorsTable() {
-    if (!imageObject) return;
+function onLoadTableUnassignedVectors() {
     $.ajax({
         type: "GET",
-        url: "load.php?do=table_image_vectors",
+        url: "load.php?do=table_images_unassigned_vectors",
         dataType: "html",
-        data: {image_id: imageObject.id},
         success: function(table) {
-            $('#vectors-list').html(table);
-            $('#vectors-list table').dataTable({
-                "bJQueryUI" : true, // Enable jQuery UI ThemeRoller support
-                "bSort" : false, // Disable sorting
-                "bFilter" : false, // Disable search box
-                "bLengthChange" : false
+            $('#images-unassigned-vectors').html(table);
+            $('#images-unassigned-vectors table').dataTable({
+                "bJQueryUI" : true,
+                "bSort" : true,
+                "bFilter" : true,
+                "bLengthChange" : false,
+                "sPaginationType" : "full_numbers",
+                "iDisplayLength" : 10
+            });
+        }
+    });
+}
+
+/**
+ * Load a table showing a list of all images flagged for review.
+ */
+function onLoadTableImagesNeedReview() {
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=table_images_need_review",
+        dataType: "html",
+        success: function(table) {
+            $('#images-need-review').html(table);
+            $('#images-need-review table').dataTable({
+                "bJQueryUI" : true,
+                "bSort" : true,
+                "bFilter" : true,
+                "bLengthChange" : false,
+                "sPaginationType" : "full_numbers",
+                "iDisplayLength" : 10
             });
         }
     });
@@ -798,6 +827,19 @@ function setModifyMode() {
     else if (resize) {
         controls.modify.mode = OpenLayers.Control.ModifyFeature.RESIZE;
     }
+}
+
+/**
+ * Go to the workspace and display an image.
+ *
+ * @param {String} path The relative path to the image file. This is the path
+ *      from the root of the web folder.
+ */
+function goToImage(path) {
+    // Select the workspace tab.
+    $("#tabs").tabs("select", "#tab-workspace");
+    // Load the image.
+    setImage(path);
 }
 
 /**

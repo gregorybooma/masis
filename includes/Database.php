@@ -310,6 +310,12 @@ class Database {
         return $sth;
     }
 
+    /**
+     * Return all vectors for an image.
+     *
+     * @param integer $image_id The image ID.
+     * @return A PDO statement handler.
+     */
     public function get_vectors($image_id) {
         try {
             $sth = $this->dbh->prepare("SELECT v.vector_id,
@@ -330,6 +336,12 @@ class Database {
         return $sth;
     }
 
+    /**
+     * Save vectors to the database.
+     *
+     * @param integer $vectors An array of vector arrays.
+     * @return A PDO statement handler.
+     */
     public function save_vectors($vectors) {
         global $member;
 

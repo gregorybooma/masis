@@ -88,11 +88,15 @@ switch ($do) {
         print $json->get_image_tags($_GET['image_id']);
         break;
 
-    case 'table_image_vectors':
-        if ( empty($_GET['image_id']) ) exit("Parameter `image_id` is not set.");
+    case 'table_images_unassigned_vectors':
         require("$root/includes/DataTable.php");
         $table = new DataTable();
-        $table->list_image_vectors($_GET['image_id']);
+        $table->images_unassigned_vectors();
+        break;
+    case 'table_images_need_review':
+        require("$root/includes/DataTable.php");
+        $table = new DataTable();
+        $table->images_need_review();
         break;
     case 'table_species_coverage_where_present':
         require("$root/includes/DataTable.php");

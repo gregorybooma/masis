@@ -15,7 +15,7 @@ class DataTable {
     private function set_table_heads($sth) {
         $this->tableHeads = array();
         $column_names = array(
-            'vector_id' => "Vector",
+            'vector_id' => "Vector ID",
             'aphia_id' => "Aphia ID",
             'scientific_name' => "Species Name",
             'area_m2' => "Area (m<sup>2</sup>)",
@@ -23,6 +23,13 @@ class DataTable {
             'surface_area' => "Surface Area (m<sup>2</sup>)",
             'species_cover' => "Species Coverage Fraction",
             'species_cover_percent' => "Species Coverage %",
+            'image_info_id' => "Image ID",
+            'created_by' => "Created By",
+            'updated_on' => "Last Updated",
+            'img_dir' => "Image Directory",
+            'file_name' => "Filename",
+            'event_id' => "Event ID",
+            'date_taken' => "Date Taken",
             '' => "",
             );
         for ($i = 0; $i < $sth->columnCount(); $i++) {
@@ -93,13 +100,13 @@ class DataTable {
      * @param $class Optional CSS class for rows.
      * @return string A HTML <tbody> element.
      */
-    public function build_tbody_simple($sth, $class="") {
+    public function build_tbody($sth, $class="") {
         $round_fields = array(
             'species_cover_percent',
             'species_area',
             'surface_area');
         $tbody = "<tbody>";
-         while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
+        while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $tbody .= "<tr class='{$class}'>\n";
             foreach ($row as $key => $col_value) {
                 $col_class = "";
@@ -118,17 +125,21 @@ class DataTable {
         return $tbody;
     }
 
-    public function list_image_vectors($image_id) {
+    /**
+     * Return a list of images with vectors that are not assigned to a species.
+     */
+    public function images_unassigned_vectors() {
         global $db;
 
         try {
-            $sth = $db->dbh->prepare("SELECT v.vector_id,
-                v.area_m2,
-                s.scientific_name
-            FROM vectors v
-                LEFT OUTER JOIN species s ON v.aphia_id = s.aphia_id
-            WHERE v.image_info_id = :image_id;");
-            $sth->bindParam(":image_id", $image_id, PDO::PARAM_INT);
+            $sth = $db->dbh->prepare("SELECT  i.img_dir,
+                    i.file_name,
+                    i.event_id,
+                    to_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS date_taken
+                FROM vectors v
+                    INNER JOIN image_info i ON i.id = v.image_info_id
+                WHERE aphia_id IS NULL
+                GROUP BY i.id;");
             $sth->execute();
         }
         catch (Exception $e) {
@@ -136,8 +147,33 @@ class DataTable {
         }
 
         $this->set_table_heads($sth);
-        $body = $this->build_tbody_simple($sth);
-        $this->build($body, "", array('header'));
+        $body = $this->build_tbody($sth);
+        $this->build($body);
+    }
+
+    /**
+     * Return a list of images that are flagged for review.
+     */
+    public function images_need_review() {
+        global $db;
+
+        try {
+            $sth = $db->dbh->prepare("SELECT i.img_dir,
+                    i.file_name,
+                    i.event_id,
+                    to_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS date_taken
+                FROM image_info i
+                    INNER JOIN image_tags t ON t.image_info_id = i.id
+                WHERE t.image_tag = 'flag for review';");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        $this->set_table_heads($sth);
+        $body = $this->build_tbody($sth);
+        $this->build($body);
     }
 
     public function species_coverage_overall() {
@@ -181,7 +217,7 @@ class DataTable {
         }
 
         $this->set_table_heads($sth);
-        $body = $this->build_tbody_simple($sth);
+        $body = $this->build_tbody($sth);
         $this->build($body);
     }
 
@@ -205,7 +241,7 @@ class DataTable {
         }
 
         $this->set_table_heads($sth);
-        $body = $this->build_tbody_simple($sth);
+        $body = $this->build_tbody($sth);
         $this->build($body);
     }
 }

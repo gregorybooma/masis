@@ -41,6 +41,7 @@ $user = $member->data();
     <div id="tabs">
         <ul>
             <li><a href="#tab-workspace">Workspace</a></li>
+            <li><a href="#tab-manager">Manager</a></li>
             <li><a href="#tab-statistics">Statistics</a></li>
         </ul>
 
@@ -124,11 +125,25 @@ $user = $member->data();
 
             </div> <!-- end content -->
 
-        </div> <!-- end tab workspace -->
+        </div>
+        <!-- end tab workspace -->
+
+        <!-- tab manager -->
+        <div id="tab-manager">
+            <h1>Manager</h1>
+
+            <h2>Images with unassigned selections</h2>
+            <p>Images with selections that are not assigned to a species.</p>
+            <div id="images-unassigned-vectors">Loading...</div>
+
+            <h2>Images flagged for review</h2>
+            <p>Images that need to be reviewed.</p>
+            <div id="images-need-review">Loading...</div>
+        </div>
+        <!-- end tab manager -->
 
         <!-- tab statistics -->
         <div id="tab-statistics">
-            <!-- Species statistics -->
             <h1>Species coverage</h1>
 
             <h2>Overall coverage</h2>
@@ -140,7 +155,8 @@ $user = $member->data();
             <h2>Coverage where present</h2>
             <p>Coverage based on images where the species was found.</p>
             <div id="species-coverage-where-present">Loading...</div>
-        </div> <!-- end tab statistics -->
+        </div>
+        <!-- end tab statistics -->
 
     </div> <!-- end tabs -->
     </div> <!-- end content-wrapper -->

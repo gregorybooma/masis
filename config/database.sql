@@ -43,8 +43,9 @@ CREATE TABLE image_annotation_status
     image_info_id integer,
     annotation_status varchar NOT NULL,
 
-    PRIMARY KEY (image_info_id),
-    FOREIGN KEY (annotation_status) REFERENCES annotation_status_types (name)
+    PRIMARY KEY (image_info_id, annotation_status),
+    FOREIGN KEY (image_info_id) REFERENCES image_info (id),
+    FOREIGN KEY (annotation_status) REFERENCES annotation_status_types (name) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE substrate_types
@@ -74,9 +75,9 @@ CREATE TABLE image_substrate
     substrate_type varchar NOT NULL,
     dominance varchar NOT NULL,
 
-    UNIQUE (image_info_id, substrate_type),
+    PRIMARY KEY (image_info_id, substrate_type),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
-    FOREIGN KEY (substrate_type) REFERENCES substrate_types (name)
+    FOREIGN KEY (substrate_type) REFERENCES substrate_types (name) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE image_tag_types
@@ -103,9 +104,9 @@ CREATE TABLE image_tags
     image_info_id integer NOT NULL,
     image_tag varchar NOT NULL,
 
-    UNIQUE (image_info_id, image_tag),
+    PRIMARY KEY (image_info_id, image_tag),
     FOREIGN KEY (image_info_id) REFERENCES image_info (id),
-    FOREIGN KEY (image_tag) REFERENCES image_tag_types (name)
+    FOREIGN KEY (image_tag) REFERENCES image_tag_types (name) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE species

@@ -143,8 +143,6 @@ class DataTable {
     public function species_coverage_overall() {
         global $db;
 
-        $db->set_areas_image_grouped();
-
         try {
             $sth = $db->dbh->prepare("SELECT sum(i.img_area)
                 FROM image_info i

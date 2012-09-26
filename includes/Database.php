@@ -440,10 +440,13 @@ class Database {
     }
 
     /**
-     * Create database table `areas_image_grouped`.
+     * Truncate and populate table `areas_image_grouped`.
      *
-     * This table contains the species coverage per image. The total coverage
+     * This table contains the species coverage per image. The overall coverage
      * for each species can be calculated using this table.
+     *
+     * This function needs to be executed after vectors in the `vectors` table
+     * have been updated in order to get up-to-date coverage data.
      */
     public function set_areas_image_grouped() {
         // Start a database transaction.

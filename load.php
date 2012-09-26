@@ -17,6 +17,17 @@ if ( $member->sessionIsSet() != true ) {
     exit("Permission denied. Please login.");
 }
 
+// Truncate and populate table `areas_image_grouped`
+if ( isset($_GET['set_areas_image_grouped']) ) {
+    try {
+        $db->set_areas_image_grouped();
+    }
+    catch (Exception $e) {
+        print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );
+        exit();
+    }
+}
+
 $do = !empty($_GET['do']) ? $_GET['do'] : NULL;
 switch ($do) {
 

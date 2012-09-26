@@ -275,7 +275,7 @@ function onLoadPhotoLibrary() {
 function onSetDatabaseAreas() {
     $.ajax({
         type: "GET",
-        url: "fetch.php?do=set_areas",
+        url: "load.php?do=set_areas",
         dataType: "json",
         success: function(data) {
             if (data.result == 'success') {
@@ -296,7 +296,7 @@ function onSetImageAnnotationStatus() {
     var element = $("input:radio[name=annotation-status]:checked");
     $.ajax({
         type: "GET",
-        url: "fetch.php?do=set_annotation_status",
+        url: "load.php?do=set_annotation_status",
         dataType: "json",
         data: {image_id: imageObject.id, status: element.val()},
         success: function(data) {
@@ -404,7 +404,7 @@ function saveVectors() {
     // Save features to the database.
     $.ajax({
         type: "POST",
-        url: "fetch.php?do=save_vectors",
+        url: "load.php?do=save_vectors",
         dataType: "json",
         data: vectors,
         success: function(data) {
@@ -434,7 +434,7 @@ function onFeatureRemove(feature) {
                     // Delete the vector from the database.
                     $.ajax({
                         type: "GET",
-                        url: "fetch.php?do=delete_vector",
+                        url: "load.php?do=delete_vector",
                         dataType: "json",
                         data: {image_id: imageObject.id, vector_id: feature.id},
                         success: function(data) {
@@ -645,7 +645,7 @@ function onSaveSubstrateAnnotations() {
     if (!imageObject) return;
     $.ajax({
         type: "POST",
-        url: "fetch.php?do=set_substrate_annotations",
+        url: "load.php?do=set_substrate_annotations",
         dataType: "json",
         data: { image_id: imageObject.id,
                 annotations: {
@@ -668,7 +668,7 @@ function onSaveImageTags() {
     if (!imageObject) return;
     $.ajax({
         type: "POST",
-        url: "fetch.php?do=set_image_tags",
+        url: "load.php?do=set_image_tags",
         dataType: "json",
         data: {image_id: imageObject.id,
             tags: getCategories('image-tags-list')},

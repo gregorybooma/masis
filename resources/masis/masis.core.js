@@ -71,12 +71,6 @@ function initInterface() {
     $( "input:submit, button").button();
 
     // Make sidebar elements toggleable.
-    /*
-	$('#sidebar-left h3').click(function() {
-		$(this).next().toggle('blind');
-		return false;
-	}).next().hide();
-    */
     $("#sidebar-left").accordion({ header: "h1", active: 2, fillSpace: false });
 
     // Make the map element resizable.
@@ -224,28 +218,41 @@ function initWorkspace() {
         }
     );
 
+    var styleMap = new OpenLayers.StyleMap({'default': {
+        strokeColor: "#EE9900",
+        strokeOpacity: 1,
+        strokeWidth: 2,
+        fillColor: "#EE9900",
+        fillOpacity: 0.1,
+        pointRadius: 6,
+        pointerEvents: "visiblePainted",
+        label : null,
+        fontColor: "black",
+        fontSize: "12x",
+        fontFamily: "Arial, sans-serif",
+        fontWeight: "normal",
+        fontStyle: "italic",
+        labelXOffset: 0,
+        labelYOffset: 0,
+        labelOutlineColor: "white",
+        labelOutlineWidth: 1
+    }});
+
+    // Create a lookup table with different symbolizers for 0 and 1.
+    var label_lookup = {
+        0: {label : null},
+        1: {label : "${species_name}"}
+    };
+
+    // Display a species name label for any vector with the
+    // attribute attributes.show_label set to 1.
+    // Note: This line is commented because due to a bug in OpenLayers, any
+    // vector that does not match any key in the lookup table is automatically
+    // hidden.
+    //styleMap.addUniqueValueRules("default", "show_label", label_lookup);
+
     // Create a vector layer.
-    vectorLayer = new OpenLayers.Layer.Vector( "Selections" , {
-                styleMap: new OpenLayers.StyleMap({'default': {
-                    strokeColor: "#EE9900",
-                    strokeOpacity: 1,
-                    strokeWidth: 2,
-                    fillColor: "#EE9900",
-                    fillOpacity: 0.1,
-                    pointRadius: 6,
-                    label : "${species_name}",
-                    fontColor: "black",
-                    fontSize: "12x",
-                    fontFamily: "Arial, sans-serif",
-                    fontWeight: "normal",
-                    fontStyle: "italic",
-                    labelXOffset: 0,
-                    labelYOffset: 0,
-                    labelOutlineColor: "white",
-                    labelOutlineWidth: 1
-                    }
-                })
-            });
+    vectorLayer = new OpenLayers.Layer.Vector( "Selections" , {styleMap: styleMap} );
 
     // Add layers to the map.
     map.addLayers([vectorLayer]);
@@ -256,8 +263,15 @@ function initWorkspace() {
 
     // Set controls.
     controls = {
-        polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),
-        regular_polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.RegularPolygon, {irregular: true}),
+        polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon,
+                {
+                eventListeners: {"featureadded": featureAddedHandler}
+            }),
+        regular_polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.RegularPolygon,
+                {
+                irregular: true,
+                eventListeners: {"featureadded": featureAddedHandler}
+            }),
         modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
         drag: new OpenLayers.Control.DragFeature(vectorLayer),
         annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
@@ -268,6 +282,10 @@ function initWorkspace() {
     for(var key in controls) {
         map.addControl(controls[key]);
     }
+}
+
+function featureAddedHandler(event) {
+    event.feature.attributes.species_name = "";
 }
 
 /**
@@ -731,17 +749,18 @@ function onSaveImageTags() {
  * @param {Object} vectors An object with vector objects from the database
  */
 function onLoadVectors(vectors) {
-    var Feature = OpenLayers.Feature.Vector;
-    var Geometry = OpenLayers.Geometry;
     var features = [];
     for (i in vectors) {
         var vector = vectors[i];
-        features[i] = new Feature(Geometry.fromWKT(vector.vector_wkt));
+        features[i] = new OpenLayers.Feature.Vector(
+            OpenLayers.Geometry.fromWKT(vector.vector_wkt)
+            );
         features[i].id = vector.vector_id;
 
         features[i].attributes = {
+            show_label: vector.aphia_id ? 1 : 0,
             aphia_id: vector.aphia_id,
-            species_name: vector.scientific_name ? vector.scientific_name : "Unassigned"
+            species_name: vector.scientific_name ? vector.scientific_name : ""
         };
     }
     vectorLayer.addFeatures(features);

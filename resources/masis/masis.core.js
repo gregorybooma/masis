@@ -82,9 +82,11 @@ function initInterface() {
     // Make the map element resizable.
     $( "#map" ).resizable({
         stop: function(event, ui) {
-                // Render the map in the resized map element to maintain
+                // Re-render the map in the resized map element to maintain
                 // restriction of movement outside image borders.
-                map.render('map');
+                if (map) {
+                    map.render('map');
+                }
             }
         });
 

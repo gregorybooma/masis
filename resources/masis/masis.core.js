@@ -223,7 +223,27 @@ function initWorkspace() {
     );
 
     // Create a vector layer.
-    vectorLayer = new OpenLayers.Layer.Vector( "Selections" );
+    vectorLayer = new OpenLayers.Layer.Vector( "Selections" , {
+                styleMap: new OpenLayers.StyleMap({'default': {
+                    strokeColor: "#EE9900",
+                    strokeOpacity: 1,
+                    strokeWidth: 2,
+                    fillColor: "#EE9900",
+                    fillOpacity: 0.1,
+                    pointRadius: 6,
+                    label : "${species_name}",
+                    fontColor: "black",
+                    fontSize: "12x",
+                    fontFamily: "Arial, sans-serif",
+                    fontWeight: "normal",
+                    fontStyle: "italic",
+                    labelXOffset: 0,
+                    labelYOffset: 0,
+                    labelOutlineColor: "white",
+                    labelOutlineWidth: 1
+                    }
+                })
+            });
 
     // Add layers to the map.
     map.addLayers([vectorLayer]);
@@ -231,13 +251,6 @@ function initWorkspace() {
     // Add a layer switcher to the map.
     var container = document.getElementById("olControlLayerSwitcher");
     map.addControl(new OpenLayers.Control.LayerSwitcher({div: container}));
-
-    // Set vector styles.
-    OpenLayers.Feature.Vector.style['default']['strokeWidth'] = 2;
-    OpenLayers.Feature.Vector.style['default']['strokeOpacity'] = 1;
-    OpenLayers.Feature.Vector.style['default']['strokeColor'] = "#EE9900";
-    OpenLayers.Feature.Vector.style['default']['fillColor'] = "#EE9900";
-    OpenLayers.Feature.Vector.style['default']['fillOpacity'] = 0.3;
 
     // Set controls.
     controls = {
@@ -427,8 +440,8 @@ function saveVectors() {
             area_pixels: area_pixels,
             area_m2: area_pixels * imageObject.area_per_pixel,
             vector_wkt: feature.geometry.toString(),
-            species_id: feature.species_id,
-            species_name: feature.species_name,
+            aphia_id: feature.attributes.aphia_id,
+            species_name: feature.attributes.species_name,
             };
     }
     // Save features to the database.
@@ -503,8 +516,8 @@ function onFeatureAnnotateSelect(feature) {
         create: function(event, ui) {
             // Replace the text field value if the selected feature is already
             // assigned to a species.
-            if (selectedFeature.species_id && selectedFeature.species_name) {
-                $("#select-species").val(selectedFeature.species_name);
+            if (selectedFeature.attributes.aphia_id && selectedFeature.attributes.species_name) {
+                $("#select-species").val(selectedFeature.attributes.species_name);
             }
         },
         select: function(event, ui) {
@@ -512,8 +525,8 @@ function onFeatureAnnotateSelect(feature) {
             var name = ui.item.label;
 
             // Set the species ID and name for the selected feature.
-            selectedFeature.species_id = id;
-            selectedFeature.species_name = name;
+            selectedFeature.attributes.aphia_id = id;
+            selectedFeature.attributes.species_name = name;
 
             // The default action of select is to replace the text field's
             // value with the value of the selected item. This is not desired.
@@ -535,9 +548,9 @@ function onFeatureAnnotateSelect(feature) {
     });
 
     // Update dialog label.
-    if ( feature.species_id ) {
-        $('#assign-species-label a').attr( {'href': "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + feature.species_id, 'target': '_blank'} );
-        $('#assign-species-label a').text(feature.species_name);
+    if ( feature.attributes.aphia_id ) {
+        $('#assign-species-label a').attr( {'href': "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + feature.attributes.aphia_id, 'target': '_blank'} );
+        $('#assign-species-label a').text(feature.attributes.species_name);
     }
     else {
         $('#assign-species-label a').attr('href', "#");
@@ -723,8 +736,11 @@ function onLoadVectors(vectors) {
         var vector = vectors[i];
         features[i] = new Feature(Geometry.fromWKT(vector.vector_wkt));
         features[i].id = vector.vector_id;
-        features[i].species_id = vector.aphia_id;
-        features[i].species_name = vector.scientific_name;
+
+        features[i].attributes = {
+            aphia_id: vector.aphia_id,
+            species_name: vector.scientific_name ? vector.scientific_name : "Unassigned"
+        };
     }
     vectorLayer.addFeatures(features);
 }

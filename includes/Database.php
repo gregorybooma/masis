@@ -370,8 +370,8 @@ class Database {
             // Handle vectors not assigned to a species.
             // The ( !is_int() && !ctype_digit() ) part is for checking numeric
             // strings.
-            if ( !isset($vector['species_id']) || ( !is_int($vector['species_id']) && !ctype_digit($vector['species_id']) ) ) {
-                $vector['species_id'] = NULL;
+            if ( !isset($vector['aphia_id']) || ( !is_int($vector['aphia_id']) && !ctype_digit($vector['aphia_id']) ) ) {
+                $vector['aphia_id'] = NULL;
                 $vector['species_name'] = NULL;
             }
 
@@ -420,7 +420,7 @@ class Database {
                 $sth = $this->dbh->prepare($query);
                 $sth->bindParam(":id", $vector['id'], PDO::PARAM_STR);
                 $sth->bindParam(":image_id", $vector['image_id'], PDO::PARAM_INT);
-                $sth->bindParam(":aphia_id", $vector['species_id'], PDO::PARAM_INT);
+                $sth->bindParam(":aphia_id", $vector['aphia_id'], PDO::PARAM_INT);
                 $sth->bindParam(":vector_wkt", $vector['vector_wkt'], PDO::PARAM_STR);
                 $sth->bindParam(":area_pixels", $vector['area_pixels'], PDO::PARAM_INT);
                 $sth->bindParam(":area_m2", $vector['area_m2'], PDO::PARAM_STR);

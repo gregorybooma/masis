@@ -218,41 +218,55 @@ function initWorkspace() {
         }
     );
 
-    var styleMap = new OpenLayers.StyleMap({'default': {
-        strokeColor: "#EE9900",
-        strokeOpacity: 1,
-        strokeWidth: 2,
-        fillColor: "#EE9900",
-        fillOpacity: 0.1,
-        pointRadius: 6,
-        pointerEvents: "visiblePainted",
-        label : null,
-        fontColor: "black",
-        fontSize: "12x",
-        fontFamily: "Arial, sans-serif",
-        fontWeight: "normal",
-        fontStyle: "italic",
-        labelXOffset: 0,
-        labelYOffset: 0,
-        labelOutlineColor: "white",
-        labelOutlineWidth: 1
-    }});
-
-    // Create a lookup table with different symbolizers for 0 and 1.
-    var label_lookup = {
-        0: {label : null},
-        1: {label : "${species_name}"}
-    };
-
-    // Display a species name label for any vector with the
-    // attribute attributes.show_label set to 1.
-    // Note: This line is commented because due to a bug in OpenLayers, any
-    // vector that does not match any key in the lookup table is automatically
-    // hidden.
-    //styleMap.addUniqueValueRules("default", "show_label", label_lookup);
+    // Here we create a new style object with rules that determine which
+    // symbolizer will be used to render each feature.
+    var style = new OpenLayers.Style(
+        // The first argument is a base symbolizer; all other symbolizers in
+        // rules will extend this one.
+        {
+            strokeColor: "#EE9900",
+            strokeOpacity: 1,
+            strokeWidth: 2,
+            fillColor: "#EE9900",
+            fillOpacity: 0.1,
+            pointRadius: 6,
+            pointerEvents: "visiblePainted",
+            fontColor: "white",
+            fontSize: "12x",
+            fontFamily: "Arial, sans-serif",
+            fontWeight: "normal",
+            fontStyle: "italic",
+            labelXOffset: 0,
+            labelYOffset: 0,
+            labelOutlineColor: "black",
+            labelOutlineWidth: 2
+        },
+        // The second argument will include all rules.
+        {
+            rules: [
+                // Show a label with the species name for each vector with the
+                // attribute `aphia_id` set.
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.GREATER_THAN,
+                        property: "aphia_id",
+                        value: 0,
+                    }),
+                    symbolizer: {label: "${species_name}"}
+                }),
+                // Apply this rule if no others apply.
+                new OpenLayers.Rule({
+                    elseFilter: true,
+                    symbolizer: {label: null}
+                })
+            ]
+        }
+    );
 
     // Create a vector layer.
-    vectorLayer = new OpenLayers.Layer.Vector( "Selections" , {styleMap: styleMap} );
+    vectorLayer = new OpenLayers.Layer.Vector( "Selections" , {
+        styleMap: new OpenLayers.StyleMap({'default': style})
+    });
 
     // Add layers to the map.
     map.addLayers([vectorLayer]);
@@ -263,15 +277,8 @@ function initWorkspace() {
 
     // Set controls.
     controls = {
-        polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon,
-                {
-                eventListeners: {"featureadded": featureAddedHandler}
-            }),
-        regular_polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.RegularPolygon,
-                {
-                irregular: true,
-                eventListeners: {"featureadded": featureAddedHandler}
-            }),
+        polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),
+        regular_polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.RegularPolygon, {irregular: true}),
         modify: new OpenLayers.Control.ModifyFeature(vectorLayer),
         drag: new OpenLayers.Control.DragFeature(vectorLayer),
         annotate: new OpenLayers.Control.SelectFeature(vectorLayer,
@@ -279,13 +286,9 @@ function initWorkspace() {
         remove: new OpenLayers.Control.SelectFeature(vectorLayer,
             {onSelect: onFeatureRemove})
     };
-    for(var key in controls) {
+    for (var key in controls) {
         map.addControl(controls[key]);
     }
-}
-
-function featureAddedHandler(event) {
-    event.feature.attributes.species_name = "";
 }
 
 /**

@@ -472,9 +472,10 @@ class Database {
         }
 
         try {
-            $sth = $this->dbh->exec("INSERT INTO areas_image_grouped (image_info_id,aphia_id,species_area,image_area)
+            $sth = $this->dbh->exec("INSERT INTO areas_image_grouped (image_info_id,aphia_id,species_count,species_area,image_area)
                 SELECT i.id,
                     s.aphia_id,
+                    count(v.id),
                     sum(v.area_m2),
                     i.img_area
                 FROM vectors v

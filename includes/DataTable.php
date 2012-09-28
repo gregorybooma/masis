@@ -112,6 +112,8 @@ class DataTable {
                 $col_class = "";
                 // Show scientific species names in italics.
                 if ($key == 'scientific_name') $col_class .= "text-italic ";
+                // Link Aphia ID's to the WoRMS website.
+                if ($key == 'aphia_id') $col_value = "<a href=\"http://www.marinespecies.org/aphia.php?p=taxdetails&id={$col_value}\">{$col_value}</a>";
                 // Round some values.
                 if ( in_array($key, $round_fields) ) {
                     $col_value = round($col_value, $this->round_precision);
@@ -196,7 +198,8 @@ class DataTable {
         $total_surface = $row ? $row[0] : 0;
 
         try {
-            $sth = $db->dbh->prepare("SELECT s.scientific_name,
+            $sth = $db->dbh->prepare("SELECT s.aphia_id,
+                    s.scientific_name,
                     SUM(a.species_area) AS species_area,
                     (1.0 * :total_surface) AS surface_area,
                     SUM(a.species_area) / :total_surface * 100 AS species_cover_percent
@@ -208,7 +211,7 @@ class DataTable {
                 -- annotated. Only for these images can be said that a species
                 -- is not present on the image if no vectors are set.
                 WHERE y.annotation_status = 'complete'
-                GROUP BY s.scientific_name;");
+                GROUP BY s.aphia_id;");
             $sth->bindParam(":total_surface", $total_surface, PDO::PARAM_STR);
             $sth->execute();
         }
@@ -227,13 +230,14 @@ class DataTable {
         //$db->set_areas_image_grouped();
 
         try {
-            $sth = $db->dbh->prepare("SELECT s.scientific_name,
+            $sth = $db->dbh->prepare("SELECT s.aphia_id,
+                    s.scientific_name,
                     SUM(a.species_area) as species_area,
                     SUM(a.image_area) as surface_area,
                     SUM(a.species_area) / SUM(a.image_area) * 100 as species_cover_percent
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
-                GROUP BY s.scientific_name;");
+                GROUP BY s.aphia_id;");
             $sth->execute();
         }
         catch (Exception $e) {

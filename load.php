@@ -98,6 +98,11 @@ switch ($do) {
         $table = new DataTable();
         $table->images_need_review();
         break;
+    case 'table_images_highlighted':
+        require("$root/includes/DataTable.php");
+        $table = new DataTable();
+        $table->images_highlighted();
+        break;
     case 'table_species_coverage_where_present':
         require("$root/includes/DataTable.php");
         $table = new DataTable();

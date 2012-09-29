@@ -129,7 +129,7 @@ class DataTable {
     }
 
     /**
-     * Return a list of images with vectors that are not assigned to a species.
+     * Print a list of images with vectors that are not assigned to a species.
      */
     public function images_unassigned_vectors() {
         global $db;
@@ -155,7 +155,7 @@ class DataTable {
     }
 
     /**
-     * Return a list of images that are flagged for review.
+     * Print a list of images that are flagged for review.
      */
     public function images_need_review() {
         global $db;
@@ -179,6 +179,38 @@ class DataTable {
         $this->build($body);
     }
 
+    /**
+     * Print a list of all highlighted images.
+     */
+    public function images_highlighted() {
+        global $db;
+
+        try {
+            $sth = $db->dbh->prepare("SELECT i.img_dir,
+                    i.file_name,
+                    i.event_id,
+                    to_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS date_taken
+                FROM image_info i
+                    INNER JOIN image_tags t ON t.image_info_id = i.id
+                WHERE t.image_tag = 'highlight';");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        $this->set_table_heads($sth);
+        $body = $this->build_tbody($sth);
+        $this->build($body);
+    }
+
+    /**
+     * Print the overall coverage per species.
+     *
+     * This is the coverage based on all annotated images. Only images for
+     * which the annotation status is set to "complete" are included in the
+     * calculation.
+     */
     public function species_coverage_overall() {
         global $db;
 
@@ -226,10 +258,12 @@ class DataTable {
         $this->build($body);
     }
 
+    /**
+     * Print the coverage for each species based on images where the species
+     * was found.
+     */
     public function species_coverage_where_present() {
         global $db;
-
-        //$db->set_areas_image_grouped();
 
         try {
             $sth = $db->dbh->prepare("SELECT s.aphia_id,

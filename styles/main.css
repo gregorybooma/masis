@@ -154,6 +154,15 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
+span.tag {
+    background-color: #4C4C4C;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    border-radius: 3px 3px 3px 3px;
+    color: #ffffff;
+    padding: 1px 4px;
+}
+
 /*----------------------------------------------------
  * Sidebars
  *----------------------------------------------------*/
@@ -420,19 +429,6 @@ div.dataTables_wrapper .ui-widget-header {
 }
 
 /*----------------------------------------------------
- * Misc
- *----------------------------------------------------*/
-
-.clearfix:after {
-    clear: both;
-    content: " ";
-    display: block;
-    font-size: 0;
-    height: 0;
-    visibility: hidden;
-}
-
-/*----------------------------------------------------
  * Category editor
  * Inspired by LinkedIn.com's jellybean-editor
  *----------------------------------------------------*/
@@ -478,4 +474,17 @@ div.dataTables_wrapper .ui-widget-header {
 }
 .category-editor .jellybean .remove:hover {
     color: #A52A2A;
+}
+
+/*----------------------------------------------------
+ * Misc
+ *----------------------------------------------------*/
+
+.clearfix:after {
+    clear: both;
+    content: " ";
+    display: block;
+    font-size: 0;
+    height: 0;
+    visibility: hidden;
 }

@@ -59,6 +59,7 @@ function initInterface() {
             if ( ui.panel.getAttribute('id') == 'tab-manager' ) {
                 onLoadTableUnassignedVectors();
                 onLoadTableImagesNeedReview();
+                onLoadTableImagesHighlighted();
             }
             else if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
                 onLoadTableSpeciesCoverageOverall();
@@ -428,6 +429,28 @@ function onLoadTableImagesNeedReview() {
         success: function(table) {
             $('#images-need-review').html(table);
             $('#images-need-review table').dataTable({
+                "bJQueryUI" : true,
+                "bSort" : true,
+                "bFilter" : true,
+                "bLengthChange" : false,
+                "sPaginationType" : "full_numbers",
+                "iDisplayLength" : 10
+            });
+        }
+    });
+}
+
+/**
+ * Load a table showing a list of all highlighted images.
+ */
+function onLoadTableImagesHighlighted() {
+    $.ajax({
+        type: "GET",
+        url: "load.php?do=table_images_highlighted",
+        dataType: "html",
+        success: function(table) {
+            $('#images-highlighted').html(table);
+            $('#images-highlighted table').dataTable({
                 "bJQueryUI" : true,
                 "bSort" : true,
                 "bFilter" : true,

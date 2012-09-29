@@ -22,6 +22,7 @@ CREATE TABLE image_info
     img_area double precision, -- in square meters
     temperature double precision, -- in degrees Celcius
     salinity double precision,
+    remarks varchar,
 
     PRIMARY KEY (id),
     UNIQUE (img_dir, file_name)

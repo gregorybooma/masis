@@ -35,7 +35,7 @@ class JSON {
         $info['width'] = $width;
         $info['height'] = $height;
         $info['mime'] = $size['mime'];
-        $info['url'] = Config::read('base_url') . $rel_path;
+        $info['url'] = Config::read('base_url') . ltrim($rel_path, '/');
         $info['path'] = $abs_path;
         $info['exif'] = exif_read_data($abs_path);
 

@@ -18,7 +18,7 @@ if ( $member->sessionIsSet() != true ) {
 }
 
 // Truncate and populate table `areas_image_grouped`
-if ( isset($_GET['set_areas_image_grouped']) ) {
+if ( isset($_GET['reset_areas']) ) {
     try {
         $db->set_areas_image_grouped();
     }
@@ -183,10 +183,45 @@ switch ($do) {
         }
         break;
 
+    /** Exporting data **/
+
+    case 'export_percent_coverage_two_species':
+        try {
+            if ( empty($_GET['species1']) ) exit("Parameter `species1` is not set.");
+            if ( empty($_GET['species2']) ) exit("Parameter `species2` is not set.");
+            require("$root/includes/Exporter.php");
+            $csv = new Exporter();
+            $file = sprintf("pc2sp-%s-%s", $_GET['species1'], $_GET['species2']);
+            $file = sprintf( "exported/%s.csv", sanitize($file) );
+            $csv->percent_coverage_two_species( Config::read('base_path').$file, $_GET['species1'], $_GET['species2'] );
+            print json_encode( array('result' => 'success', 'download' => Config::read('base_url').$file) );
+        }
+        catch (Exception $e) {
+            print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );
+        }
+        break;
+
     default:
         if ( !isset($do) ) {
             exit("Parameter `do` is not set.");
         } else {
             exit("Value '{$do}' for parameter `do` is unknown.");
         }
+}
+
+/**
+ * Returns a sanitized string.
+ *
+ * @param string $string The string to sanitize.
+ * @param bool $force_lowercase Force the string to lowercase?
+ * @param bool $analfa If set to TRUE, will remove all non-alphanumeric characters.
+ * @param id $filter The ID of the PHP filter to apply.
+ * @return string The sanitized string.
+ */
+function sanitize($string, $force_lowercase = false, $analfa = false, $filter = FILTER_SANITIZE_URL) {
+    $clean = preg_replace('/\s+/', "-", trim($string));
+    $clean = filter_var($clean, $filter);
+    $clean = $analfa ? preg_replace("/[^a-zA-Z0-9]/", "", $clean) : $clean;
+    $clean = $force_lowercase ? function_exists('mb_strtolower') ? mb_strtolower($clean, 'UTF-8') : strtolower($clean) : $clean;
+    return $clean;
 }

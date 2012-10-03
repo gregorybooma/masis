@@ -304,6 +304,7 @@ END;
             $user = $db->query("SELECT * FROM users WHERE user_id = :user_id;", array(':user_id' => $user_id), 'FETCH_OBJ');
             if ($user) {
                 $user->id = $user_id;
+                $user->username = strpos($user_id, '@') === FALSE ? $user_id : strstr($user_id, '@', true);
             }
             return $user;
         }

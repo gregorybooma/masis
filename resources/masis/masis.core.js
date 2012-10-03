@@ -359,7 +359,7 @@ function onLoadTableSpeciesCoverageOverall() {
     $.ajax({
         type: "GET",
         url: "load.php?do=table_species_coverage_overall",
-        data: {'set_areas_image_grouped': 1},
+        data: {'reset_areas': 1},
         dataType: "html",
         success: function(table) {
             $('#species-coverage-overall').html(table);

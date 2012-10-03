@@ -114,7 +114,7 @@ CREATE TABLE species
 (
     aphia_id integer NOT NULL,
     lsid varchar,
-    scientific_name varchar NOT NULL,
+    scientific_name varchar,
     status varchar,
     valid_aphia_id integer,
     valid_name varchar,

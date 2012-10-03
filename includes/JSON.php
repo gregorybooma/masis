@@ -82,6 +82,7 @@ class JSON {
                 throw new Exception( "Value '$searchpar' is invalid for parameter `searchpar`." );
         }
 
+        $cache = array();
         $species = array();
         $species[] = array('label' => "Unassigned", 'value' => null);
         if ($records) {
@@ -89,9 +90,8 @@ class JSON {
             $db->cache_aphia_records($records, Config::read('update_species_records'));
 
             foreach ( $records as $sp ) {
-                // Skip species with a specific status
-                if ($sp->status == "nomen nudum") continue;
-                if ($sp->status == "nomen dubium") continue;
+                // Skip records with a specific status.
+                if ( in_array($sp->status, $db->aphia_status_exclude) ) continue;
 
                 $species[] = array(
                     'label' => $sp->scientificname,

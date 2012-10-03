@@ -4,7 +4,16 @@
  * The Database class provides methods for retrieving data from the database.
  */
 class Database {
+    /**
+     * The PDO database handler.
+     */
     public $dbh = null;
+
+    /**
+     * Skip records with an Aphia status set in this variable.
+     * @var Array
+     */
+    public $aphia_status_exclude = array('nomen dubium','nomen nudum','deleted');
 
     /**
      * Connect with the PostgreSQL database.
@@ -159,6 +168,9 @@ class Database {
         $this->dbh->beginTransaction();
 
         foreach ($records as $sp) {
+            // Skip Aphia records with a specific status.
+            if ( in_array($sp->status, $this->aphia_status_exclude) ) continue;
+
             // Check if this record already exists in the database.
             try {
                 $sth = $this->dbh->prepare("SELECT aphia_id FROM species

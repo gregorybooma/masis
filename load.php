@@ -103,6 +103,11 @@ switch ($do) {
         $table = new DataTable();
         $table->images_highlighted();
         break;
+    case 'table_images_species_unaccepted':
+        require("$root/includes/DataTable.php");
+        $table = new DataTable();
+        $table->images_species_unaccepted();
+        break;
     case 'table_species_coverage_where_present':
         require("$root/includes/DataTable.php");
         $table = new DataTable();

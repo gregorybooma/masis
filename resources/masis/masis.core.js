@@ -57,13 +57,14 @@ function initInterface() {
         select: function(event, ui) {
             // Update the contents of the Statistics tab whenever it's selected
             if ( ui.panel.getAttribute('id') == 'tab-manager' ) {
-                onLoadTableUnassignedVectors();
-                onLoadTableImagesNeedReview();
-                onLoadTableImagesHighlighted();
+                onLoadTable('load.php?do=table_images_unassigned_vectors', '#images-unassigned-vectors');
+                onLoadTable('load.php?do=table_images_need_review', '#images-need-review');
+                onLoadTable('load.php?do=table_images_highlighted', '#images-highlighted');
+                onLoadTable('load.php?do=table_images_species_unaccepted', '#images-species-unaccepted');
             }
             else if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
-                onLoadTableSpeciesCoverageOverall();
-                onLoadTableSpeciesCoverageWherePresent();
+                onLoadTable('load.php?do=table_species_coverage_overall','#species-coverage-overall');
+                onLoadTable('load.php?do=table_species_coverage_where_present','#species-coverage-where-present');
             }
         }
     });
@@ -353,111 +354,30 @@ function onSetImageAnnotationStatus() {
 }
 
 /**
- * Load a table showing the coverage per species based on all fully annotated images.
+ * Load a data table in a div element.
+ *
+ * @param {String} url The URL which returns the HTML table
+ * @param {String} div_id The jQuery selector string for the div element which will hold the table
+ * @param {Object} options Optional options object for the dataTable function
  */
-function onLoadTableSpeciesCoverageOverall() {
-    $.ajax({
-        type: "GET",
-        url: "load.php?do=table_species_coverage_overall",
-        data: {'reset_areas': 1},
-        dataType: "html",
-        success: function(table) {
-            $('#species-coverage-overall').html(table);
-            $('#species-coverage-overall table').dataTable({
+function onLoadTable(url, div_id, options) {
+    if (!options) {
+        var options = {
                 "bJQueryUI" : true,
                 "bSort" : true,
                 "bFilter" : true,
                 "bLengthChange" : true,
-                "sPaginationType" : "full_numbers"
-            });
-        }
-    });
-}
-
-/**
- * Load a table showing the coverage per species on images where they were found.
- */
-function onLoadTableSpeciesCoverageWherePresent() {
-    $.ajax({
-        type: "GET",
-        url: "load.php?do=table_species_coverage_where_present",
-        dataType: "html",
-        success: function(table) {
-            $('#species-coverage-where-present').html(table);
-            $('#species-coverage-where-present table').dataTable({
-                "bJQueryUI" : true,
-                "bSort" : true,
-                "bFilter" : true,
-                "bLengthChange" : true,
-                "sPaginationType" : "full_numbers"
-            });
-        }
-    });
-}
-
-/**
- * Load a table showing a list of images with vectors that are not assigned to
- * a species.
- */
-function onLoadTableUnassignedVectors() {
-    $.ajax({
-        type: "GET",
-        url: "load.php?do=table_images_unassigned_vectors",
-        dataType: "html",
-        success: function(table) {
-            $('#images-unassigned-vectors').html(table);
-            $('#images-unassigned-vectors table').dataTable({
-                "bJQueryUI" : true,
-                "bSort" : true,
-                "bFilter" : true,
-                "bLengthChange" : false,
                 "sPaginationType" : "full_numbers",
-                "iDisplayLength" : 10
-            });
-        }
-    });
-}
+                "iDisplayLength" : 10};
+    }
 
-/**
- * Load a table showing a list of all images flagged for review.
- */
-function onLoadTableImagesNeedReview() {
     $.ajax({
         type: "GET",
-        url: "load.php?do=table_images_need_review",
+        url: url,
         dataType: "html",
         success: function(table) {
-            $('#images-need-review').html(table);
-            $('#images-need-review table').dataTable({
-                "bJQueryUI" : true,
-                "bSort" : true,
-                "bFilter" : true,
-                "bLengthChange" : false,
-                "sPaginationType" : "full_numbers",
-                "iDisplayLength" : 10
-            });
-        }
-    });
-}
-
-/**
- * Load a table showing a list of all highlighted images.
- */
-function onLoadTableImagesHighlighted() {
-    $.ajax({
-        type: "GET",
-        url: "load.php?do=table_images_highlighted",
-        dataType: "html",
-        success: function(table) {
-            $('#images-highlighted').html(table);
-            $('#images-highlighted table').dataTable({
-                "bJQueryUI" : true,
-                "bSort" : true,
-                "bFilter" : true,
-                "bLengthChange" : false,
-                "sPaginationType" : "full_numbers",
-                "iDisplayLength" : 10
-            });
+            $(div_id).html(table);
+            $(div_id+' table').dataTable(options);
         }
     });
 }

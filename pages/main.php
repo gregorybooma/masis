@@ -138,7 +138,7 @@ $user = $member->data();
 
             <h2>Images flagged for review</h2>
             <p>Images that need to be reviewed.</p>
-            <p>To mark an image as <span class="tag">reviewed</span>, remove the
+            <p>To mark an image as "reviewed", remove the
             <span class="tag">flag for review</span> tag and add the <span class="tag">reviewed</span>
             tag in the Annotate Image dialog.</p>
             <div id="images-need-review">Loading...</div>
@@ -146,6 +146,10 @@ $user = $member->data();
             <h2>Highlighted Images</h2>
             <p>Images of special interest.</p>
             <div id="images-highlighted">Loading...</div>
+
+            <h2>Images with unaccepted species</h2>
+            <p>Images with annotations of unaccepted Aphia species records.</p>
+            <div id="images-species-unaccepted">Loading...</div>
         </div>
         <!-- end tab manager -->
 

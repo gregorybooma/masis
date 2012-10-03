@@ -205,6 +205,32 @@ class DataTable {
     }
 
     /**
+     * Print a list of images with annotations of unaccepted Aphia records.
+     */
+    public function images_species_unaccepted() {
+        global $db;
+
+        try {
+            $sth = $db->dbh->prepare("SELECT i.img_dir,
+                    i.file_name,
+                    i.event_id,
+                    to_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS date_taken
+                FROM vectors v
+                    INNER JOIN image_info i ON i.id = v.image_info_id
+                    INNER JOIN species s ON s.aphia_id = v.aphia_id
+                WHERE s.status = 'unaccepted';");
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+
+        $this->set_table_heads($sth);
+        $body = $this->build_tbody($sth);
+        $this->build($body);
+    }
+
+    /**
      * Print the overall coverage per species.
      *
      * This is the coverage based on all annotated images. Only images for

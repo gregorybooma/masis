@@ -114,7 +114,7 @@ class DataTable {
                 // Show scientific species names in italics.
                 if ($key == 'scientific_name') $col_class .= "text-italic ";
                 // Link Aphia ID's to the WoRMS website.
-                if ($key == 'aphia_id') $col_value = "<a href=\"http://www.marinespecies.org/aphia.php?p=taxdetails&id={$col_value}\">{$col_value}</a>";
+                if ($key == 'aphia_id') $col_value = "<a href=\"http://www.marinespecies.org/aphia.php?p=taxdetails&id={$col_value}\" target=\"_blank\">{$col_value}</a>";
                 // Round some values.
                 if ( in_array($key, $round_fields) ) {
                     $col_value = round($col_value, $this->round_precision);

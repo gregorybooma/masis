@@ -6,6 +6,50 @@
 class Exporter {
 
     /**
+     * PDO statement handler set by a set_* method.
+     */
+    public $sth = null;
+
+    /**
+     * Character to be used as the CSV field delimiter.
+     * @var String
+     */
+    public $delimiter = ";";
+
+    /**
+     * Whether to print a header for the CSV output.
+     * @var Bool
+     */
+    public $header = TRUE;
+
+    /**
+     * Set the values for the object attributes.
+     *
+     * @param string $delimiter Character to be used as the CSV field delimiter.
+     * @param bool $header Whether to print a header for the CSV output.
+     */
+    public function __construct($delimiter=";", $header=TRUE) {
+        $this->delimiter = $delimiter;
+        $this->header = $header;
+    }
+
+    /**
+     * Print results from a PDO statement hander in CSV format.
+     *
+     * @param string $filename The name of the CSV file to be exported.
+     */
+    public function export_csv($filename) {
+        if (!$this->sth) return;
+        header("Content-Type: text/csv; charset=utf-8");
+        header("Content-Disposition: attachment; filename={$filename}");
+        if ($this->header) print implode($this->delimiter, $this->get_header($this->sth))."\n";
+        while ( $row = $this->sth->fetch(PDO::FETCH_NUM) ) {
+            print implode($this->delimiter, $row)."\n";
+        }
+        exit();
+    }
+
+    /**
      * Return a header array from the query output.
      *
      * @param $sth A PDO statement handler.
@@ -22,19 +66,17 @@ class Exporter {
     }
 
     /**
-     * Exports the vector count and coverage/square meter for two species per image.
+     * Set vector count and coverage/square meter for two species per image on
+     * images where both species are present.
      *
      * Only images for which the annotation status is "complete" are used in
      * the calculations.
      *
-     * @param string $file Absolute path to the file to be exported.
      * @param string $species1 Scientific name of the first species.
      * @param string $species2 Scientific name of the second species.
-     * @param string $delimiter Character for the CSV field delimiter (defaults to ";").
-     * @param bool $header Whether to export a CSV header (defaults to TRUE).
      * @throws Exception
      */
-    public function coverage_two_species($filename, $species1, $species2, $delimiter=';', $header=TRUE) {
+    public function set_coverage_two_species_present($species1, $species2) {
         global $db;
 
         try {
@@ -60,13 +102,6 @@ class Exporter {
         catch (Exception $e) {
             throw new Exception( $e->getMessage() );
         }
-
-        header("Content-Type: text/csv; charset=utf-8");
-        header("Content-Disposition: attachment; filename={$filename}");
-        if ($header) print implode($delimiter, $this->get_header($sth))."\n";
-        while ( $row = $sth->fetch(PDO::FETCH_NUM) ) {
-            print implode($delimiter, $row)."\n";
-        }
-        exit();
+        $this->sth = $sth;
     }
 }

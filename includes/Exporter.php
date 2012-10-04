@@ -22,7 +22,7 @@ class Exporter {
     }
 
     /**
-     * Exports the percent cover for two species per image.
+     * Exports the vector count and coverage/square meter for two species per image.
      *
      * Only images for which the annotation status is "complete" are used in
      * the calculations.
@@ -34,13 +34,15 @@ class Exporter {
      * @param bool $header Whether to export a CSV header (defaults to TRUE).
      * @throws Exception
      */
-    public function percent_coverage_two_species($file, $species1, $species2, $delimiter=';', $header=TRUE) {
+    public function two_species($file, $species1, $species2, $delimiter=';', $header=TRUE) {
         global $db;
 
         try {
             $sth = $db->dbh->prepare("SELECT a1.image_info_id AS image_id,
-                    a1.species_area/a1.image_area AS \"{$species1}\",
-                    a2.species_area/a1.image_area AS \"{$species2}\"
+                    a1.vector_count AS \"{$species1} count\",
+                    a1.species_area/a1.image_area AS \"{$species1} coverage\",
+                    a2.vector_count AS \"{$species2} count\",
+                    a2.species_area/a1.image_area AS \"{$species2} coverage\"
                 FROM areas_image_grouped a1
                     INNER JOIN image_annotation_status ann ON ann.image_info_id = a1.image_info_id
                     LEFT OUTER JOIN image_tags t ON t.image_info_id = a1.image_info_id

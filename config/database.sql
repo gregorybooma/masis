@@ -152,7 +152,7 @@ CREATE TABLE areas_image_grouped
 (
     image_info_id integer NOT NULL,
     aphia_id integer NOT NULL,
-    species_count integer NOT NULL,
+    vector_count integer NOT NULL,
     species_area double precision NOT NULL,
     image_area double precision NOT NULL,
 

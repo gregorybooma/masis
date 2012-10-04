@@ -20,7 +20,7 @@ class DataTable {
             'scientific_name' => "Species Name",
             'area_m2' => "Area (m<sup>2</sup>)",
             'species_area' => "Species Coverage (m<sup>2</sup>)",
-            'species_count' => "Species Count",
+            'vector_count' => "Selections Count",
             'surface_area' => "Surface Area (m<sup>2</sup>)",
             'species_cover' => "Species Coverage Fraction",
             'species_cover_percent' => "Species Coverage %",
@@ -259,7 +259,7 @@ class DataTable {
         try {
             $sth = $db->dbh->prepare("SELECT s.aphia_id,
                     s.scientific_name,
-                    SUM(a.species_count) AS species_count,
+                    SUM(a.vector_count) AS vector_count,
                     SUM(a.species_area) AS species_area,
                     (1.0 * :total_surface) AS surface_area,
                     SUM(a.species_area) / :total_surface * 100 AS species_cover_percent
@@ -294,7 +294,7 @@ class DataTable {
         try {
             $sth = $db->dbh->prepare("SELECT s.aphia_id,
                     s.scientific_name,
-                    SUM(a.species_count) AS species_count,
+                    SUM(a.vector_count) AS vector_count,
                     SUM(a.species_area) as species_area,
                     SUM(a.image_area) as surface_area,
                     SUM(a.species_area) / SUM(a.image_area) * 100 as species_cover_percent

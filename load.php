@@ -196,9 +196,9 @@ switch ($do) {
             if ( empty($_GET['species2']) ) exit("Parameter `species2` is not set.");
             require("$root/includes/Exporter.php");
             $csv = new Exporter();
-            $file = sprintf("pc2sp-%s-%s", $_GET['species1'], $_GET['species2']);
+            $file = sprintf("2sp-%s-%s", $_GET['species1'], $_GET['species2']);
             $file = sprintf( "exported/%s.csv", sanitize($file) );
-            $csv->percent_coverage_two_species( Config::read('base_path').$file, $_GET['species1'], $_GET['species2'] );
+            $csv->two_species( Config::read('base_path').$file, $_GET['species1'], $_GET['species2'] );
             print json_encode( array('result' => 'success', 'download' => Config::read('base_url').$file) );
         }
         catch (Exception $e) {

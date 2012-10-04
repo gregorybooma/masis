@@ -34,7 +34,7 @@ class Exporter {
      * @param bool $header Whether to export a CSV header (defaults to TRUE).
      * @throws Exception
      */
-    public function two_species($file, $species1, $species2, $delimiter=';', $header=TRUE) {
+    public function coverage_two_species($filename, $species1, $species2, $delimiter=';', $header=TRUE) {
         global $db;
 
         try {
@@ -61,16 +61,12 @@ class Exporter {
             throw new Exception( $e->getMessage() );
         }
 
-        $fp = @fopen($file, 'w');
-        if (!$fp) {
-            $e = error_get_last();
-            throw new Exception( $e['message'] );
-        }
-
-        if ($header) fputcsv( $fp, $this->get_header($sth), $delimiter );
+        header("Content-Type: text/csv; charset=utf-8");
+        header("Content-Disposition: attachment; filename={$filename}");
+        if ($header) print implode($delimiter, $this->get_header($sth))."\n";
         while ( $row = $sth->fetch(PDO::FETCH_NUM) ) {
-            fputcsv($fp, $row, $delimiter);
+            print implode($delimiter, $row)."\n";
         }
-        fclose($fp);
+        exit();
     }
 }

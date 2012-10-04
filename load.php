@@ -51,7 +51,7 @@ switch ($do) {
             print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );
         }
         break;
-    case 'get_species':
+    case 'get_worms_species':
         if ( !empty($_GET['term']) ) {
             $searchpar = !empty($_GET['searchpar']) ? $_GET['searchpar'] : 0;
             require("$root/includes/JSON.php");
@@ -59,6 +59,13 @@ switch ($do) {
             print $json->get_species_from_worms($_GET['term'], $searchpar);
         }
         break;
+    case 'get_species_matching':
+        if ( !empty($_GET['term']) ) {
+            require("$root/includes/JSON.php");
+            $json = new JSON();
+            print $json->get_species_matching($_GET['term']);
+            break;
+        }
     case 'get_substrate_types':
         require("$root/includes/JSON.php");
         $json = new JSON();
@@ -190,19 +197,18 @@ switch ($do) {
 
     /** Exporting data **/
 
-    case 'export_percent_coverage_two_species':
+    case 'export_coverage_two_species':
         try {
-            if ( empty($_GET['species1']) ) exit("Parameter `species1` is not set.");
-            if ( empty($_GET['species2']) ) exit("Parameter `species2` is not set.");
+            if ( empty($_GET['species1']) ) throw new Exception("Parameter `species1` is empty.");
+            if ( empty($_GET['species2']) ) throw new Exception("Parameter `species2` is empty.");
             require("$root/includes/Exporter.php");
             $csv = new Exporter();
-            $file = sprintf("2sp-%s-%s", $_GET['species1'], $_GET['species2']);
-            $file = sprintf( "exported/%s.csv", sanitize($file) );
-            $csv->two_species( Config::read('base_path').$file, $_GET['species1'], $_GET['species2'] );
-            print json_encode( array('result' => 'success', 'download' => Config::read('base_url').$file) );
+            $filename = sprintf("coverage-%s-%s", $_GET['species1'], $_GET['species2']);
+            $filename = sprintf("%s.csv", sanitize($filename));
+            $csv->coverage_two_species( $filename, $_GET['species1'], $_GET['species2'] );
         }
         catch (Exception $e) {
-            print json_encode( array('result' => 'fail', 'exception' => $e->getMessage()) );
+            print $e->getMessage();
         }
         break;
 

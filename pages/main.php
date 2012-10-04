@@ -157,6 +157,19 @@ $user = $member->data();
         <div id="tab-statistics">
             <h1>Species coverage</h1>
 
+            <h2>Export</h2>
+            <form action="load.php" method="get" target="_blank" id="export-coverage-two-species">
+            <input type="hidden" name="do" value="export_coverage_two_species" />
+            <fieldset>
+                <legend>Species coverage per image</legend>
+                <p>Export the species selections count and species
+                coverage/m<sup>2</sup> for two species per image.</p>
+                <label>First Species: <input type="text" name="species1" size="30" value="" placeholder="Enter species name..."></label>
+                <label>Second Species: <input type="text" name="species2" size="30" value="" placeholder="Enter species name..."></label>
+                <input type="submit" value="Export" class="button" />
+            </fieldset>
+            </form>
+
             <h2>Overall coverage</h2>
             <p>Coverage based on all annotated images. Only images for which
             the annotation status is set to "Complete" are included in the

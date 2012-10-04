@@ -275,13 +275,19 @@ class Database {
      *
      * This method can be used for the Autocomplete feature of jQuery UI.
      *
-     * @param $term The keyword to match against species names in the database.
+     * @param string $term The keyword to match against species names in the database.
+     * @param integer $limit The maximum number of records to return (defaults to 20).
      * @return A PDO statement handler.
      */
-    public function get_species($term) {
+    public function get_species_matching($term, $limit=20) {
         try {
-            $sth = $this->dbh->prepare("SELECT * FROM species WHERE scientific_name ~* :term;");
+            $sth = $this->dbh->prepare("SELECT * FROM species
+                WHERE scientific_name ~* :term
+                    AND status = 'accepted'
+                ORDER BY scientific_name
+                LIMIT :limit;");
             $sth->bindParam(":term", $term, PDO::PARAM_STR);
+            $sth->bindParam(":limit", $limit, PDO::PARAM_INT);
             $sth->execute();
         }
         catch (Exception $e) {

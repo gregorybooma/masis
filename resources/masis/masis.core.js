@@ -70,7 +70,7 @@ function initInterface() {
     });
 
     // Style buttons with jQuery UI.
-    $( "input:submit, button").button();
+    $("button").button();
 
     // Make sidebar elements toggleable.
     $("#sidebar-left").accordion({ header: "h1", active: 2, fillSpace: false });
@@ -97,8 +97,34 @@ function initInterface() {
     // Set button actions.
     $("#select-species-searchpar").change(function() {
         $('#select-species').autocomplete(
-            "option", "source", "load.php?do=get_species&searchpar=" + $("#select-species-searchpar option:selected").val()
+            "option", "source", "load.php?do=get_worms_species&searchpar=" + $("#select-species-searchpar option:selected").val()
         );
+    });
+
+    // Set autocomplete for inputs.
+    $('#export-coverage-two-species input:text[name=species1]').autocomplete({
+        minLength: 3,
+        delay: 500,
+        source: "load.php?do=get_species_matching",
+        select: function(event, ui) {
+            // The default action of select is to replace the text field's
+            // value with the value of the selected item. This is not desired.
+            event.preventDefault();
+            // Replace the text field value with the label instead.
+            $('#export-coverage-two-species input:text[name=species1]').val(ui.item.label);
+        }
+    });
+    $('#export-coverage-two-species input:text[name=species2]').autocomplete({
+        minLength: 3,
+        delay: 500,
+        source: "load.php?do=get_species_matching",
+        select: function(event, ui) {
+            // The default action of select is to replace the text field's
+            // value with the value of the selected item. This is not desired.
+            event.preventDefault();
+            // Replace the text field value with the label instead.
+            $('#export-coverage-two-species input:text[name=species2]').val(ui.item.label);
+        }
     });
 
     // Populate select menu's
@@ -121,6 +147,16 @@ function initInterface() {
     });
 
     // Initialize dialogs.
+    initDialogs();
+}
+
+
+/**
+ * Initialize all dialogs.
+ *
+ * Dialogs are initialized, but not displayed.
+ */
+function initDialogs() {
     $( "#dialog-on-save-selections" ).dialog({
         autoOpen: false,
         resizable: false,
@@ -478,7 +514,7 @@ function onFeatureAnnotateSelect(feature) {
     $('#select-species').attr('value', "");
     $('#select-species').autocomplete({
         delay: 1000,
-        source: "load.php?do=get_species",
+        source: "load.php?do=get_worms_species",
         create: function(event, ui) {
             // Replace the text field value if the selected feature is already
             // assigned to a species.

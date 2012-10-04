@@ -105,6 +105,30 @@ class JSON {
     }
 
     /**
+     * Return all species prepared for HTML select input options.
+     *
+     * Each object in the array has two attributes: value and label. To be
+     * used as value and text for the <option> elements.
+     *
+     * @param string $term The keyword to match against species names in the database.
+     * @param integer $limit The maximum number of records to return (defaults to 20).
+     * @return Species in JSON format
+     */
+    public function get_species_matching($term, $limit=20) {
+        global $db;
+
+        $sth = $db->get_species_matching($term, $limit);
+        $types = array();
+        while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
+            $types[] = array(
+                'value' => $row['aphia_id'],
+                'label' => $row['scientific_name']
+                );
+        }
+        return json_encode($types);
+    }
+
+    /**
      * Return all substrate types prepared for HTML select input options.
      *
      * Each object in the array has two attributes: value and label. To be

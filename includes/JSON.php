@@ -92,9 +92,11 @@ class JSON {
             foreach ( $records as $sp ) {
                 // Skip records with a specific status.
                 if ( in_array($sp->status, $db->aphia_status_exclude) ) continue;
+                // Show in the label if a record is unaccepted.
+                $label = $sp->status == 'unaccepted' ? $sp->scientificname . " (unaccepted)" : $sp->scientificname;
 
                 $species[] = array(
-                    'label' => $sp->scientificname,
+                    'label' => $label,
                     'value' => $sp->AphiaID
                     );
             }

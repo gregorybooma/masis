@@ -158,15 +158,20 @@ $user = $member->data();
             <h1>Species coverage</h1>
 
             <h2>Export</h2>
+            <p>The forms below allow you to export species coverage data to
+            CSV data files. Only images for which the annotation status is set
+            to "complete" are included. Images tagged as
+            <span class="tag">unusable</span> or similar are excluded.</p>
+
             <form action="load.php" method="get" target="_blank" id="export-coverage-two-species-present">
             <input type="hidden" name="do" value="export_coverage_two_species_present" />
             <fieldset>
-                <legend>Species coverage per image</legend>
+                <legend>Species coverage per image where both present</legend>
                 <p>Export the species selections count and species
                 coverage/m<sup>2</sup> for two species per image. This is
-                on image where both species are present.</p>
-                <label>First Species: <input type="text" name="species1" size="30" value="" placeholder="Enter species name..."></label>
-                <label>Second Species: <input type="text" name="species2" size="30" value="" placeholder="Enter species name..."></label>
+                for images where both species are present.</p>
+                <label>Species A: <input type="text" name="species1" size="30" value="" placeholder="Enter species name..."></label>
+                <label>Species B: <input type="text" name="species2" size="30" value="" placeholder="Enter species name..."></label>
                 <input type="submit" value="Export" class="button" />
             </fieldset>
             </form>

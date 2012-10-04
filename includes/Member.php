@@ -138,14 +138,14 @@ END;
                 $user = $db->query("SELECT user_id as id, pass_hash FROM users WHERE user_id = :user_id;",
                     array(':user_id' => $username . $this->username_suffix), 'FETCH_OBJ');
 
-                if ( $db->sth->rowCount() >= '1' ) {
+                if ( $db->sth->rowCount() > 0 ) {
                     if ( $this->verify($password, $user->pass_hash) ) {
                         // Set the user session if verified successfully.
                         session_regenerate_id();
                         $_SESSION['member_id'] = $user->id;
                         $_SESSION['member_valid'] = 1;
 
-                        // Use rember me feature?
+                        // Set a login session cookie?
                         $this->createNewCookie($user->id);
 
                         // Report Status
@@ -205,13 +205,10 @@ END;
             $user = $db->query("SELECT user_id as id, hash FROM users_logged WHERE user_id = :user_id;",
                 array(':user_id' => $_COOKIE['remember_me_id']), 'FETCH_OBJ');
             // Does the record exist?
-            if ($db->sth->rowCount() >= '1') {
+            if ($db->sth->rowCount() > 0) {
                 // Check if the hashes match
                 if ($user->hash == $_COOKIE['remember_me_hash']) {
-                    // If so, create a new cookie and database record
-                    $this->createNewCookie($user->id);
-
-                    // And recreate session
+                    // Recreate session
                     session_regenerate_id();
                     $_SESSION['member_id'] = $user->id;
                     $_SESSION['member_valid'] = 1;
@@ -244,21 +241,25 @@ END;
     }
 
     /**
-     * If the remember me feature is enabled and the
-     * user has selected it create a cookie for them.
-     * Log it in the database
+     * If the user has checked the "Remember me" option, create a login session
+     * cookie for them.
+     *
+     * The login session details are saved to the database.
      *
      * @param string $user_id The users id
      */
     public function createNewCookie($user_id) {
         global $db;
 
+        // Only continue if the "Remember me" checkbox is checked.
+        if ( empty($_POST['remember_me']) ) return;
+
         // Generate random hash
         $hash = $this->genHash($this->genSalt(), $_SERVER['REMOTE_ADDR']);
 
-        // Set cookies (expire in 1 year)
-        setcookie("remember_me_id", $user_id, time() + 31536000);
-        setcookie("remember_me_hash", $hash, time() + 31536000);
+        // Set cookies (expire in 30 days)
+        setcookie("remember_me_id", $user_id, time() + 3600*24*30);
+        setcookie("remember_me_hash", $hash, time() + 3600*24*30);
 
         // Remove old cookie records from the database.
         $db->query("DELETE FROM users_logged WHERE user_id = :user_id;", array(':user_id' => $user_id));
@@ -276,9 +277,9 @@ END;
         global $db;
 
         // Expire the cookies (the browser will delete the expired cookies)
-        setcookie("remember_me_id", "", time() - 31536000);
-        setcookie("remember_me_hash", "", time() - 31536000);
-        setcookie("redirect", "", time() - 31536000);
+        setcookie("remember_me_id", "", time() - 3600);
+        setcookie("remember_me_hash", "", time() - 3600);
+        setcookie("redirect", "", time() - 3600);
 
         // Clear cookie records in the database
         $db->query("DELETE FROM users_logged WHERE user_id = :user_id;", array(':user_id' => $user_id));

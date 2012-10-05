@@ -17,8 +17,8 @@ CREATE TABLE image_info
     longitude double precision,
     latitude double precision,
     "timestamp" timestamp,
-    nav_depth double precision NOT NULL, -- in meters
-    nav_altitude double precision NOT NULL, -- in meters
+    nav_depth double precision, -- in meters
+    nav_altitude double precision, -- in meters
     img_area double precision, -- in square meters
     temperature double precision, -- in degrees Celcius
     salinity double precision,

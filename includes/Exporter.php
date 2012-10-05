@@ -88,10 +88,10 @@ class Exporter {
         $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
         try {
             $sth = $db->dbh->prepare("SELECT i.id AS image_id,
-                    a1.vector_count AS \"{$this->aphia2name[$aphia_id1]} count\",
-                    a1.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id1]} coverage\",
-                    a2.vector_count AS \"{$this->aphia2name[$aphia_id2]} count\",
-                    a2.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id2]} coverage\"
+                    COALESCE(a1.vector_count, 0) AS \"{$this->aphia2name[$aphia_id1]} count\",
+                    COALESCE(a1.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id1]} coverage\",
+                    COALESCE(a2.vector_count, 0) AS \"{$this->aphia2name[$aphia_id2]} count\",
+                    COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
                 FROM image_info i
                     INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
                     LEFT JOIN image_tags t ON t.image_info_id = i.id
@@ -128,10 +128,10 @@ class Exporter {
         $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
         try {
             $sth = $db->dbh->prepare("SELECT i.id AS image_id,
-                    a1.vector_count AS \"{$this->aphia2name[$aphia_id1]} count\",
-                    a1.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id1]} coverage\",
-                    a2.vector_count AS \"{$this->aphia2name[$aphia_id2]} count\",
-                    a2.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id2]} coverage\"
+                    COALESCE(a1.vector_count, 0) AS \"{$this->aphia2name[$aphia_id1]} count\",
+                    COALESCE(a1.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id1]} coverage\",
+                    COALESCE(a2.vector_count, 0) AS \"{$this->aphia2name[$aphia_id2]} count\",
+                    COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
                 FROM image_info i
                     INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
                     LEFT JOIN image_tags t ON t.image_info_id = i.id

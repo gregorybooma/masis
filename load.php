@@ -197,15 +197,22 @@ switch ($do) {
 
     /** Exporting data **/
 
-    case 'export_coverage_two_species_present':
+    case 'export_coverage_two_species':
         try {
-            if ( empty($_GET['species1']) ) throw new Exception("Parameter `species1` is empty.");
-            if ( empty($_GET['species2']) ) throw new Exception("Parameter `species2` is empty.");
+            if ( empty($_GET['aphia_id1']) ) throw new Exception("Parameter `aphia_id1` is empty.");
+            if ( empty($_GET['aphia_id2']) ) throw new Exception("Parameter `aphia_id2` is empty.");
             require("$root/includes/Exporter.php");
             $csv = new Exporter();
-            $filename = sprintf("coverage-present-%s-%s", $_GET['species1'], $_GET['species2']);
+            $aphia_id1 = $_GET['aphia_id1'];
+            $aphia_id2 = $_GET['aphia_id2'];
+            if ( !empty($_GET['and']) ) {
+                $csv->set_coverage_two_species_present($aphia_id1, $aphia_id2);
+                $filename = sprintf("coverage-present-%s-%s", $csv->aphia2name[$aphia_id1], $csv->aphia2name[$aphia_id2]);
+            } else {
+                $csv->set_coverage_two_species($aphia_id1, $aphia_id2);
+                $filename = sprintf("coverage-%s-%s", $csv->aphia2name[$aphia_id1], $csv->aphia2name[$aphia_id2]);
+            }
             $filename = sprintf("%s.csv", sanitize($filename));
-            $csv->set_coverage_two_species_present($_GET['species1'], $_GET['species2']);
             $csv->export_csv($filename);
         }
         catch (Exception $e) {

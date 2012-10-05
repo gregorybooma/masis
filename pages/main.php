@@ -160,19 +160,19 @@ $user = $member->data();
             <h2>Export</h2>
             <p>The forms below allow you to export species coverage data to
             CSV data files. Only images for which the annotation status is set
-            to "complete" are included. Images tagged as
+            to "Complete" are included. Images tagged as
             <span class="tag">unusable</span> or similar are excluded.</p>
 
-            <form action="load.php" method="get" target="_blank" id="export-coverage-two-species-present">
-            <input type="hidden" name="do" value="export_coverage_two_species_present" />
+            <form action="load.php" method="get" target="_blank" id="export-coverage-two-species">
+            <input type="hidden" name="do" value="export_coverage_two_species" />
             <fieldset>
-                <legend>Species coverage per image where both present</legend>
+                <legend>Species coverage per image</legend>
                 <p>Export the species selections count and species
-                coverage/m<sup>2</sup> for two species per image. This is
-                for images where both species are present.</p>
-                <label>Species A: <input type="text" name="species1" size="30" value="" placeholder="Enter species name..."></label>
-                <label>Species B: <input type="text" name="species2" size="30" value="" placeholder="Enter species name..."></label>
-                <input type="submit" value="Export" class="button" />
+                coverage/m<sup>2</sup> for two species per image.</p>
+                <p><label>Aphia ID Species A: <input type="text" name="aphia_id1" size="30" value="" placeholder="Enter species name..."></label></p>
+                <p><label>Aphia ID Species B: <input type="text" name="aphia_id2" size="30" value="" placeholder="Enter species name..."></label></p>
+                <p><label><input type="checkbox" name="and" value="1" /> Only include images where both species are present</label></p>
+                <p><input type="submit" value="Export" class="button" /></p>
             </fieldset>
             </form>
 

@@ -23,6 +23,12 @@ class Exporter {
     public $header = TRUE;
 
     /**
+     * Associative array with Aphia ID as key, species name as value.
+     * @var Array
+     */
+    public $aphia2name = array();
+
+    /**
      * Set the values for the object attributes.
      *
      * @param string $delimiter Character to be used as the CSV field delimiter.
@@ -67,41 +73,106 @@ class Exporter {
 
     /**
      * Set vector count and coverage/square meter for two species per image on
-     * images where both species are present.
+     * images where either species is present.
      *
      * Only images for which the annotation status is "complete" are used in
      * the calculations.
      *
-     * @param string $species1 Scientific name of the first species.
-     * @param string $species2 Scientific name of the second species.
+     * @param integer $aphia_id1 Aphia ID for species A.
+     * @param integer $aphia_id2 Aphia ID for species B.
      * @throws Exception
      */
-    public function set_coverage_two_species_present($species1, $species2) {
+    public function set_coverage_two_species($aphia_id1, $aphia_id2) {
         global $db;
 
+        $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
         try {
-            $sth = $db->dbh->prepare("SELECT a1.image_info_id AS image_id,
-                    a1.vector_count AS \"{$species1} count\",
-                    a1.species_area/a1.image_area AS \"{$species1} coverage\",
-                    a2.vector_count AS \"{$species2} count\",
-                    a2.species_area/a1.image_area AS \"{$species2} coverage\"
-                FROM areas_image_grouped a1
-                    INNER JOIN image_annotation_status ann ON ann.image_info_id = a1.image_info_id
-                    LEFT OUTER JOIN image_tags t ON t.image_info_id = a1.image_info_id
-                    INNER JOIN areas_image_grouped a2 ON a2.image_info_id = a1.image_info_id
-                    INNER JOIN species sp1 ON sp1.aphia_id = a1.aphia_id
-                    INNER JOIN species sp2 ON sp2.aphia_id = a2.aphia_id
-                WHERE ann.annotation_status = 'complete'
+            $sth = $db->dbh->prepare("SELECT i.id AS image_id,
+                    a1.vector_count AS \"{$this->aphia2name[$aphia_id1]} count\",
+                    a1.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id1]} coverage\",
+                    a2.vector_count AS \"{$this->aphia2name[$aphia_id2]} count\",
+                    a2.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id2]} coverage\"
+                FROM image_info i
+                    INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
+                    LEFT JOIN image_tags t ON t.image_info_id = i.id
+                    LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
+                    LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
+                WHERE i.img_area IS NOT NULL
+                    AND ann.annotation_status = 'complete'
                     AND t.image_tag NOT IN ('unusable','cannot see seafloor')
-                    AND sp1.scientific_name = :species1
-                    AND sp2.scientific_name = :species2;");
-            $sth->bindParam(":species1", $species1, PDO::PARAM_STR);
-            $sth->bindParam(":species2", $species2, PDO::PARAM_STR);
+                    AND (a1.species_area IS NOT NULL OR a2.species_area IS NOT NULL);");
+            $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
+            $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);
             $sth->execute();
         }
         catch (Exception $e) {
             throw new Exception( $e->getMessage() );
         }
         $this->sth = $sth;
+    }
+
+    /**
+     * Set vector count and coverage/square meter for two species per image on
+     * images where both species are present.
+     *
+     * Only images for which the annotation status is "complete" are used in
+     * the calculations.
+     *
+     * @param integer $aphia_id1 Aphia ID for species A.
+     * @param integer $aphia_id2 Aphia ID for species B.
+     * @throws Exception
+     */
+    public function set_coverage_two_species_present($aphia_id1, $aphia_id2) {
+        global $db;
+
+        $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
+        try {
+            $sth = $db->dbh->prepare("SELECT i.id AS image_id,
+                    a1.vector_count AS \"{$this->aphia2name[$aphia_id1]} count\",
+                    a1.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id1]} coverage\",
+                    a2.vector_count AS \"{$this->aphia2name[$aphia_id2]} count\",
+                    a2.species_area/i.img_area AS \"{$this->aphia2name[$aphia_id2]} coverage\"
+                FROM image_info i
+                    INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
+                    LEFT JOIN image_tags t ON t.image_info_id = i.id
+                    LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
+                    LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
+                WHERE i.img_area IS NOT NULL
+                    AND ann.annotation_status = 'complete'
+                    AND t.image_tag NOT IN ('unusable','cannot see seafloor')
+                    AND (a1.species_area IS NOT NULL AND a2.species_area IS NOT NULL);");
+            $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
+            $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        $this->sth = $sth;
+    }
+
+    /**
+     * Populate the aphia2name attribute.
+     *
+     * @param Array $ids Aphia ID's
+     * @uses Array $this->aphia2name
+     * @throws Exception
+     */
+    public function set_names_from_aphia_ids($ids) {
+        global $db;
+
+        $query = sprintf("SELECT aphia_id,scientific_name
+            FROM species
+            WHERE aphia_id IN (%s);", implode(',', $ids));
+        try {
+            $sth = $db->dbh->prepare($query);
+            $sth->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception( $e->getMessage() );
+        }
+        while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
+            $this->aphia2name[$row['aphia_id']] = $row['scientific_name'];
+        }
     }
 }

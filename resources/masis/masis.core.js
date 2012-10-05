@@ -102,29 +102,10 @@ function initInterface() {
     });
 
     // Set autocomplete for inputs.
-    $('#export-coverage-two-species-present input:text[name=species1]').autocomplete({
+    $('#export-coverage-two-species input:text[name=aphia_id*]').autocomplete({
         minLength: 3,
         delay: 500,
-        source: "load.php?do=get_species_matching",
-        select: function(event, ui) {
-            // The default action of select is to replace the text field's
-            // value with the value of the selected item. This is not desired.
-            event.preventDefault();
-            // Replace the text field value with the label instead.
-            $('#export-coverage-two-species-present input:text[name=species1]').val(ui.item.label);
-        }
-    });
-    $('#export-coverage-two-species-present input:text[name=species2]').autocomplete({
-        minLength: 3,
-        delay: 500,
-        source: "load.php?do=get_species_matching",
-        select: function(event, ui) {
-            // The default action of select is to replace the text field's
-            // value with the value of the selected item. This is not desired.
-            event.preventDefault();
-            // Replace the text field value with the label instead.
-            $('#export-coverage-two-species-present input:text[name=species2]').val(ui.item.label);
-        }
+        source: "load.php?do=get_species_matching"
     });
 
     // Populate select menu's

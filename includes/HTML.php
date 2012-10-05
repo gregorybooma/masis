@@ -35,7 +35,7 @@ class HTML {
                 // be listed.
                 $stack = explode('/', trim($dir, '/'));
                 $img_dir = array_pop($stack);
-                $ext_pattern = '/\.[a-z]+$/';
+                $ext_pattern = '/\.[A-Za-z]+$/';
                 $sth = $db->get_files_for_dir($img_dir);
                 while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
                     // Many entries in the database are .ppm files which are

@@ -22,7 +22,11 @@ class JSON {
         }
 
         // Get file info.
-        $size = getimagesize($abs_path);
+        $size = @getimagesize($abs_path);
+        if ( $size === FALSE ) {
+            $e = error_get_last();
+            throw new Exception( $e['message'] );
+        }
         $width = $size[0];
         $height = $size[1];
         $type = $size[2];
@@ -37,7 +41,7 @@ class JSON {
         $info['mime'] = $size['mime'];
         $info['url'] = Config::read('base_url') . ltrim($rel_path, '/');
         $info['path'] = $abs_path;
-        $info['exif'] = exif_read_data($abs_path);
+        $info['exif'] = @exif_read_data($abs_path);
 
         $arr = $db->get_image_attributes($info['dir'], $info['name']);
         $info = array_merge($info, $arr);

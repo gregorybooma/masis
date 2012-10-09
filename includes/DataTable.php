@@ -4,7 +4,19 @@
  * The DataTable class for generating HTML tables.
  */
 class DataTable {
+
+    /**
+     * The number of decimals to round to.
+     * @var Integer
+     */
     public $round_precision = 5;
+
+    /**
+     * Names of columns for which the values should be rounded.
+     * @var Array
+     */
+    public $round_columns = array('species_cover_percent','species_area',
+        'avg_species_area','surface_area');
 
     /**
      * Set table heads from the query output.
@@ -20,7 +32,9 @@ class DataTable {
             'scientific_name' => "Species Name",
             'area_m2' => "Area (m<sup>2</sup>)",
             'species_area' => "Species Coverage (m<sup>2</sup>)",
-            'vector_count' => "Selections Count",
+            'avg_species_area' => "Average Species Coverage (m<sup>2</sup>)",
+            'vector_count' => "Selection Count",
+            'image_count' => "Image Count",
             'surface_area' => "Surface Area (m<sup>2</sup>)",
             'species_cover' => "Species Coverage Fraction",
             'species_cover_percent' => "Species Coverage %",
@@ -102,10 +116,6 @@ class DataTable {
      * @return string A HTML <tbody> element.
      */
     public function build_tbody($sth, $class="") {
-        $round_fields = array(
-            'species_cover_percent',
-            'species_area',
-            'surface_area');
         $tbody = "<tbody>";
         while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
             $tbody .= "<tr class='{$class}'>\n";
@@ -116,7 +126,7 @@ class DataTable {
                 // Link Aphia ID's to the WoRMS website.
                 if ($key == 'aphia_id') $col_value = "<a href=\"http://www.marinespecies.org/aphia.php?p=taxdetails&id={$col_value}\" target=\"_blank\">{$col_value}</a>";
                 // Round some values.
-                if ( in_array($key, $round_fields) ) {
+                if ( in_array($key, $this->round_columns) ) {
                     $col_value = round($col_value, $this->round_precision);
                 }
 
@@ -263,6 +273,7 @@ class DataTable {
         try {
             $sth = $db->dbh->prepare("SELECT s.aphia_id,
                     s.scientific_name,
+                    COUNT(a.image_info_id) AS image_count,
                     SUM(a.vector_count) AS vector_count,
                     SUM(a.species_area) AS species_area,
                     (1.0 * :total_surface) AS surface_area,
@@ -302,10 +313,12 @@ class DataTable {
         try {
             $sth = $db->dbh->prepare("SELECT s.aphia_id,
                     s.scientific_name,
+                    COUNT(a.image_info_id) AS image_count,
                     SUM(a.vector_count) AS vector_count,
-                    SUM(a.species_area) as species_area,
-                    SUM(a.image_area) as surface_area,
-                    SUM(a.species_area) / SUM(a.image_area) * 100 as species_cover_percent
+                    SUM(a.species_area) AS species_area,
+                    AVG(a.species_area) AS avg_species_area,
+                    SUM(a.image_area) AS surface_area,
+                    SUM(a.species_area) / SUM(a.image_area) * 100 AS species_cover_percent
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                     LEFT JOIN image_tags t ON t.image_info_id = a.image_info_id

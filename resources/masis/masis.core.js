@@ -434,10 +434,7 @@ function saveVectors() {
         dataType: "json",
         data: vectors,
         success: function(data) {
-            if (data.result == 'success') {
-                $("#dialog-selections-save-success").dialog('open');
-            }
-            else {
+            if (data.result != 'success') {
                 $("#dialog-unknown-error").dialog('open');
             }
         }

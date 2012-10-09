@@ -193,8 +193,8 @@ $user = $member->data();
 
     <!-- dialogs -->
     <div class="hidden">
-        <div id="dialog-on-save-selections" title="Commit changes?">
-            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You are about to save all changes. Are you sure?</p>
+        <div id="dialog-on-save-selections" title="Save selections?">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You are about to save all selections. Continue?</p>
         </div>
 
         <div id="dialog-remove-selection" title="Remove selection?">

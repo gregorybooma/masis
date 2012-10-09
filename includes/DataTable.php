@@ -240,14 +240,18 @@ class DataTable {
     public function species_coverage_overall() {
         global $db;
 
+        $tags_image_unusable = "'".implode("','", $db->tags_image_unusable)."'";
+
         try {
             $sth = $db->dbh->prepare("SELECT sum(i.img_area)
                 FROM image_info i
                     INNER JOIN image_annotation_status a ON a.image_info_id = i.id
+                    LEFT JOIN image_tags t ON t.image_info_id = i.id
                 -- Images marked as 'complete' are fully reviewed and
                 -- annotated. Only for these images can be said that a species
                 -- is not present on the image if no vectors are set.
-                WHERE a.annotation_status = 'complete';");
+                WHERE a.annotation_status = 'complete'
+                    AND t.image_tag NOT IN ({$tags_image_unusable});");
             $sth->execute();
         }
         catch (Exception $e) {
@@ -267,10 +271,12 @@ class DataTable {
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
                     INNER JOIN image_info i ON i.id = a.image_info_id
                     INNER JOIN image_annotation_status y ON y.image_info_id = i.id
+                    LEFT JOIN image_tags t ON t.image_info_id = i.id
                 -- Images marked as 'complete' are fully reviewed and
                 -- annotated. Only for these images can be said that a species
                 -- is not present on the image if no vectors are set.
                 WHERE y.annotation_status = 'complete'
+                    AND t.image_tag NOT IN ({$tags_image_unusable})
                 GROUP BY s.aphia_id;");
             $sth->bindParam(":total_surface", $total_surface, PDO::PARAM_STR);
             $sth->execute();
@@ -291,6 +297,8 @@ class DataTable {
     public function species_coverage_where_present() {
         global $db;
 
+        $tags_image_unusable = "'".implode("','", $db->tags_image_unusable)."'";
+
         try {
             $sth = $db->dbh->prepare("SELECT s.aphia_id,
                     s.scientific_name,
@@ -300,6 +308,8 @@ class DataTable {
                     SUM(a.species_area) / SUM(a.image_area) * 100 as species_cover_percent
                 FROM areas_image_grouped a
                     INNER JOIN species s ON s.aphia_id = a.aphia_id
+                    LEFT JOIN image_tags t ON t.image_info_id = a.image_info_id
+                WHERE t.image_tag NOT IN ({$tags_image_unusable})
                 GROUP BY s.aphia_id;");
             $sth->execute();
         }

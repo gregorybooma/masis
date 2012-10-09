@@ -86,6 +86,8 @@ class Exporter {
         global $db;
 
         $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
+        $tags_image_unusable = "'".implode("','", $db->tags_image_unusable)."'";
+
         try {
             $sth = $db->dbh->prepare("SELECT i.id AS image_id,
                     i.img_dir,
@@ -101,7 +103,7 @@ class Exporter {
                     LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
                 WHERE i.img_area IS NOT NULL
                     AND ann.annotation_status = 'complete'
-                    AND t.image_tag NOT IN ('unusable','cannot see seafloor')
+                    AND t.image_tag NOT IN ({$tags_image_unusable})
                     AND (a1.species_area IS NOT NULL OR a2.species_area IS NOT NULL);");
             $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
             $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);
@@ -128,6 +130,8 @@ class Exporter {
         global $db;
 
         $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
+        $tags_image_unusable = "'".implode("','", $db->tags_image_unusable)."'";
+
         try {
             $sth = $db->dbh->prepare("SELECT i.id AS image_id,
                     i.img_dir,
@@ -143,7 +147,7 @@ class Exporter {
                     LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
                 WHERE i.img_area IS NOT NULL
                     AND ann.annotation_status = 'complete'
-                    AND t.image_tag NOT IN ('unusable','cannot see seafloor')
+                    AND t.image_tag NOT IN ({$tags_image_unusable})
                     AND (a1.species_area IS NOT NULL AND a2.species_area IS NOT NULL);");
             $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
             $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);

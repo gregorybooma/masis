@@ -16,6 +16,12 @@ class Database {
     public $aphia_status_exclude = array('nomen dubium','nomen nudum','deleted');
 
     /**
+     * Images with these tags are considered unusable.
+     * @var Array
+     */
+    public $tags_image_unusable = array('unusable','cannot see seafloor','altitude too high');
+
+    /**
      * Connect with the PostgreSQL database.
      */
     public function connect() {

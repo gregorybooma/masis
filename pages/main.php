@@ -165,6 +165,7 @@ $user = $member->data();
 
             <form action="load.php" method="get" target="_blank" id="export-coverage-two-species">
             <input type="hidden" name="do" value="export_coverage_two_species" />
+            <input type="hidden" name="reset_areas" value="1" />
             <fieldset>
                 <legend>Species coverage per image</legend>
                 <p>Export the species selections count and species

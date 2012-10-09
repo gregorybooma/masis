@@ -63,7 +63,7 @@ function initInterface() {
                 onLoadTable('load.php?do=table_images_species_unaccepted', '#images-species-unaccepted');
             }
             else if ( ui.panel.getAttribute('id') == 'tab-statistics' ) {
-                onLoadTable('load.php?do=table_species_coverage_overall','#species-coverage-overall');
+                onLoadTable('load.php?do=table_species_coverage_overall&reset_areas=1','#species-coverage-overall');
                 onLoadTable('load.php?do=table_species_coverage_where_present','#species-coverage-where-present');
             }
         }

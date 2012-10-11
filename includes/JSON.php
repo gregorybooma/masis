@@ -122,14 +122,17 @@ class JSON {
         global $db;
 
         $sth = $db->get_species_matching($term, $limit);
-        $types = array();
-        while ( $row = $sth->fetch(PDO::FETCH_ASSOC) ) {
-            $types[] = array(
-                'value' => $row['aphia_id'],
-                'label' => $row['scientific_name']
+        $species = array();
+        $species[] = array('label' => "Unassigned", 'value' => null);
+        while ( $sp = $sth->fetch(PDO::FETCH_OBJ) ) {
+                // Show in the label if a record is unaccepted.
+                $label = $sp->status == 'unaccepted' ? $sp->scientific_name . " (unaccepted)" : $sp->scientific_name;
+            $species[] = array(
+                'value' => $sp->aphia_id,
+                'label' => $label
                 );
         }
-        return json_encode($types);
+        return json_encode($species);
     }
 
     /**

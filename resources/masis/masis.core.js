@@ -95,13 +95,70 @@ function initInterface() {
     $("#feature-controls input:radio").button("disable");
 
     // Set button actions.
-    $("#select-species-searchpar").change(function() {
-        $('#select-species').autocomplete(
-            "option", "source", "load.php?do=get_worms_species&searchpar=" + $("#select-species-searchpar option:selected").val()
-        );
+    $("#select-species-worms-searchpar").change(function() {
+        var val = $("#select-species-worms-searchpar option:selected").val();
+
+        // Check the source option to "marinespecies.org" if "Common Name" is selected.
+        if (val == 1) {
+            $("input:radio[name=select-species-source]").filter('[value=worms]').attr('checked', true);
+        }
+        // Set the source to marinespecies.org with the searchpar option set.
+        $('#select-species').autocomplete("option", {
+            delay: 1000,
+            source: "load.php?do=get_worms_species&searchpar=" + val
+        });
+    });
+    $("input:radio[name=select-species-source]").change(function() {
+        var val = $("input:radio[name=select-species-source]:checked").val();
+
+        if (val == 'local') {
+            // Set the searchpar option to "Scientific Name" if source is set to "Local".
+            $("#select-species-worms-searchpar option").filter('[value=0]').attr('selected', true);
+            // Set the autocomplete source to local search.
+            $('#select-species').autocomplete("option", {
+                delay: 500,
+                source: "load.php?do=get_species_matching"
+            });
+        }
+        else {
+            // Set the autocomplete source to WoRMS search.
+            $('#select-species').autocomplete("option", {
+                delay: 1000,
+                source: "load.php?do=get_worms_species"
+            });
+        }
     });
 
     // Set autocomplete for inputs.
+    $('#select-species').autocomplete({
+        delay: 1000,
+        source: "load.php?do=get_worms_species",
+        select: function(event, ui) {
+            var id = ui.item.value;
+            var name = ui.item.label;
+
+            // Set the species ID and name for the selected feature.
+            selectedFeature.attributes.aphia_id = id;
+            selectedFeature.attributes.species_name = name;
+
+            // The default action of select is to replace the text field's
+            // value with the value of the selected item. This is not desired.
+            event.preventDefault();
+
+            // Replace the text field value with the label instead.
+            $("#select-species").val(name);
+
+            // Update dialog label.
+            if ( id ) {
+                $('#assign-species-label a').attr( {'href': "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + id, 'target': '_blank'} );
+                $('#assign-species-label a').text(name);
+            }
+            else {
+                $('#assign-species-label a').attr( {'href': "#", 'target': '_self'} );
+                $('#assign-species-label a').text("Unassigned");
+            }
+        }
+    });
     $('#export-coverage-two-species input:text[name=aphia_id*]').autocomplete({
         minLength: 3,
         delay: 500,
@@ -182,12 +239,9 @@ function initDialogs() {
         width: 400,
         modal: true,
         buttons: {
-            Ok: function() {
+            Close: function() {
                 $(this).dialog("close");
             }
-        },
-        close: function() {
-            $('#select-species').autocomplete("destroy");
         }
     });
     $( "#dialog-annotate-image" ).dialog({
@@ -489,43 +543,14 @@ function onFeatureRemove(feature) {
 function onFeatureAnnotateSelect(feature) {
     selectedFeature = feature;
 
+    // Remove the value of the species input field.
     $('#select-species').attr('value', "");
-    $('#select-species').autocomplete({
-        delay: 1000,
-        source: "load.php?do=get_worms_species",
-        create: function(event, ui) {
-            // Replace the text field value if the selected feature is already
-            // assigned to a species.
-            if (selectedFeature.attributes.aphia_id && selectedFeature.attributes.species_name) {
-                $("#select-species").val(selectedFeature.attributes.species_name);
-            }
-        },
-        select: function(event, ui) {
-            var id = ui.item.value;
-            var name = ui.item.label;
 
-            // Set the species ID and name for the selected feature.
-            selectedFeature.attributes.aphia_id = id;
-            selectedFeature.attributes.species_name = name;
-
-            // The default action of select is to replace the text field's
-            // value with the value of the selected item. This is not desired.
-            event.preventDefault();
-
-            // Replace the text field value with the label instead.
-            $("#select-species").val(name);
-
-            // Update dialog label.
-            if ( id ) {
-                $('#assign-species-label a').attr( {'href': "http://www.marinespecies.org/aphia.php?p=taxdetails&id=" + id, 'target': '_blank'} );
-                $('#assign-species-label a').text(name);
-            }
-            else {
-                $('#assign-species-label a').attr('href', "#");
-                $('#assign-species-label a').text("Unassigned");
-            }
-        }
-    });
+    // Replace the text field value if the selected feature is already
+    // assigned to a species.
+    if (selectedFeature.attributes.aphia_id && selectedFeature.attributes.species_name) {
+        $("#select-species").val(selectedFeature.attributes.species_name);
+    }
 
     // Update dialog label.
     if ( feature.attributes.aphia_id ) {
@@ -533,12 +558,9 @@ function onFeatureAnnotateSelect(feature) {
         $('#assign-species-label a').text(feature.attributes.species_name);
     }
     else {
-        $('#assign-species-label a').attr('href', "#");
+        $('#assign-species-label a').attr( {'href': "#", 'target': '_self'} );
         $('#assign-species-label a').text("Unassigned");
     }
-
-    // Reset the search parameter (sets it to "Scientific Name").
-     $("#select-species-searchpar").val(0);
 
     // Open dialog.
     $("#dialog-assign-species").dialog('open');

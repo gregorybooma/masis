@@ -289,7 +289,6 @@ class Database {
         try {
             $sth = $this->dbh->prepare("SELECT * FROM species
                 WHERE scientific_name ~* :term
-                    AND status = 'accepted'
                 ORDER BY scientific_name
                 LIMIT :limit;");
             $sth->bindParam(":term", $term, PDO::PARAM_STR);

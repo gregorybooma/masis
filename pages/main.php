@@ -220,17 +220,25 @@ $user = $member->data();
             <p>To assign a species to the selection, enter a species name in the search
             field and wait for a list of matches to appear. Select a species from
             the list to assign the species.</p>
+            <p>When searching by common name, enter the full name.</p>
             <form>
             <fieldset>
                 <legend>Select species</legend>
-                <select name="searchpar" id="select-species-searchpar">
-                    <option value="0" selected>Scientific Name</option>
-                    <option value="1">Common Name</option>
-                </select>
-                <input type="text" name="assign-species" id="select-species" size="50" value="" placeholder="Enter species name...">
+                <p>
+                    <select name="searchpar" id="select-species-worms-searchpar">
+                        <option value="0" selected>Scientific Name</option>
+                        <option value="1">Common Name</option>
+                    </select>
+                    <input type="text" name="select-species" id="select-species" size="50" value="" placeholder="Enter species name..." />
+                </p>
+                <p>
+                    Source:
+                    <label><input type="radio" name="select-species-source" value="worms" checked="checked" /> marinespecies.org</label>
+                    <label><input type="radio" name="select-species-source" value="local" /> Local</label>
+                </p>
             </fieldset>
+
             <p>Assigned to: <span id="assign-species-label" class="text-italic"><a href="#">Unassigned</a></span></p>
-            </form>
         </div>
 
         <div id="dialog-annotate-image" title="Annotate Image">
@@ -269,6 +277,7 @@ $user = $member->data();
 
             <fieldset>
                 <legend>Annotation status</legend>
+                <p>Set the status to "Complete" if all organisms on the image have been identified.</p>
                 <div id="image-annotation-status">
                     <input type="radio" name="annotation-status" value="incomplete" id="annotation-status-incomplete" checked="checked" />
                     <label for="annotation-status-incomplete">Incomplete</label>

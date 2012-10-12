@@ -73,7 +73,7 @@ function initInterface() {
     $("button").button();
 
     // Make sidebar elements toggleable.
-    $("#sidebar-left").accordion({ header: "h1", active: 2, fillSpace: false });
+    $("#sidebar-left").accordion({ header: "h1", active: 2, fillSpace: true });
 
     // Make the map element resizable.
     $( "#map" ).resizable({
@@ -368,6 +368,7 @@ function initWorkspace() {
  * Load the photo library.
  */
 function onLoadPhotoLibrary() {
+    // Load the directory tree in the photo library.
     $('#photo-library').fileTree({
             root: '/data/',
             script: 'load.php?do=get_file_list',
@@ -380,6 +381,8 @@ function onLoadPhotoLibrary() {
             setImage(file);
         }
     );
+    // Make the photo library horizontally resizable.
+    $( "#photo-library" ).resizable({handles: 's'});
 }
 
 /**

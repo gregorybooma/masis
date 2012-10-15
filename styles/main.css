@@ -226,11 +226,13 @@ span.tag {
 #dialog-image-info td {
     vertical-align: top;
 }
-
 #dialog-image-info th {
     padding: 0 3px;
     text-align: right;
-    min-width: 100px;
+    white-space: nowrap;
+}
+#dialog-image-info td {
+    word-break: break-all;
 }
 
 /*----------------------------------------------------

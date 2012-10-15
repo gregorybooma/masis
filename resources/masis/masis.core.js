@@ -73,7 +73,7 @@ function initInterface() {
     $("button").button();
 
     // Make sidebar elements toggleable.
-    $("#sidebar-left").accordion({ header: "h1", active: 2, fillSpace: true });
+    $("#sidebar-left").accordion({ header: "h1", active: 2, fillSpace: false });
 
     // Make the map element resizable.
     $( "#map" ).resizable({

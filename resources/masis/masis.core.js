@@ -468,6 +468,11 @@ function onSaveSelections() {
  * Save all workspace vectors to the database.
  */
 function saveVectors() {
+    // Don't save vectors if the area for the current image is unknown.
+    if (!imageObject.area) {
+        $("#dialog-error-image-area-unknown").dialog('open');
+        return;
+    }
     var vectors = {};
     for (f in vectorLayer.features) {
         var feature = vectorLayer.features[f];
@@ -894,6 +899,7 @@ function setImage(path) {
  *      from the root of the web folder.
  */
 function setImageObject(info) {
+    // Attributes for which the type whould be changed.
     var to_float = ['altitude','area','area_per_pixel','depth'];
 
     // Set new image object.
@@ -901,10 +907,14 @@ function setImageObject(info) {
 
     // Copy all info attributes to the image object.
     for (key in info) {
+        // Skip if the attribute value is not set.
+        if (!info[key]) continue;
         var val = info[key];
+        // Convert types for attribute values.
         if ( $.inArray(key, to_float) != -1 ) {
             val = parseFloat(val);
         }
+        // Copy the attribute to the image object.
         imageObject[key] = val;
     }
 }

@@ -1037,3 +1037,12 @@ function test1() {
     box = new OpenLayers.Feature.Vector(bounds.toGeometry());
     vectorLayer.addFeatures(box);
 }
+
+/**
+ * Draw a 1279x959px box in the workspace.
+ */
+function test2() {
+    bounds = new OpenLayers.Bounds(0, imageObject.height-959, 1279, imageObject.height);
+    box = new OpenLayers.Feature.Vector(bounds.toGeometry());
+    vectorLayer.addFeatures(box);
+}

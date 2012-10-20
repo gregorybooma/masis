@@ -98,12 +98,11 @@ class Exporter {
                     COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
                 FROM image_info i
                     INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
-                    LEFT JOIN image_tags t ON t.image_info_id = i.id
                     LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
                     LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
                 WHERE i.img_area IS NOT NULL
                     AND ann.annotation_status = 'complete'
-                    AND t.image_tag NOT IN ({$tags_image_unusable})
+                    AND NOT EXISTS (SELECT 1 FROM image_tags WHERE image_info_id = i.id AND image_tag IN ({$tags_image_unusable}))
                     AND (a1.species_area IS NOT NULL OR a2.species_area IS NOT NULL);");
             $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
             $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);
@@ -142,12 +141,11 @@ class Exporter {
                     COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
                 FROM image_info i
                     INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
-                    LEFT JOIN image_tags t ON t.image_info_id = i.id
                     LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
                     LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
                 WHERE i.img_area IS NOT NULL
                     AND ann.annotation_status = 'complete'
-                    AND t.image_tag NOT IN ({$tags_image_unusable})
+                    AND NOT EXISTS (SELECT 1 FROM image_tags WHERE image_info_id = i.id AND image_tag IN ({$tags_image_unusable}))
                     AND (a1.species_area IS NOT NULL AND a2.species_area IS NOT NULL);");
             $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
             $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);

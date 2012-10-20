@@ -176,6 +176,6 @@ CREATE TABLE IF NOT EXISTS users_logged (
   FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
-/* Creatie indexes */
+/* Create indexes */
 
 CREATE INDEX ON image_info (img_dir);

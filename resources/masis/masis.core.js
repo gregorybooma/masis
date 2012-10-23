@@ -159,7 +159,7 @@ function initInterface() {
             }
         }
     });
-    $('#export-coverage-two-species input:text[name=aphia_id*]').autocomplete({
+    $('#export-coverage-two-species input:text[name^=aphia_id]').autocomplete({
         minLength: 3,
         delay: 500,
         source: "load.php?do=get_species_matching"

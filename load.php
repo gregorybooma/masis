@@ -205,6 +205,7 @@ switch ($do) {
             $csv = new Exporter();
             $aphia_id1 = $_GET['aphia_id1'];
             $aphia_id2 = $_GET['aphia_id2'];
+            $csv->exclude_dominant_substrates = !empty($_GET['exclude_dominant_substrates']) ? explode(',', $_GET['exclude_dominant_substrates']) : NULL;
             if ( !empty($_GET['and']) ) {
                 $csv->set_coverage_two_species_present($aphia_id1, $aphia_id2);
                 $filename = sprintf("coverage-present-%s-%s", $csv->aphia2name[$aphia_id1], $csv->aphia2name[$aphia_id2]);

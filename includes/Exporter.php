@@ -29,6 +29,13 @@ class Exporter {
     public $aphia2name = array();
 
     /**
+     * Images with a dominant substrate type that matches a value in this
+     * list are excluded.
+     * @var Array
+     */
+    public $exclude_dominant_substrates = array();
+
+    /**
      * Set the values for the object attributes.
      *
      * @param string $delimiter Character to be used as the CSV field delimiter.
@@ -88,22 +95,31 @@ class Exporter {
         $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
         $tags_image_unusable = "'".implode("','", $db->tags_image_unusable)."'";
 
+        $query = "SELECT i.id AS image_id,
+                i.img_dir,
+                i.file_name,
+                COALESCE(a1.vector_count, 0) AS \"{$this->aphia2name[$aphia_id1]} count\",
+                COALESCE(a1.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id1]} coverage\",
+                COALESCE(a2.vector_count, 0) AS \"{$this->aphia2name[$aphia_id2]} count\",
+                COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
+            FROM image_info i
+                INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
+                LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
+                LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
+            WHERE i.img_area IS NOT NULL
+                AND ann.annotation_status = 'complete'
+                AND NOT EXISTS (SELECT 1 FROM image_tags WHERE image_info_id = i.id AND image_tag IN ({$tags_image_unusable}))
+                --where
+                AND (a1.species_area IS NOT NULL OR a2.species_area IS NOT NULL);";
+        if ( count($this->exclude_dominant_substrates) > 0 ) {
+            $exclude_dominant_substrates = "'".implode("','", $this->exclude_dominant_substrates)."'";
+            $query = str_replace("--where", "AND NOT EXISTS (SELECT 1 FROM image_substrate WHERE image_info_id = i.id AND substrate_type IN ({$exclude_dominant_substrates}) AND dominance = 'dominant')
+                --where", $query);
+        }
+
         try {
-            $sth = $db->dbh->prepare("SELECT i.id AS image_id,
-                    i.img_dir,
-                    i.file_name,
-                    COALESCE(a1.vector_count, 0) AS \"{$this->aphia2name[$aphia_id1]} count\",
-                    COALESCE(a1.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id1]} coverage\",
-                    COALESCE(a2.vector_count, 0) AS \"{$this->aphia2name[$aphia_id2]} count\",
-                    COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
-                FROM image_info i
-                    INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
-                    LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
-                    LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
-                WHERE i.img_area IS NOT NULL
-                    AND ann.annotation_status = 'complete'
-                    AND NOT EXISTS (SELECT 1 FROM image_tags WHERE image_info_id = i.id AND image_tag IN ({$tags_image_unusable}))
-                    AND (a1.species_area IS NOT NULL OR a2.species_area IS NOT NULL);");
+            $sth = $db->dbh->prepare($query);
+
             $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
             $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);
             $sth->execute();
@@ -131,22 +147,30 @@ class Exporter {
         $this->set_names_from_aphia_ids(array($aphia_id1, $aphia_id2));
         $tags_image_unusable = "'".implode("','", $db->tags_image_unusable)."'";
 
+        $query = "SELECT i.id AS image_id,
+                i.img_dir,
+                i.file_name,
+                COALESCE(a1.vector_count, 0) AS \"{$this->aphia2name[$aphia_id1]} count\",
+                COALESCE(a1.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id1]} coverage\",
+                COALESCE(a2.vector_count, 0) AS \"{$this->aphia2name[$aphia_id2]} count\",
+                COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
+            FROM image_info i
+                INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
+                LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
+                LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
+            WHERE i.img_area IS NOT NULL
+                AND ann.annotation_status = 'complete'
+                AND NOT EXISTS (SELECT 1 FROM image_tags WHERE image_info_id = i.id AND image_tag IN ({$tags_image_unusable}))
+                --where
+                AND (a1.species_area IS NOT NULL AND a2.species_area IS NOT NULL);";
+        if ( count($this->exclude_dominant_substrates) > 0 ) {
+            $exclude_dominant_substrates = "'".implode("','", $this->exclude_dominant_substrates)."'";
+            $query = str_replace("--where", "AND NOT EXISTS (SELECT 1 FROM image_substrate WHERE image_info_id = i.id AND substrate_type IN ({$exclude_dominant_substrates}) AND dominance = 'dominant')
+                --where", $query);
+        }
+
         try {
-            $sth = $db->dbh->prepare("SELECT i.id AS image_id,
-                    i.img_dir,
-                    i.file_name,
-                    COALESCE(a1.vector_count, 0) AS \"{$this->aphia2name[$aphia_id1]} count\",
-                    COALESCE(a1.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id1]} coverage\",
-                    COALESCE(a2.vector_count, 0) AS \"{$this->aphia2name[$aphia_id2]} count\",
-                    COALESCE(a2.species_area/i.img_area, 0) AS \"{$this->aphia2name[$aphia_id2]} coverage\"
-                FROM image_info i
-                    INNER JOIN image_annotation_status ann ON ann.image_info_id = i.id
-                    LEFT JOIN areas_image_grouped a1 ON a1.image_info_id = i.id AND a1.aphia_id = :aphia_id1
-                    LEFT JOIN areas_image_grouped a2 ON a2.image_info_id = i.id AND a2.aphia_id = :aphia_id2
-                WHERE i.img_area IS NOT NULL
-                    AND ann.annotation_status = 'complete'
-                    AND NOT EXISTS (SELECT 1 FROM image_tags WHERE image_info_id = i.id AND image_tag IN ({$tags_image_unusable}))
-                    AND (a1.species_area IS NOT NULL AND a2.species_area IS NOT NULL);");
+            $sth = $db->dbh->prepare($query);
             $sth->bindParam(":aphia_id1", $aphia_id1, PDO::PARAM_INT);
             $sth->bindParam(":aphia_id2", $aphia_id2, PDO::PARAM_INT);
             $sth->execute();

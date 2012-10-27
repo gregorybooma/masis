@@ -157,6 +157,16 @@ $user = $member->data();
         <div id="tab-statistics">
             <h1>Species coverage</h1>
 
+            <h2>Overall coverage</h2>
+            <p>Coverage based on all annotated images. Only images for which
+            the annotation status is set to "Complete" are included in the
+            calculation.</p>
+            <div id="species-coverage-overall">Loading...</div>
+
+            <h2>Coverage where present</h2>
+            <p>Coverage based on images where the species was found.</p>
+            <div id="species-coverage-where-present">Loading...</div>
+
             <h2>Export</h2>
             <p>The forms below allow you to export species coverage data to
             CSV data files. Only images for which the annotation status is set
@@ -177,16 +187,6 @@ $user = $member->data();
                 <p><input type="submit" value="Export" class="button" /></p>
             </fieldset>
             </form>
-
-            <h2>Overall coverage</h2>
-            <p>Coverage based on all annotated images. Only images for which
-            the annotation status is set to "Complete" are included in the
-            calculation.</p>
-            <div id="species-coverage-overall">Loading...</div>
-
-            <h2>Coverage where present</h2>
-            <p>Coverage based on images where the species was found.</p>
-            <div id="species-coverage-where-present">Loading...</div>
         </div>
         <!-- end tab statistics -->
 

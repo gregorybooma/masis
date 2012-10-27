@@ -1,9 +1,4 @@
-CREATE DATABASE masis
-  WITH ENCODING = 'UTF8'
-       TABLESPACE = pg_default
-       LC_COLLATE = 'en_US.UTF-8'
-       LC_CTYPE = 'en_US.UTF-8'
-       CONNECTION LIMIT = -1;
+CREATE DATABASE masis;
 
 /* Create tables */
 
@@ -161,21 +156,23 @@ CREATE TABLE areas_image_grouped
     FOREIGN KEY (aphia_id) REFERENCES species (aphia_id)
 );
 
-CREATE TABLE IF NOT EXISTS users (
-  user_id varchar NOT NULL, -- this is an email address (user@mit.edu)
+CREATE TABLE users
+(
+  user_id varchar NOT NULL,
   pass_hash varchar NOT NULL, -- preferably bcrypt hash
   first_name varchar,
 
   PRIMARY KEY (user_id)
 );
 
-CREATE TABLE IF NOT EXISTS users_logged (
+CREATE TABLE users_logged
+(
   user_id varchar NOT NULL,
   hash varchar NOT NULL, -- remember_me_hash cookie hash for the login session
 
   FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
-/* Create indexes */
+/* Create indexes for improved performance */
 
 CREATE INDEX ON image_info (img_dir);

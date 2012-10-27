@@ -24,10 +24,10 @@ function ImageInfo() {
 
     // Methods
     this.get_width = function () {
-        return this.area_per_pixel * this.width;
+        return Math.sqrt(this.area_per_pixel) * this.width;
     };
     this.get_height = function () {
-        return this.area_per_pixel * this.height;
+        return Math.sqrt(this.area_per_pixel) * this.height;
     };
 }
 

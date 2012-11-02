@@ -1,0 +1,55 @@
+\hypertarget{Notice_8php}{\subsection{Notice.\-php}
+\label{Notice_8php}\index{includes/\-Notice.\-php@{includes/\-Notice.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 \textcolor{comment}{/*}
+00003 \textcolor{comment}{ * Originally part of Tutis Login <http://www.firedartstudios.com/labs/
+      tutis-login>}
+00004 \textcolor{comment}{ * Author: FireDart}
+00005 \textcolor{comment}{ * License: CC-BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>}
+00006 \textcolor{comment}{ *}
+00007 \textcolor{comment}{ * Modified by Serrano Pereira for MaSIS}
+00008 \textcolor{comment}{ */}
+00009 
+\hypertarget{Notice_8php_source_l00013}{}\hyperlink{classNotice}{00013} \textcolor{keyword}{class }\hyperlink{classNotice}{Notice} \{
+00014     \textcolor{keyword}{private} $\_notices = array();
+00015 
+\hypertarget{Notice_8php_source_l00022}{}\hyperlink{classNotice_a8feb95600521cd842ef89bfe5978beb3}{00022}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classNotice_a8feb95600521cd842ef89bfe5978beb3}{add}($type, $message) \{
+00023         $this->\_notice[$type][] = $message;
+00024     \}
+00025 
+\hypertarget{Notice_8php_source_l00029}{}\hyperlink{classNotice_a238f96bf3cf9846645659302671e57e2}{00029}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classNotice_a238f96bf3cf9846645659302671e57e2}{report}() \{
+00030         $data = \textcolor{stringliteral}{''};
+00031         \textcolor{comment}{/* Report any Info */}
+00032         \textcolor{keywordflow}{if} (isset($this->\_notice[\textcolor{stringliteral}{'info'}])) \{
+00033             \textcolor{keywordflow}{foreach}($this->\_notice[\textcolor{stringliteral}{'info'}] as $message) \{
+00034                 $data .= \textcolor{stringliteral}{'<div class="notice info">'} . $message . \textcolor{stringliteral}{'</div>'};
+00035             \}
+00036         \}
+00037         \textcolor{comment}{/* Report any Errors */}
+00038         \textcolor{keywordflow}{if} (isset($this->\_notice[\textcolor{stringliteral}{'error'}])) \{
+00039             \textcolor{keywordflow}{foreach}($this->\_notice[\textcolor{stringliteral}{'error'}] as $message) \{
+00040                 $data .= \textcolor{stringliteral}{'<div class="notice error">'} . $message . \textcolor{stringliteral}{'</div>'};
+00041             \}
+00042         \}
+00043         \textcolor{comment}{/* Report any Success */}
+00044         \textcolor{keywordflow}{if} (isset($this->\_notice[\textcolor{stringliteral}{'success'}])) \{
+00045             \textcolor{keywordflow}{foreach}($this->\_notice[\textcolor{stringliteral}{'success'}] as $message) \{
+00046                 $data .= \textcolor{stringliteral}{'<div class="notice success">'} . $message . \textcolor{stringliteral}{'</div>'};
+00047             \}
+00048         \}
+00049         \textcolor{comment}{/* Return data */}
+00050         \textcolor{keywordflow}{if} (isset($data)) \{
+00051             \textcolor{keywordflow}{return} $data;
+00052         \}
+00053 
+00054     \}
+00055 
+\hypertarget{Notice_8php_source_l00061}{}\hyperlink{classNotice_a19a6cbb1ea7b08c42b98d739acaef480}{00061}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classNotice_a19a6cbb1ea7b08c42b98d739acaef480}{errorsExist}() \{
+00062         \textcolor{keywordflow}{return} !empty($this->\_notice[\textcolor{stringliteral}{'error'}]);
+00063     \}
+00064 \}
+00065 
+\end{DoxyCode}

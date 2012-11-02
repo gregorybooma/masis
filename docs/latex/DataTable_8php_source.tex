@@ -1,0 +1,295 @@
+\hypertarget{DataTable_8php}{\subsection{Data\-Table.\-php}
+\label{DataTable_8php}\index{includes/\-Data\-Table.\-php@{includes/\-Data\-Table.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 
+\hypertarget{DataTable_8php_source_l00008}{}\hyperlink{classDataTable}{00008} \textcolor{keyword}{class }\hyperlink{classDataTable}{DataTable} \{
+00009 
+\hypertarget{DataTable_8php_source_l00013}{}\hyperlink{classDataTable_af4fe165de0ec60acfa2f3d5846353e39}{00013}     \textcolor{keyword}{public} \hyperlink{classDataTable_af4fe165de0ec60acfa2f3d5846353e39}{$round\_precision} = 5;
+00014 
+\hypertarget{DataTable_8php_source_l00018}{}\hyperlink{classDataTable_a70af4121fabf49b5d01b9e77c059a6cc}{00018}     \textcolor{keyword}{public} \hyperlink{classDataTable_a70af4121fabf49b5d01b9e77c059a6cc}{$round\_columns} = array(\textcolor{stringliteral}{'species\_cover\_percent'},\textcolor{stringliteral}{'
+      species\_area'},
+00019         \textcolor{stringliteral}{'avg\_species\_area'},\textcolor{stringliteral}{'surface\_area'});
+00020 
+00027     \textcolor{keyword}{private} \textcolor{keyword}{function} set\_table\_heads($sth) \{
+00028         $this->tableHeads = array();
+00029         $column\_names = array(
+00030             \textcolor{stringliteral}{'vector\_id'} => \textcolor{stringliteral}{"Vector ID"},
+00031             \textcolor{stringliteral}{'aphia\_id'} => \textcolor{stringliteral}{"Aphia ID"},
+00032             \textcolor{stringliteral}{'scientific\_name'} => \textcolor{stringliteral}{"Species Name"},
+00033             \textcolor{stringliteral}{'area\_m2'} => \textcolor{stringliteral}{"Area (m<sup>2</sup>)"},
+00034             \textcolor{stringliteral}{'species\_area'} => \textcolor{stringliteral}{"Species Coverage (m<sup>2</sup>)"},
+00035             \textcolor{stringliteral}{'avg\_species\_area'} => \textcolor{stringliteral}{"Average Species Coverage (m<sup>2</sup>)"},
+00036             \textcolor{stringliteral}{'vector\_count'} => \textcolor{stringliteral}{"Selection Count"},
+00037             \textcolor{stringliteral}{'image\_count'} => \textcolor{stringliteral}{"Image Count"},
+00038             \textcolor{stringliteral}{'surface\_area'} => \textcolor{stringliteral}{"Surface Area (m<sup>2</sup>)"},
+00039             \textcolor{stringliteral}{'species\_cover'} => \textcolor{stringliteral}{"Species Coverage Fraction"},
+00040             \textcolor{stringliteral}{'species\_cover\_percent'} => \textcolor{stringliteral}{"Species Coverage %"},
+00041             \textcolor{stringliteral}{'image\_info\_id'} => \textcolor{stringliteral}{"Image ID"},
+00042             \textcolor{stringliteral}{'created\_by'} => \textcolor{stringliteral}{"Created By"},
+00043             \textcolor{stringliteral}{'updated\_on'} => \textcolor{stringliteral}{"Last Updated"},
+00044             \textcolor{stringliteral}{'img\_dir'} => \textcolor{stringliteral}{"Image Directory"},
+00045             \textcolor{stringliteral}{'file\_name'} => \textcolor{stringliteral}{"Filename"},
+00046             \textcolor{stringliteral}{'event\_id'} => \textcolor{stringliteral}{"Event ID"},
+00047             \textcolor{stringliteral}{'date\_taken'} => \textcolor{stringliteral}{"Date Taken"},
+00048             \textcolor{stringliteral}{''} => \textcolor{stringliteral}{""},
+00049             );
+00050         \textcolor{keywordflow}{for} ($i = 0; $i < $sth->columnCount(); $i++) \{
+00051             $meta = $sth->getColumnMeta($i);
+00052             $field = $meta[\textcolor{stringliteral}{'name'}];
+00053             \textcolor{keywordflow}{if} ( array\_key\_exists($field, $column\_names) ) \{
+00054                 $field = $column\_names[$field];
+00055             \}
+00056             $this->tableHeads[] = $field;
+00057         \}
+00058     \}
+00059 
+\hypertarget{DataTable_8php_source_l00069}{}\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{00069}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build}($body, $properties=\textcolor{stringliteral}{""}, $components = array(\textcolor{stringliteral}{'
+      header'},\textcolor{stringliteral}{'footer'})) \{
+00070         print \textcolor{stringliteral}{"<table cellpadding=\(\backslash\)"0\(\backslash\)" cellspacing=\(\backslash\)"0\(\backslash\)" border=\(\backslash\)"0\(\backslash\)"
+       \{$properties\}>"};
+00071         \textcolor{keywordflow}{if} ( in\_array(\textcolor{stringliteral}{'header'}, $components) ) \{
+00072             print $this->build\_thead();
+00073         \}
+00074         print $body;
+00075         \textcolor{keywordflow}{if} ( in\_array(\textcolor{stringliteral}{'footer'}, $components) ) \{
+00076             print $this->build\_tfoot();
+00077         \}
+00078         print \textcolor{stringliteral}{"</table>"};
+00079     \}
+00080 
+00088     \textcolor{keyword}{private} \textcolor{keyword}{function} build\_thead() \{
+00089         print \textcolor{stringliteral}{"<thead>\(\backslash\)n<tr>\(\backslash\)n"};
+00090         \textcolor{keywordflow}{foreach} ($this->tableHeads as $head) \{
+00091             print \textcolor{stringliteral}{"<th>\{$head\}</th>\(\backslash\)n"};
+00092         \}
+00093         print \textcolor{stringliteral}{"</tr>\(\backslash\)n</thead>\(\backslash\)n"};
+00094     \}
+00095 
+00103     \textcolor{keyword}{private} \textcolor{keyword}{function} build\_tfoot() \{
+00104         print \textcolor{stringliteral}{"<tfoot>\(\backslash\)n<tr>\(\backslash\)n"};
+00105         \textcolor{keywordflow}{foreach} ($this->tableHeads as $head) \{
+00106             print \textcolor{stringliteral}{"<th>\{$head\}</th>\(\backslash\)n"};
+00107         \}
+00108         print \textcolor{stringliteral}{"</tr>\(\backslash\)n</tfoot>\(\backslash\)n"};
+00109     \}
+00110 
+\hypertarget{DataTable_8php_source_l00118}{}\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{00118}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\_tbody}($sth, $class=\textcolor{stringliteral}{""}) \{
+00119         $tbody = \textcolor{stringliteral}{"<tbody>"};
+00120         \textcolor{keywordflow}{while} ( $row = $sth->fetch(PDO::FETCH\_ASSOC) ) \{
+00121             $tbody .= \textcolor{stringliteral}{"<tr class='\{$class\}'>\(\backslash\)n"};
+00122             \textcolor{keywordflow}{foreach} ($row as $key => $col\_value) \{
+00123                 $col\_class = \textcolor{stringliteral}{""};
+00124                 \textcolor{comment}{// Show scientific species names in italics.}
+00125                 \textcolor{keywordflow}{if} ($key == \textcolor{stringliteral}{'scientific\_name'}) $col\_class .= \textcolor{stringliteral}{"text-italic "};
+00126                 \textcolor{comment}{// Link Aphia ID's to the WoRMS website.}
+00127                 \textcolor{keywordflow}{if} ($key == \textcolor{stringliteral}{'aphia\_id'}) $col\_value = \textcolor{stringliteral}{"<a href=\(\backslash\)"
+      http://www.marinespecies.org/aphia.php?p=taxdetails&id=\{$col\_value\}\(\backslash\)" target=\(\backslash\)"\_blank\(\backslash\)"
+      >\{$col\_value\}</a>"};
+00128                 \textcolor{comment}{// Round some values.}
+00129                 \textcolor{keywordflow}{if} ( in\_array($key, $this->round\_columns) ) \{
+00130                     $col\_value = round($col\_value, $this->round\_precision);
+00131                 \}
+00132 
+00133                 $tbody .= \textcolor{stringliteral}{"<td align='center'
+       class='\{$col\_class\}'>\{$col\_value\}</td>\(\backslash\)n"};
+00134             \}
+00135             $tbody .= \textcolor{stringliteral}{"</tr>\(\backslash\)n"};
+00136         \}
+00137         $tbody .= \textcolor{stringliteral}{"</tbody>"};
+00138         \textcolor{keywordflow}{return} $tbody;
+00139     \}
+00140 
+\hypertarget{DataTable_8php_source_l00144}{}\hyperlink{classDataTable_a747f48562b9f9ad3cb35bbda429ae7d0}{00144}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_a747f48562b9f9ad3cb35bbda429ae7d0}{images\_unassigned\_vectors}() \{
+00145         global $db;
+00146 
+00147         \textcolor{keywordflow}{try} \{
+00148             $sth = $db->dbh->prepare(\textcolor{stringliteral}{"SELECT  i.img\_dir,}
+00149 \textcolor{stringliteral}{                    i.file\_name,}
+00150 \textcolor{stringliteral}{                    i.event\_id,}
+00151 \textcolor{stringliteral}{                    to\_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS
+       date\_taken}
+00152 \textcolor{stringliteral}{                FROM vectors v}
+00153 \textcolor{stringliteral}{                    INNER JOIN image\_info i ON i.id = v.image\_info\_id}
+00154 \textcolor{stringliteral}{                WHERE aphia\_id IS NULL}
+00155 \textcolor{stringliteral}{                GROUP BY i.id;"});
+00156             $sth->execute();
+00157         \}
+00158         \textcolor{keywordflow}{catch} (Exception $e) \{
+00159             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00160         \}
+00161 
+00162         $this->set\_table\_heads($sth);
+00163         $body = $this->\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\_tbody}($sth);
+00164         $this->\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build}($body);
+00165     \}
+00166 
+\hypertarget{DataTable_8php_source_l00170}{}\hyperlink{classDataTable_acdc88b8674e9af875d9fdbbb6e36bda3}{00170}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_acdc88b8674e9af875d9fdbbb6e36bda3}{images\_need\_review}() \{
+00171         global $db;
+00172 
+00173         \textcolor{keywordflow}{try} \{
+00174             $sth = $db->dbh->prepare(\textcolor{stringliteral}{"SELECT i.img\_dir,}
+00175 \textcolor{stringliteral}{                    i.file\_name,}
+00176 \textcolor{stringliteral}{                    i.event\_id,}
+00177 \textcolor{stringliteral}{                    to\_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS
+       date\_taken}
+00178 \textcolor{stringliteral}{                FROM image\_info i}
+00179 \textcolor{stringliteral}{                    INNER JOIN image\_tags t ON t.image\_info\_id = i.id}
+00180 \textcolor{stringliteral}{                WHERE t.image\_tag = 'flag for review';"});
+00181             $sth->execute();
+00182         \}
+00183         \textcolor{keywordflow}{catch} (Exception $e) \{
+00184             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00185         \}
+00186 
+00187         $this->set\_table\_heads($sth);
+00188         $body = $this->\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\_tbody}($sth);
+00189         $this->\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build}($body);
+00190     \}
+00191 
+\hypertarget{DataTable_8php_source_l00195}{}\hyperlink{classDataTable_aae1eed20159db0c809e26ab41aee3a18}{00195}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_aae1eed20159db0c809e26ab41aee3a18}{images\_highlighted}() \{
+00196         global $db;
+00197 
+00198         \textcolor{keywordflow}{try} \{
+00199             $sth = $db->dbh->prepare(\textcolor{stringliteral}{"SELECT i.img\_dir,}
+00200 \textcolor{stringliteral}{                    i.file\_name,}
+00201 \textcolor{stringliteral}{                    i.event\_id,}
+00202 \textcolor{stringliteral}{                    to\_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS
+       date\_taken}
+00203 \textcolor{stringliteral}{                FROM image\_info i}
+00204 \textcolor{stringliteral}{                    INNER JOIN image\_tags t ON t.image\_info\_id = i.id}
+00205 \textcolor{stringliteral}{                WHERE t.image\_tag = 'highlight';"});
+00206             $sth->execute();
+00207         \}
+00208         \textcolor{keywordflow}{catch} (Exception $e) \{
+00209             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00210         \}
+00211 
+00212         $this->set\_table\_heads($sth);
+00213         $body = $this->\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\_tbody}($sth);
+00214         $this->\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build}($body);
+00215     \}
+00216 
+\hypertarget{DataTable_8php_source_l00220}{}\hyperlink{classDataTable_a133de329decd44c977d5142ef1595803}{00220}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_a133de329decd44c977d5142ef1595803}{images\_species\_unaccepted}() \{
+00221         global $db;
+00222 
+00223         \textcolor{keywordflow}{try} \{
+00224             $sth = $db->dbh->prepare(\textcolor{stringliteral}{"SELECT i.img\_dir,}
+00225 \textcolor{stringliteral}{                    i.file\_name,}
+00226 \textcolor{stringliteral}{                    i.event\_id,}
+00227 \textcolor{stringliteral}{                    to\_char(i.timestamp, 'DD Mon YYYY, HH24:MI:SS') AS
+       date\_taken}
+00228 \textcolor{stringliteral}{                FROM vectors v}
+00229 \textcolor{stringliteral}{                    INNER JOIN image\_info i ON i.id = v.image\_info\_id}
+00230 \textcolor{stringliteral}{                    INNER JOIN species s ON s.aphia\_id = v.aphia\_id}
+00231 \textcolor{stringliteral}{                WHERE s.status = 'unaccepted';"});
+00232             $sth->execute();
+00233         \}
+00234         \textcolor{keywordflow}{catch} (Exception $e) \{
+00235             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00236         \}
+00237 
+00238         $this->set\_table\_heads($sth);
+00239         $body = $this->\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\_tbody}($sth);
+00240         $this->\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build}($body);
+00241     \}
+00242 
+\hypertarget{DataTable_8php_source_l00250}{}\hyperlink{classDataTable_a6cc56465dab08d3ee3056e8194763c59}{00250}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_a6cc56465dab08d3ee3056e8194763c59}{species\_coverage\_overall}() \{
+00251         global $db;
+00252 
+00253         $tags\_image\_unusable = \textcolor{stringliteral}{"'"}.implode(\textcolor{stringliteral}{"','"}, $db->tags\_image\_unusable).\textcolor{stringliteral}{"'"}
+      ;
+00254 
+00255         \textcolor{keywordflow}{try} \{
+00256             $sth = $db->dbh->prepare(\textcolor{stringliteral}{"SELECT sum(i.img\_area)}
+00257 \textcolor{stringliteral}{                FROM image\_info i}
+00258 \textcolor{stringliteral}{                    INNER JOIN image\_annotation\_status a ON a.image\_info\_id =
+       i.id}
+00259 \textcolor{stringliteral}{                -- Images marked as 'complete' are fully reviewed and}
+00260 \textcolor{stringliteral}{                -- annotated. Only for these images can be said that a species}
+00261 \textcolor{stringliteral}{                -- is not present on the image if no vectors are set.}
+00262 \textcolor{stringliteral}{                WHERE a.annotation\_status = 'complete'}
+00263 \textcolor{stringliteral}{                    AND NOT EXISTS (SELECT 1 FROM image\_tags WHERE
+       image\_info\_id = a.image\_info\_id AND image\_tag IN (\{$tags\_image\_unusable\}))"});
+00264             $sth->execute();
+00265         \}
+00266         \textcolor{keywordflow}{catch} (Exception $e) \{
+00267             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00268         \}
+00269         $row = $sth->fetch();
+00270         $total\_surface = $row ? $row[0] : 0;
+00271 
+00272         \textcolor{keywordflow}{try} \{
+00273             $sth = $db->dbh->prepare(\textcolor{stringliteral}{"SELECT s.aphia\_id,}
+00274 \textcolor{stringliteral}{                    s.scientific\_name,}
+00275 \textcolor{stringliteral}{                    COUNT(a.image\_info\_id) AS image\_count,}
+00276 \textcolor{stringliteral}{                    SUM(a.vector\_count) AS vector\_count,}
+00277 \textcolor{stringliteral}{                    SUM(a.species\_area) AS species\_area,}
+00278 \textcolor{stringliteral}{                    (1.0 * :total\_surface) AS surface\_area,}
+00279 \textcolor{stringliteral}{                    SUM(a.species\_area) / :total\_surface * 100 AS
+       species\_cover\_percent}
+00280 \textcolor{stringliteral}{                FROM areas\_image\_grouped a}
+00281 \textcolor{stringliteral}{                    INNER JOIN species s ON s.aphia\_id = a.aphia\_id}
+00282 \textcolor{stringliteral}{                    INNER JOIN image\_info i ON i.id = a.image\_info\_id}
+00283 \textcolor{stringliteral}{                    INNER JOIN image\_annotation\_status y ON y.image\_info\_id =
+       i.id}
+00284 \textcolor{stringliteral}{                -- Images marked as 'complete' are fully reviewed and}
+00285 \textcolor{stringliteral}{                -- annotated. Only for these images can be said that a species}
+00286 \textcolor{stringliteral}{                -- is not present on the image if no vectors are set.}
+00287 \textcolor{stringliteral}{                WHERE y.annotation\_status = 'complete'}
+00288 \textcolor{stringliteral}{                    AND NOT EXISTS (SELECT 1 FROM image\_tags WHERE
+       image\_info\_id = a.image\_info\_id AND image\_tag IN (\{$tags\_image\_unusable\}))}
+00289 \textcolor{stringliteral}{                GROUP BY s.aphia\_id;"});
+00290             $sth->bindParam(\textcolor{stringliteral}{":total\_surface"}, $total\_surface, PDO::PARAM\_STR);
+00291             $sth->execute();
+00292         \}
+00293         \textcolor{keywordflow}{catch} (Exception $e) \{
+00294             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00295         \}
+00296 
+00297         $this->set\_table\_heads($sth);
+00298         $body = $this->\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\_tbody}($sth);
+00299         $this->\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build}($body);
+00300     \}
+00301 
+\hypertarget{DataTable_8php_source_l00306}{}\hyperlink{classDataTable_a3b2e8e53c42632b99bedf359ea3d5632}{00306}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDataTable_a3b2e8e53c42632b99bedf359ea3d5632}{species\_coverage\_where\_present}
+      () \{
+00307         global $db;
+00308 
+00309         $tags\_image\_unusable = \textcolor{stringliteral}{"'"}.implode(\textcolor{stringliteral}{"','"}, $db->tags\_image\_unusable).\textcolor{stringliteral}{"'"}
+      ;
+00310 
+00311         \textcolor{keywordflow}{try} \{
+00312             $sth = $db->dbh->prepare(\textcolor{stringliteral}{"SELECT s.aphia\_id,}
+00313 \textcolor{stringliteral}{                    s.scientific\_name,}
+00314 \textcolor{stringliteral}{                    COUNT(a.image\_info\_id) AS image\_count,}
+00315 \textcolor{stringliteral}{                    SUM(a.vector\_count) AS vector\_count,}
+00316 \textcolor{stringliteral}{                    SUM(a.species\_area) AS species\_area,}
+00317 \textcolor{stringliteral}{                    AVG(a.species\_area) AS avg\_species\_area,}
+00318 \textcolor{stringliteral}{                    SUM(a.image\_area) AS surface\_area,}
+00319 \textcolor{stringliteral}{                    SUM(a.species\_area) / SUM(a.image\_area) * 100 AS
+       species\_cover\_percent}
+00320 \textcolor{stringliteral}{                FROM areas\_image\_grouped a}
+00321 \textcolor{stringliteral}{                    INNER JOIN species s ON s.aphia\_id = a.aphia\_id}
+00322 \textcolor{stringliteral}{                    --LEFT JOIN image\_tags t ON t.image\_info\_id =
+       a.image\_info\_id}
+00323 \textcolor{stringliteral}{                --WHERE t.image\_tag NOT IN (\{$tags\_image\_unusable\})}
+00324 \textcolor{stringliteral}{                -- Unlike the commented INNER JOIN method, this method}
+00325 \textcolor{stringliteral}{                -- does not cause duplicate rows.}
+00326 \textcolor{stringliteral}{                WHERE NOT EXISTS (SELECT 1 FROM image\_tags WHERE image\_info\_id
+       = a.image\_info\_id AND image\_tag IN (\{$tags\_image\_unusable\}))}
+00327 \textcolor{stringliteral}{                GROUP BY s.aphia\_id;"});
+00328             $sth->execute();
+00329         \}
+00330         \textcolor{keywordflow}{catch} (Exception $e) \{
+00331             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00332         \}
+00333 
+00334         $this->set\_table\_heads($sth);
+00335         $body = $this->\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\_tbody}($sth);
+00336         $this->\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build}($body);
+00337     \}
+00338 \}
+\end{DoxyCode}

@@ -1,0 +1,202 @@
+\hypertarget{classJSON}{\subsection{J\-S\-O\-N Class Reference}
+\label{classJSON}\index{J\-S\-O\-N@{J\-S\-O\-N}}
+}
+
+
+Generate data in \hyperlink{classJSON}{J\-S\-O\-N} format.  
+
+
+\subsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classJSON_a66b5ebb4e30753852638dbbf0d53e799}{get\-\_\-image\-\_\-info} (\$rel\-\_\-path)
+\begin{DoxyCompactList}\small\item\em Prints info for an image file. \end{DoxyCompactList}\item 
+\hyperlink{classJSON_a1f9cea49a726222ca98b6df75efbb0df}{get\-\_\-species\-\_\-from\-\_\-worms} (\$term, \$searchpar=0)
+\begin{DoxyCompactList}\small\item\em Return a list of species names matching the search term. \end{DoxyCompactList}\item 
+\hyperlink{classJSON_a1c6b7055dca8f87c890dd1a3dc6b4c09}{get\-\_\-species\-\_\-matching} (\$term, \$limit=20)
+\begin{DoxyCompactList}\small\item\em Return all species prepared for \hyperlink{classHTML}{H\-T\-M\-L} select input options. \end{DoxyCompactList}\item 
+\hyperlink{classJSON_a3dc5fecab5727b9e24af963f98ae7ed3}{get\-\_\-substrate\-\_\-types} ()
+\begin{DoxyCompactList}\small\item\em Return all substrate types prepared for \hyperlink{classHTML}{H\-T\-M\-L} select input options. \end{DoxyCompactList}\item 
+\hyperlink{classJSON_ae455596a746767bc1ed3805a2770be69}{get\-\_\-image\-\_\-tag\-\_\-types} ()
+\begin{DoxyCompactList}\small\item\em Return all image tag types prepared for \hyperlink{classHTML}{H\-T\-M\-L} select input options. \end{DoxyCompactList}\item 
+\hyperlink{classJSON_a8e8a4959e85674496ec7ffa0adb8ef9c}{get\-\_\-substrate\-\_\-annotations} (\$image\-\_\-id)
+\begin{DoxyCompactList}\small\item\em Return the substrate annotations for an image. \end{DoxyCompactList}\item 
+\hyperlink{classJSON_af9e69b033fc445c5b7f342108c1f2644}{get\-\_\-image\-\_\-tags} (\$image\-\_\-id)
+\begin{DoxyCompactList}\small\item\em Return the tags for an image. \end{DoxyCompactList}\item 
+\hypertarget{classJSON_aec8c1684302cb5d678bcd0609654227e}{{\bfseries get\-\_\-vectors} (\$image\-\_\-id)}\label{classJSON_aec8c1684302cb5d678bcd0609654227e}
+
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Generate data in \hyperlink{classJSON}{J\-S\-O\-N} format. 
+
+Definition at line \hyperlink{JSON_8php_source_l00006}{6} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+
+
+\subsubsection{Member Function Documentation}
+\hypertarget{classJSON_a66b5ebb4e30753852638dbbf0d53e799}{\index{J\-S\-O\-N@{J\-S\-O\-N}!get\-\_\-image\-\_\-info@{get\-\_\-image\-\_\-info}}
+\index{get\-\_\-image\-\_\-info@{get\-\_\-image\-\_\-info}!JSON@{J\-S\-O\-N}}
+\paragraph[{get\-\_\-image\-\_\-info}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-::get\-\_\-image\-\_\-info (
+\begin{DoxyParamCaption}
+\item[{}]{\$rel\-\_\-path}
+\end{DoxyParamCaption}
+)}}\label{classJSON_a66b5ebb4e30753852638dbbf0d53e799}
+
+
+Prints info for an image file. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$path} & Relative path to the image file. Relative from the web page root directory.  \$db \hyperlink{classDatabase}{Database} object. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{JSON_8php_source_l00015}{15} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+\hypertarget{classJSON_ae455596a746767bc1ed3805a2770be69}{\index{J\-S\-O\-N@{J\-S\-O\-N}!get\-\_\-image\-\_\-tag\-\_\-types@{get\-\_\-image\-\_\-tag\-\_\-types}}
+\index{get\-\_\-image\-\_\-tag\-\_\-types@{get\-\_\-image\-\_\-tag\-\_\-types}!JSON@{J\-S\-O\-N}}
+\paragraph[{get\-\_\-image\-\_\-tag\-\_\-types}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-::get\-\_\-image\-\_\-tag\-\_\-types (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classJSON_ae455596a746767bc1ed3805a2770be69}
+
+
+Return all image tag types prepared for \hyperlink{classHTML}{H\-T\-M\-L} select input options. 
+
+Each object in the array has two attributes\-: value and label. To be used as value and text for the $<$option$>$ elements.
+
+\begin{DoxyReturn}{Returns}
+Substrate types in \hyperlink{classJSON}{J\-S\-O\-N} format 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{JSON_8php_source_l00168}{168} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+\hypertarget{classJSON_af9e69b033fc445c5b7f342108c1f2644}{\index{J\-S\-O\-N@{J\-S\-O\-N}!get\-\_\-image\-\_\-tags@{get\-\_\-image\-\_\-tags}}
+\index{get\-\_\-image\-\_\-tags@{get\-\_\-image\-\_\-tags}!JSON@{J\-S\-O\-N}}
+\paragraph[{get\-\_\-image\-\_\-tags}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-::get\-\_\-image\-\_\-tags (
+\begin{DoxyParamCaption}
+\item[{}]{\$image\-\_\-id}
+\end{DoxyParamCaption}
+)}}\label{classJSON_af9e69b033fc445c5b7f342108c1f2644}
+
+
+Return the tags for an image. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+int & {\em \$image\-\_\-id} & The id for the image \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The image tags in \hyperlink{classJSON}{J\-S\-O\-N} format 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{JSON_8php_source_l00202}{202} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+\hypertarget{classJSON_a1f9cea49a726222ca98b6df75efbb0df}{\index{J\-S\-O\-N@{J\-S\-O\-N}!get\-\_\-species\-\_\-from\-\_\-worms@{get\-\_\-species\-\_\-from\-\_\-worms}}
+\index{get\-\_\-species\-\_\-from\-\_\-worms@{get\-\_\-species\-\_\-from\-\_\-worms}!JSON@{J\-S\-O\-N}}
+\paragraph[{get\-\_\-species\-\_\-from\-\_\-worms}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-::get\-\_\-species\-\_\-from\-\_\-worms (
+\begin{DoxyParamCaption}
+\item[{}]{\$term, }
+\item[{}]{\$searchpar = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}}\label{classJSON_a1f9cea49a726222ca98b6df75efbb0df}
+
+
+Return a list of species names matching the search term. 
+
+This method retrieves the species names from the online Wo\-R\-M\-S (World Register of Marine Species) database.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \$term} & The keyword to match against species names in the database. \\
+\hline
+{\em \$searchpar} & Search by 0 = scientific name, 1 = common name. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{JSON_8php_source_l00070}{70} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+\hypertarget{classJSON_a1c6b7055dca8f87c890dd1a3dc6b4c09}{\index{J\-S\-O\-N@{J\-S\-O\-N}!get\-\_\-species\-\_\-matching@{get\-\_\-species\-\_\-matching}}
+\index{get\-\_\-species\-\_\-matching@{get\-\_\-species\-\_\-matching}!JSON@{J\-S\-O\-N}}
+\paragraph[{get\-\_\-species\-\_\-matching}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-::get\-\_\-species\-\_\-matching (
+\begin{DoxyParamCaption}
+\item[{}]{\$term, }
+\item[{}]{\$limit = {\ttfamily 20}}
+\end{DoxyParamCaption}
+)}}\label{classJSON_a1c6b7055dca8f87c890dd1a3dc6b4c09}
+
+
+Return all species prepared for \hyperlink{classHTML}{H\-T\-M\-L} select input options. 
+
+Each object in the array has two attributes\-: value and label. To be used as value and text for the $<$option$>$ elements.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$term} & The keyword to match against species names in the database. \\
+\hline
+integer & {\em \$limit} & The maximum number of records to return (defaults to 20). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Species in \hyperlink{classJSON}{J\-S\-O\-N} format 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{JSON_8php_source_l00121}{121} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+\hypertarget{classJSON_a8e8a4959e85674496ec7ffa0adb8ef9c}{\index{J\-S\-O\-N@{J\-S\-O\-N}!get\-\_\-substrate\-\_\-annotations@{get\-\_\-substrate\-\_\-annotations}}
+\index{get\-\_\-substrate\-\_\-annotations@{get\-\_\-substrate\-\_\-annotations}!JSON@{J\-S\-O\-N}}
+\paragraph[{get\-\_\-substrate\-\_\-annotations}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-::get\-\_\-substrate\-\_\-annotations (
+\begin{DoxyParamCaption}
+\item[{}]{\$image\-\_\-id}
+\end{DoxyParamCaption}
+)}}\label{classJSON_a8e8a4959e85674496ec7ffa0adb8ef9c}
+
+
+Return the substrate annotations for an image. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+int & {\em \$image\-\_\-id} & The id for the image \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The substrate annotations in \hyperlink{classJSON}{J\-S\-O\-N} format 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{JSON_8php_source_l00188}{188} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+\hypertarget{classJSON_a3dc5fecab5727b9e24af963f98ae7ed3}{\index{J\-S\-O\-N@{J\-S\-O\-N}!get\-\_\-substrate\-\_\-types@{get\-\_\-substrate\-\_\-types}}
+\index{get\-\_\-substrate\-\_\-types@{get\-\_\-substrate\-\_\-types}!JSON@{J\-S\-O\-N}}
+\paragraph[{get\-\_\-substrate\-\_\-types}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-::get\-\_\-substrate\-\_\-types (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classJSON_a3dc5fecab5727b9e24af963f98ae7ed3}
+
+
+Return all substrate types prepared for \hyperlink{classHTML}{H\-T\-M\-L} select input options. 
+
+Each object in the array has two attributes\-: value and label. To be used as value and text for the $<$option$>$ elements.
+
+\begin{DoxyReturn}{Returns}
+Substrate types in \hyperlink{classJSON}{J\-S\-O\-N} format 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{JSON_8php_source_l00146}{146} of file \hyperlink{JSON_8php_source}{J\-S\-O\-N.\-php}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+includes/J\-S\-O\-N.\-php\end{DoxyCompactItemize}

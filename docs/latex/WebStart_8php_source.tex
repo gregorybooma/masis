@@ -1,0 +1,85 @@
+\hypertarget{WebStart_8php}{\subsection{Web\-Start.\-php}
+\label{WebStart_8php}\index{includes/\-Web\-Start.\-php@{includes/\-Web\-Start.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 
+00003 \textcolor{comment}{// Mark valid web server entry point.}
+00004 define(\textcolor{stringliteral}{'MASIS'}, \textcolor{keyword}{true});
+00005 
+\hypertarget{WebStart_8php_source_l00009}{}\hyperlink{classWebStart}{00009} \textcolor{keyword}{class }\hyperlink{classWebStart}{WebStart} \{
+00010     \textcolor{keyword}{static} $lens\_angle\_x = 0.510472157;
+00011     \textcolor{keyword}{static} $lens\_angle\_y = 0.386512004;
+00012     \textcolor{keyword}{public} $page\_title;
+00013     \textcolor{keyword}{public} $page\_content;
+00014 
+\hypertarget{WebStart_8php_source_l00018}{}\hyperlink{classWebStart_aab27910ba1dac86454076c3eb1bbfeef}{00018}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classWebStart_aab27910ba1dac86454076c3eb1bbfeef}{start}() \{
+00019         global $db, $member;
+00020 
+00021         \textcolor{comment}{// Load settings. If the settings file doesn't exist, give directions}
+00022         \textcolor{comment}{// to create one.}
+00023         \textcolor{keywordflow}{if} ( is\_file(ROOT.\textcolor{stringliteral}{"/settings.php"}) ) \{
+00024             require(ROOT.\textcolor{stringliteral}{"/settings.php"});
+00025         \} \textcolor{keywordflow}{else} \{
+00026             require(ROOT.\textcolor{stringliteral}{"/includes/Setup.php"});
+00027             $setup = \textcolor{keyword}{new} \hyperlink{classSetup}{Setup}();
+00028             \textcolor{keywordflow}{return};
+00029         \}
+00030 
+00031         \textcolor{comment}{// Connect with the database.}
+00032         $db->connect();
+00033 
+00034         \textcolor{comment}{// Check if the user is logged in.}
+00035         \textcolor{keywordflow}{if} ( !$member->sessionIsSet() ) \{
+00036             \textcolor{comment}{// If not, show the login screen.}
+00037             $this->page\_title   = \textcolor{stringliteral}{'Login to MaSIS'};
+00038             $this->page\_content =  $member->login();
+00039             $this->\hyperlink{classWebStart_aa86bafc7079b85cdd1051eeb392525b0}{load\_page}(\textcolor{stringliteral}{'login'});
+00040             \textcolor{keywordflow}{return};
+00041         \}
+00042 
+00043         $p = isset($\_GET[\textcolor{charliteral}{'p'}]) ? $\_GET[\textcolor{charliteral}{'p'}] : \textcolor{stringliteral}{'main'};
+00044 
+00045         \textcolor{keywordflow}{if} ($p == \textcolor{stringliteral}{'logout'}) \{
+00046             \textcolor{comment}{// Show the logout screen.}
+00047             echo $member->logout();
+00048             $this->page\_title = \textcolor{stringliteral}{'Logging user out'};
+00049             $this->page\_content = \textcolor{stringliteral}{'<div class="notice info">You are being
+       logged out...</div>'};
+00050             $this->\hyperlink{classWebStart_aa86bafc7079b85cdd1051eeb392525b0}{load\_page}(\textcolor{stringliteral}{'login'});
+00051             \textcolor{keywordflow}{return};
+00052         \}
+00053 
+00054         $this->\hyperlink{classWebStart_aa86bafc7079b85cdd1051eeb392525b0}{load\_page}($p);
+00055     \}
+00056 
+\hypertarget{WebStart_8php_source_l00064}{}\hyperlink{classWebStart_aa86bafc7079b85cdd1051eeb392525b0}{00064}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classWebStart_aa86bafc7079b85cdd1051eeb392525b0}{load\_page}($page) \{
+00065         global $member;
+00066 
+00067         $path = ROOT.\textcolor{stringliteral}{'/pages/'}.$page.\textcolor{stringliteral}{'.php'};
+00068         \textcolor{keywordflow}{if} ( is\_file($path) ) \{
+00069             require\_once($path);
+00070         \} \textcolor{keywordflow}{else} \{
+00071             header(\textcolor{stringliteral}{'HTTP/1.x 404 Not Found'});
+00072             print \textcolor{stringliteral}{"<h1>Page Not Found</h1>"};
+00073             print \textcolor{stringliteral}{"<p>That page doesn't seem to exist.</p>"};
+00074             print \textcolor{stringliteral}{"<p>Return to the <a href=\(\backslash\)"/\(\backslash\)">main page</a>.</p>"};
+00075         \}
+00076     \}
+00077 
+\hypertarget{WebStart_8php_source_l00086}{}\hyperlink{classWebStart_a0b7c4025f9e2528f567509b42ff91499}{00086}     \textcolor{keyword}{static} \textcolor{keyword}{function} \hyperlink{classWebStart_a0b7c4025f9e2528f567509b42ff91499}{get\_area\_from\_altitude}($altitude, 
+      $angle\_x = null, $angle\_y = null) \{
+00087         $angle\_x = isset($angle\_x) ? $angle\_x : self::$lens\_angle\_x;
+00088         $angle\_y = isset($angle\_y) ? $angle\_y : self::$lens\_angle\_y;
+00089 
+00090         $ratio\_x = 2 * tan($angle\_x / 2);
+00091         $ratio\_y = 2 * tan($angle\_y / 2);
+00092 
+00093         $size\_y = $altitude * $ratio\_y;
+00094         $size\_x = $altitude * $ratio\_x;
+00095 
+00096         \textcolor{keywordflow}{return} $size\_y * $size\_x;
+00097     \}
+00098 \}
+\end{DoxyCode}

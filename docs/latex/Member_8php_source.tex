@@ -1,0 +1,281 @@
+\hypertarget{Member_8php}{\subsection{Member.\-php}
+\label{Member_8php}\index{includes/\-Member.\-php@{includes/\-Member.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 \textcolor{comment}{/*}
+00003 \textcolor{comment}{ * Originally part of Tutis Login <http://www.firedartstudios.com/labs/
+      tutis-login>}
+00004 \textcolor{comment}{ * Author: FireDart}
+00005 \textcolor{comment}{ * License: CC-BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>}
+00006 \textcolor{comment}{ *}
+00007 \textcolor{comment}{ * Modified by Serrano Pereira for MaSIS}
+00008 \textcolor{comment}{ */}
+00009 
+\hypertarget{Member_8php_source_l00013}{}\hyperlink{classMember}{00013} \textcolor{keyword}{class }\hyperlink{classMember}{Member} \{
+00014 
+\hypertarget{Member_8php_source_l00018}{}\hyperlink{classMember_ad34ad36031d144cb0b1fe6020bfcaf4b}{00018}     \textcolor{keyword}{public} \hyperlink{classMember_ad34ad36031d144cb0b1fe6020bfcaf4b}{$username\_suffix} = \textcolor{stringliteral}{"@mit.edu"};
+00019 
+\hypertarget{Member_8php_source_l00027}{}\hyperlink{classMember_a1b63bcda0a4ff98a704d8219dd00940e}{00027}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_a1b63bcda0a4ff98a704d8219dd00940e}{\_\_construct}() \{
+00028         \textcolor{comment}{// Prevent JavaScript from reading session cookies.}
+00029         ini\_set(\textcolor{stringliteral}{'session.cookie\_httponly'}, \textcolor{keyword}{true});
+00030 
+00031         \textcolor{comment}{// Start session.}
+00032         session\_start();
+00033 
+00034         \textcolor{comment}{// Check if last session was from the same computer.}
+00035         \textcolor{keywordflow}{if} (!isset($\_SESSION[\textcolor{stringliteral}{'last\_ip'}])) \{
+00036             $\_SESSION[\textcolor{stringliteral}{'last\_ip'}] = $\_SERVER[\textcolor{stringliteral}{'REMOTE\_ADDR'}];
+00037         \}
+00038         \textcolor{keywordflow}{if} ($\_SESSION[\textcolor{stringliteral}{'last\_ip'}] !== $\_SERVER[\textcolor{stringliteral}{'REMOTE\_ADDR'}]) \{
+00039             \textcolor{comment}{// Clear the session.}
+00040             $\_SESSION = array();
+00041             \textcolor{comment}{// Destroy the session.}
+00042             session\_unset();
+00043             session\_destroy();
+00044         \}
+00045 
+00046         \textcolor{comment}{// Include Notice class}
+00047         require\_once(\textcolor{stringliteral}{"Notice.php"});
+00048     \}
+00049 
+\hypertarget{Member_8php_source_l00053}{}\hyperlink{classMember_af167bc35d83e6fd60e875ad800028924}{00053}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_af167bc35d83e6fd60e875ad800028924}{currentPath}() \{
+00054         $currentPath  = \textcolor{stringliteral}{'http'};
+00055         \textcolor{keywordflow}{if} (isset($\_SERVER[\textcolor{stringliteral}{"HTTPS"}]) == \textcolor{stringliteral}{"on"}) \{$currentPage .= \textcolor{stringliteral}{"s"};\}
+00056         $currentPath .= \textcolor{stringliteral}{"://"};
+00057         $currentPath .= dirname($\_SERVER[\textcolor{stringliteral}{"SERVER\_NAME"}] . $\_SERVER[\textcolor{stringliteral}{"REQUEST\_URI
+      "}]) . \textcolor{charliteral}{'/'};
+00058         \textcolor{keywordflow}{return} $currentPath;
+00059     \}
+00060 
+\hypertarget{Member_8php_source_l00064}{}\hyperlink{classMember_af4bf2a5c4bb9839768c7547707fb3ef0}{00064}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_af4bf2a5c4bb9839768c7547707fb3ef0}{currentPage}() \{
+00065         \textcolor{comment}{/* Current Page */}
+00066         $currentPage  = \textcolor{stringliteral}{'http'};
+00067         \textcolor{keywordflow}{if} (isset($\_SERVER[\textcolor{stringliteral}{"HTTPS"}]) == \textcolor{stringliteral}{"on"}) \{$currentPage .= \textcolor{stringliteral}{"s"};\}
+00068         $currentPage .= \textcolor{stringliteral}{"://"};
+00069         $currentPage .= $\_SERVER[\textcolor{stringliteral}{"SERVER\_NAME"}] . $\_SERVER[\textcolor{stringliteral}{"REQUEST\_URI"}];
+00070         \textcolor{keywordflow}{return} $currentPage;
+00071     \}
+00072 
+\hypertarget{Member_8php_source_l00076}{}\hyperlink{classMember_a4f141835943affa73028f0f412522670}{00076}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_a4f141835943affa73028f0f412522670}{genSalt}() \{
+00077         \textcolor{comment}{// openssl\_random\_pseudo\_bytes(16) fallback}
+00078         $seed = \textcolor{stringliteral}{''};
+00079         \textcolor{keywordflow}{for}($i = 0; $i < 16; $i++) \{
+00080             $seed .= chr(mt\_rand(0, 255));
+00081         \}
+00082         $salt = substr(strtr(base64\_encode($seed), \textcolor{charliteral}{'+'}, \textcolor{charliteral}{'.'}), 0, 22);
+00083         \textcolor{keywordflow}{return} $salt;
+00084     \}
+00085 
+\hypertarget{Member_8php_source_l00094}{}\hyperlink{classMember_ad7ab0ff1849464c8378a88205fcc2149}{00094}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_ad7ab0ff1849464c8378a88205fcc2149}{genHash}($salt, $password, $rounds=12) \{
+00095         \textcolor{comment}{// 2y selects the bcrypt algorithm}
+00096         $hash = crypt($password, \textcolor{stringliteral}{'$2y$'} . $rounds . \textcolor{charliteral}{'$'} . $this->\hyperlink{classMember_a4f141835943affa73028f0f412522670}{genSalt}
+      ());
+00097         \textcolor{keywordflow}{return} $hash;
+00098     \}
+00099 
+\hypertarget{Member_8php_source_l00106}{}\hyperlink{classMember_a13daaf7ca65d2456c80f280a3cf9dfef}{00106}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_a13daaf7ca65d2456c80f280a3cf9dfef}{verify}($password, $existingHash) \{
+00107         \textcolor{comment}{// Hash new password with old hash.}
+00108         $hash = crypt($password, $existingHash);
+00109         \textcolor{comment}{// Check if the hashes match.}
+00110         \textcolor{keywordflow}{return} $hash == $existingHash;
+00111     \}
+00112 
+\hypertarget{Member_8php_source_l00116}{}\hyperlink{classMember_aedacc5cf03c724d93df1c732489d15a2}{00116}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_aedacc5cf03c724d93df1c732489d15a2}{login}() \{
+00117         global $db;
+00118 
+00119         $notice = \textcolor{keyword}{new} \hyperlink{classNotice}{Notice};
+00120         $username = !empty($\_POST[\textcolor{stringliteral}{'username'}]) ? $\_POST[\textcolor{stringliteral}{'username'}] : null;
+00121         $password = !empty($\_POST[\textcolor{stringliteral}{'password'}]) ? $\_POST[\textcolor{stringliteral}{'password'}] : null;
+00122         $form = <<<END
+00123 <form name=\textcolor{stringliteral}{"login"} action=\textcolor{stringliteral}{"\{$this->currentPage()\}"} method=\textcolor{stringliteral}{"post"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"group"}>
+00124     <label>
+00125         <span>Username</span>
+00126         <br/>
+00127         <input type=\textcolor{stringliteral}{"text"} name=\textcolor{stringliteral}{"username"} value=\textcolor{stringliteral}{"\{$username\}"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"username"}
+       /> @mit.edu
+00128     </label>
+00129     <label>
+00130         <span>Password</span>
+00131         <br/>
+00132         <input type=\textcolor{stringliteral}{"password"} name=\textcolor{stringliteral}{"password"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"expand"} />
+00133     </label>
+00134     <label>
+00135         <input type=\textcolor{stringliteral}{"checkbox"} name=\textcolor{stringliteral}{"remember\_me"} value=\textcolor{stringliteral}{"1"} /> <span>Remember 
+      me</span>
+00136     </label>
+00137     <input name=\textcolor{stringliteral}{"login"} type=\textcolor{stringliteral}{"submit"} value=\textcolor{stringliteral}{"Login"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button expand"} />
+00138 </form>
+00139 END;
+00140 
+00141         \textcolor{keywordflow}{if} ( isset($\_POST[\textcolor{stringliteral}{'login'}]) ) \{
+00142             \textcolor{keywordflow}{if} ( $username && $password ) \{
+00143                 $user = $db->query(\textcolor{stringliteral}{"SELECT user\_id as id, pass\_hash FROM users
+       WHERE user\_id = :user\_id;"},
+00144                     array(\textcolor{stringliteral}{':user\_id'} => $username . $this->username\_suffix), \textcolor{stringliteral}{'
+      FETCH\_OBJ'});
+00145 
+00146                 \textcolor{keywordflow}{if} ( $db->sth->rowCount() > 0 ) \{
+00147                     \textcolor{keywordflow}{if} ( $this->\hyperlink{classMember_a13daaf7ca65d2456c80f280a3cf9dfef}{verify}($password, $user->pass\_hash) ) \{
+00148                         \textcolor{comment}{// Set the user session if verified successfully.}
+00149                         session\_regenerate\_id();
+00150                         $\_SESSION[\textcolor{stringliteral}{'member\_id'}] = $user->id;
+00151                         $\_SESSION[\textcolor{stringliteral}{'member\_valid'}] = 1;
+00152 
+00153                         \textcolor{comment}{// Set a login session cookie?}
+00154                         $this->\hyperlink{classMember_aec76f4eeb51b0a6678305e71ca90f9d4}{createNewCookie}($user->id);
+00155 
+00156                         \textcolor{comment}{// Report Status}
+00157                         $notice->add(\textcolor{stringliteral}{'success'}, \textcolor{stringliteral}{'Authentication Success'});
+00158                         $return\_form = 0;
+00159 
+00160                         \textcolor{comment}{// Redirect}
+00161                         $redirect = isset($\_COOKIE[\textcolor{stringliteral}{'redirect'}]) ? $\_COOKIE[\textcolor{stringliteral}{'
+      redirect'}] : \textcolor{charliteral}{'/'};
+00162                         echo \textcolor{stringliteral}{'<meta http-equiv="refresh" content="2;url='} . 
+      $redirect . \textcolor{stringliteral}{'" />'};
+00163                     \}
+00164                     \textcolor{keywordflow}{else} \{
+00165                         \textcolor{comment}{// Report Status}
+00166                         $notice->add(\textcolor{stringliteral}{'error'}, \textcolor{stringliteral}{'Authentication Failed'});
+00167                         $return\_form = 1;
+00168                     \}
+00169                 \}
+00170                 \textcolor{keywordflow}{else} \{
+00171                     \textcolor{comment}{/* Report Status */}
+00172                     $notice->add(\textcolor{stringliteral}{'error'}, \textcolor{stringliteral}{'Authentication Failed'});
+00173                     $return\_form = 1;
+00174                 \}
+00175             \}
+00176             \textcolor{keywordflow}{else} \{
+00177                 \textcolor{comment}{/* Report Status */}
+00178                 $notice->add(\textcolor{stringliteral}{'error'}, \textcolor{stringliteral}{'Authentication Failed'});
+00179                 $return\_form = 1;
+00180             \}
+00181         \}
+00182         \textcolor{keywordflow}{else} \{
+00183             \textcolor{comment}{/* Report Status */}
+00184             $notice->add(\textcolor{stringliteral}{'info'}, \textcolor{stringliteral}{'Please authenticate yourself'});
+00185             $return\_form = 1;
+00186         \}
+00187 
+00188         $data = \textcolor{stringliteral}{""};
+00189 
+00190         \textcolor{comment}{// Display the login form?}
+00191         \textcolor{keywordflow}{if} ($return\_form == 1) $data .= $form;
+00192 
+00193         \textcolor{comment}{// Return page content}
+00194         \textcolor{keywordflow}{return} $notice->report() . $data;
+00195     \}
+00196 
+\hypertarget{Member_8php_source_l00200}{}\hyperlink{classMember_a1ebfbff8b4159700fd6ba42d3abffa41}{00200}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_a1ebfbff8b4159700fd6ba42d3abffa41}{sessionIsSet}() \{
+00201         global $db;
+00202 
+00203         \textcolor{comment}{// Check if a session is set.}
+00204         \textcolor{keywordflow}{if} (isset($\_SESSION[\textcolor{stringliteral}{'member\_valid'}]) && $\_SESSION[\textcolor{stringliteral}{'member\_valid'}]) \{
+00205             \textcolor{keywordflow}{return} TRUE;
+00206         \}
+00207         \textcolor{comment}{// Check if a cookie is set.}
+00208         \textcolor{keywordflow}{if} (isset($\_COOKIE[\textcolor{stringliteral}{'remember\_me\_id'}]) && isset($\_COOKIE[\textcolor{stringliteral}{'
+      remember\_me\_hash'}])) \{
+00209             \textcolor{comment}{// If so, find the equivilent in the db}
+00210             $user = $db->query(\textcolor{stringliteral}{"SELECT user\_id as id, hash FROM users\_logged
+       WHERE user\_id = :user\_id;"},
+00211                 array(\textcolor{stringliteral}{':user\_id'} => $\_COOKIE[\textcolor{stringliteral}{'remember\_me\_id'}]), \textcolor{stringliteral}{'FETCH\_OBJ'});
+00212             \textcolor{comment}{// Does the record exist?}
+00213             \textcolor{keywordflow}{if} ($db->sth->rowCount() > 0) \{
+00214                 \textcolor{comment}{// Check if the hashes match}
+00215                 \textcolor{keywordflow}{if} ($user->hash == $\_COOKIE[\textcolor{stringliteral}{'remember\_me\_hash'}]) \{
+00216                     \textcolor{comment}{// Recreate session}
+00217                     session\_regenerate\_id();
+00218                     $\_SESSION[\textcolor{stringliteral}{'member\_id'}] = $user->id;
+00219                     $\_SESSION[\textcolor{stringliteral}{'member\_valid'}] = 1;
+00220 
+00221                     \textcolor{keywordflow}{return} TRUE;
+00222                 \}
+00223             \}
+00224         \}
+00225         \textcolor{keywordflow}{return} FALSE;
+00226     \}
+00227 
+\hypertarget{Member_8php_source_l00231}{}\hyperlink{classMember_a9d15d39e7d2e9417086f08fd8d2ba52e}{00231}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_a9d15d39e7d2e9417086f08fd8d2ba52e}{logout}() \{
+00232         \textcolor{comment}{// Clear the session}
+00233         $\_SESSION = array();
+00234 
+00235         \textcolor{comment}{// Destroy the session}
+00236         session\_unset();
+00237         session\_destroy();
+00238 
+00239         \textcolor{comment}{// Delete all old cookies and user\_logged}
+00240         \textcolor{keywordflow}{if} (isset($\_COOKIE[\textcolor{stringliteral}{'remember\_me\_id'}])) \{
+00241             $this->\hyperlink{classMember_ac2dcb4c19a67fe43eb5806105401bfed}{deleteCookie}($\_COOKIE[\textcolor{stringliteral}{'remember\_me\_id'}]);
+00242         \}
+00243 
+00244         \textcolor{comment}{// Redirect to the main page}
+00245         header(\textcolor{stringliteral}{'Refresh: 2; url=/'});
+00246     \}
+00247 
+\hypertarget{Member_8php_source_l00256}{}\hyperlink{classMember_aec76f4eeb51b0a6678305e71ca90f9d4}{00256}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_aec76f4eeb51b0a6678305e71ca90f9d4}{createNewCookie}($user\_id) \{
+00257         global $db;
+00258 
+00259         \textcolor{comment}{// Only continue if the "Remember me" checkbox is checked.}
+00260         \textcolor{keywordflow}{if} ( empty($\_POST[\textcolor{stringliteral}{'remember\_me'}]) ) \textcolor{keywordflow}{return};
+00261 
+00262         \textcolor{comment}{// Generate random hash}
+00263         $hash = $this->\hyperlink{classMember_ad7ab0ff1849464c8378a88205fcc2149}{genHash}($this->\hyperlink{classMember_a4f141835943affa73028f0f412522670}{genSalt}(), $\_SERVER[\textcolor{stringliteral}{'
+      REMOTE\_ADDR'}]);
+00264 
+00265         \textcolor{comment}{// Set cookies (expire in 30 days)}
+00266         setcookie(\textcolor{stringliteral}{"remember\_me\_id"}, $user\_id, time() + 3600*24*30);
+00267         setcookie(\textcolor{stringliteral}{"remember\_me\_hash"}, $hash, time() + 3600*24*30);
+00268 
+00269         \textcolor{comment}{// Remove old cookie records from the database.}
+00270         $db->query(\textcolor{stringliteral}{"DELETE FROM users\_logged WHERE user\_id = :user\_id;"}, array(\textcolor{stringliteral}{
+      ':user\_id'} => $user\_id));
+00271 
+00272         \textcolor{comment}{// Set new cookie record in the database.}
+00273         $db->query(\textcolor{stringliteral}{"INSERT INTO users\_logged (user\_id, hash) VALUES (:user\_id,
+       :hash);"}, array(\textcolor{stringliteral}{':user\_id'} => $user\_id, \textcolor{stringliteral}{':hash'} => $hash));
+00274     \}
+00275 
+\hypertarget{Member_8php_source_l00281}{}\hyperlink{classMember_ac2dcb4c19a67fe43eb5806105401bfed}{00281}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_ac2dcb4c19a67fe43eb5806105401bfed}{deleteCookie}($user\_id) \{
+00282         global $db;
+00283 
+00284         \textcolor{comment}{// Expire the cookies (the browser will delete the expired cookies)}
+00285         setcookie(\textcolor{stringliteral}{"remember\_me\_id"}, \textcolor{stringliteral}{""}, time() - 3600);
+00286         setcookie(\textcolor{stringliteral}{"remember\_me\_hash"}, \textcolor{stringliteral}{""}, time() - 3600);
+00287         setcookie(\textcolor{stringliteral}{"redirect"}, \textcolor{stringliteral}{""}, time() - 3600);
+00288 
+00289         \textcolor{comment}{// Clear cookie records in the database}
+00290         $db->query(\textcolor{stringliteral}{"DELETE FROM users\_logged WHERE user\_id = :user\_id;"}, array(\textcolor{stringliteral}{
+      ':user\_id'} => $user\_id));
+00291     \}
+00292 
+\hypertarget{Member_8php_source_l00296}{}\hyperlink{classMember_a9efd5a33fc7ecde58c4869061ab4e3df}{00296}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classMember_a9efd5a33fc7ecde58c4869061ab4e3df}{data}() \{
+00297         global $db;
+00298 
+00299         \textcolor{keywordflow}{if} (isset($\_SESSION[\textcolor{stringliteral}{'member\_id'}])) \{
+00300             $user\_id = $\_SESSION[\textcolor{stringliteral}{'member\_id'}];
+00301         \}
+00302         elseif (isset($\_COOKIE[\textcolor{stringliteral}{'remember\_me\_id'}])) \{
+00303             $user\_id = $\_COOKIE[\textcolor{stringliteral}{'remember\_me\_id'}];
+00304         \}
+00305         \textcolor{keywordflow}{else} \{
+00306             $user\_id = NULL;
+00307         \}
+00308 
+00309         \textcolor{keywordflow}{if} ( isset($user\_id) ) \{
+00310             $user = $db->query(\textcolor{stringliteral}{"SELECT * FROM users WHERE user\_id = :user\_id;"},
+       array(\textcolor{stringliteral}{':user\_id'} => $user\_id), \textcolor{stringliteral}{'FETCH\_OBJ'});
+00311             \textcolor{keywordflow}{if} ($user) \{
+00312                 $user->id = $user\_id;
+00313                 $user->username = strpos($user\_id, \textcolor{charliteral}{'@'}) === FALSE ? $user\_id : 
+      strstr($user\_id, \textcolor{charliteral}{'@'}, \textcolor{keyword}{true});
+00314             \}
+00315             \textcolor{keywordflow}{return} $user;
+00316         \}
+00317         \textcolor{keywordflow}{return} NULL;
+00318     \}
+00319 \}
+\end{DoxyCode}

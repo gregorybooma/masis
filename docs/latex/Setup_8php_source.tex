@@ -1,0 +1,35 @@
+\hypertarget{Setup_8php}{\subsection{Setup.\-php}
+\label{Setup_8php}\index{includes/\-Setup.\-php@{includes/\-Setup.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 
+\hypertarget{Setup_8php_source_l00006}{}\hyperlink{classSetup}{00006} \textcolor{keyword}{class }\hyperlink{classSetup}{Setup} \{
+00007 
+00011     \textcolor{keyword}{private} $setup\_instructions = <<<EOT
+00012 <html>
+00013 <head>
+00014 <title>MaSIS \hyperlink{classSetup}{Setup}</title>
+00015 </head>
+00016 <body>
+00017 <h1>MaSIS \hyperlink{classSetup}{Setup}</h1>
+00018 <p>File settings.php was not found.</p>
+00019 <ol>
+00020     <li>Copy it from <code>config/settings.php</code>
+00021     to the web site root folder.</li>
+00022     <li>Create a PostgreSQL database \textcolor{keyword}{using} database.sql from the config 
+      directory.</li>
+00023     <li>Open settings.php in a text editor and change the settings where
+00024     necessary.</li>
+00025     <li>Finally, reload \textcolor{keyword}{this} page.</li>
+00026 </ol>
+00027 </body>
+00028 </html>
+00029 EOT;
+00030 
+\hypertarget{Setup_8php_source_l00036}{}\hyperlink{classSetup_a335b43a6ca3b2021f8538acbf2da8105}{00036}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classSetup_a335b43a6ca3b2021f8538acbf2da8105}{\_\_construct}() \{
+00037         print $this->setup\_instructions;
+00038     \}
+00039 \}
+\end{DoxyCode}

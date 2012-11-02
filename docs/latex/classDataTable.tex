@@ -1,0 +1,143 @@
+\hypertarget{classDataTable}{\subsection{Data\-Table Class Reference}
+\label{classDataTable}\index{Data\-Table@{Data\-Table}}
+}
+
+
+Generate \hyperlink{classHTML}{H\-T\-M\-L} tables.  
+
+
+\subsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{build} (\$body, \$properties=\char`\"{}\char`\"{}, \$components=array('header','footer'))
+\begin{DoxyCompactList}\small\item\em Print \hyperlink{classHTML}{H\-T\-M\-L} table. \end{DoxyCompactList}\item 
+\hyperlink{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{build\-\_\-tbody} (\$sth, \$class=\char`\"{}\char`\"{})
+\begin{DoxyCompactList}\small\item\em Return a simple \hyperlink{classHTML}{H\-T\-M\-L} table body. \end{DoxyCompactList}\item 
+\hypertarget{classDataTable_a747f48562b9f9ad3cb35bbda429ae7d0}{\hyperlink{classDataTable_a747f48562b9f9ad3cb35bbda429ae7d0}{images\-\_\-unassigned\-\_\-vectors} ()}\label{classDataTable_a747f48562b9f9ad3cb35bbda429ae7d0}
+
+\begin{DoxyCompactList}\small\item\em Print a list of images with vectors that are not assigned to a species. \end{DoxyCompactList}\item 
+\hypertarget{classDataTable_acdc88b8674e9af875d9fdbbb6e36bda3}{\hyperlink{classDataTable_acdc88b8674e9af875d9fdbbb6e36bda3}{images\-\_\-need\-\_\-review} ()}\label{classDataTable_acdc88b8674e9af875d9fdbbb6e36bda3}
+
+\begin{DoxyCompactList}\small\item\em Print a list of images that are flagged for review. \end{DoxyCompactList}\item 
+\hypertarget{classDataTable_aae1eed20159db0c809e26ab41aee3a18}{\hyperlink{classDataTable_aae1eed20159db0c809e26ab41aee3a18}{images\-\_\-highlighted} ()}\label{classDataTable_aae1eed20159db0c809e26ab41aee3a18}
+
+\begin{DoxyCompactList}\small\item\em Print a list of all highlighted images. \end{DoxyCompactList}\item 
+\hypertarget{classDataTable_a133de329decd44c977d5142ef1595803}{\hyperlink{classDataTable_a133de329decd44c977d5142ef1595803}{images\-\_\-species\-\_\-unaccepted} ()}\label{classDataTable_a133de329decd44c977d5142ef1595803}
+
+\begin{DoxyCompactList}\small\item\em Print a list of images with annotations of unaccepted Aphia records. \end{DoxyCompactList}\item 
+\hyperlink{classDataTable_a6cc56465dab08d3ee3056e8194763c59}{species\-\_\-coverage\-\_\-overall} ()
+\begin{DoxyCompactList}\small\item\em Print the overall coverage per species. \end{DoxyCompactList}\item 
+\hypertarget{classDataTable_a3b2e8e53c42632b99bedf359ea3d5632}{\hyperlink{classDataTable_a3b2e8e53c42632b99bedf359ea3d5632}{species\-\_\-coverage\-\_\-where\-\_\-present} ()}\label{classDataTable_a3b2e8e53c42632b99bedf359ea3d5632}
+
+\begin{DoxyCompactList}\small\item\em Print the coverage for each species based on images where the species was found. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classDataTable_af4fe165de0ec60acfa2f3d5846353e39}{\hyperlink{classDataTable_af4fe165de0ec60acfa2f3d5846353e39}{\$round\-\_\-precision} = 5}\label{classDataTable_af4fe165de0ec60acfa2f3d5846353e39}
+
+\begin{DoxyCompactList}\small\item\em The number of decimals to round to. \end{DoxyCompactList}\item 
+\hyperlink{classDataTable_a70af4121fabf49b5d01b9e77c059a6cc}{\$round\-\_\-columns}
+\begin{DoxyCompactList}\small\item\em Names of columns for which the values should be rounded. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Generate \hyperlink{classHTML}{H\-T\-M\-L} tables. 
+
+Generated \hyperlink{classHTML}{H\-T\-M\-L} tables can be used for the Data\-Tables j\-Query extension. 
+
+Definition at line \hyperlink{DataTable_8php_source_l00008}{8} of file \hyperlink{DataTable_8php_source}{Data\-Table.\-php}.
+
+
+
+\subsubsection{Member Function Documentation}
+\hypertarget{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}{\index{Data\-Table@{Data\-Table}!build@{build}}
+\index{build@{build}!DataTable@{Data\-Table}}
+\paragraph[{build}]{\setlength{\rightskip}{0pt plus 5cm}Data\-Table\-::build (
+\begin{DoxyParamCaption}
+\item[{}]{\$body, }
+\item[{}]{\$properties = {\ttfamily \char`\"{}\char`\"{}}, }
+\item[{}]{\$components = {\ttfamily array('header','footer')}}
+\end{DoxyParamCaption}
+)}}\label{classDataTable_afcaf77a1a8158f843f3881208f0cdac4}
+
+
+Print \hyperlink{classHTML}{H\-T\-M\-L} table. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$body} & The \hyperlink{classHTML}{H\-T\-M\-L} tbody element for the table. \\
+\hline
+string & {\em \$properties} & Optional additional properties for the table tag. \\
+\hline
+array & {\em \$components} & Specifies the elements for the table. Possible items for the array are the strings 'header' and 'footer'. By default, both the header and the table are printed. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{DataTable_8php_source_l00069}{69} of file \hyperlink{DataTable_8php_source}{Data\-Table.\-php}.
+
+\hypertarget{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}{\index{Data\-Table@{Data\-Table}!build\-\_\-tbody@{build\-\_\-tbody}}
+\index{build\-\_\-tbody@{build\-\_\-tbody}!DataTable@{Data\-Table}}
+\paragraph[{build\-\_\-tbody}]{\setlength{\rightskip}{0pt plus 5cm}Data\-Table\-::build\-\_\-tbody (
+\begin{DoxyParamCaption}
+\item[{}]{\$sth, }
+\item[{}]{\$class = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}}\label{classDataTable_a96fdd1a56f76ac72e7a7ecce82a06a1d}
+
+
+Return a simple \hyperlink{classHTML}{H\-T\-M\-L} table body. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \$sth} & P\-D\-O Statement handler. \\
+\hline
+{\em \$class} & Optional C\-S\-S class for rows. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string A \hyperlink{classHTML}{H\-T\-M\-L} tbody element. 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{DataTable_8php_source_l00118}{118} of file \hyperlink{DataTable_8php_source}{Data\-Table.\-php}.
+
+\hypertarget{classDataTable_a6cc56465dab08d3ee3056e8194763c59}{\index{Data\-Table@{Data\-Table}!species\-\_\-coverage\-\_\-overall@{species\-\_\-coverage\-\_\-overall}}
+\index{species\-\_\-coverage\-\_\-overall@{species\-\_\-coverage\-\_\-overall}!DataTable@{Data\-Table}}
+\paragraph[{species\-\_\-coverage\-\_\-overall}]{\setlength{\rightskip}{0pt plus 5cm}Data\-Table\-::species\-\_\-coverage\-\_\-overall (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classDataTable_a6cc56465dab08d3ee3056e8194763c59}
+
+
+Print the overall coverage per species. 
+
+This is the coverage based on all annotated images. Only images for which the annotation status is set to \char`\"{}complete\char`\"{} are included in the calculation. 
+
+Definition at line \hyperlink{DataTable_8php_source_l00250}{250} of file \hyperlink{DataTable_8php_source}{Data\-Table.\-php}.
+
+
+
+\subsubsection{Member Data Documentation}
+\hypertarget{classDataTable_a70af4121fabf49b5d01b9e77c059a6cc}{\index{Data\-Table@{Data\-Table}!\$round\-\_\-columns@{\$round\-\_\-columns}}
+\index{\$round\-\_\-columns@{\$round\-\_\-columns}!DataTable@{Data\-Table}}
+\paragraph[{\$round\-\_\-columns}]{\setlength{\rightskip}{0pt plus 5cm}Data\-Table\-::\$round\-\_\-columns}}\label{classDataTable_a70af4121fabf49b5d01b9e77c059a6cc}
+{\bfseries Initial value\-:}
+\begin{DoxyCode}
+ array(\textcolor{stringliteral}{'species\_cover\_percent'},\textcolor{stringliteral}{'species\_area'},
+        \textcolor{stringliteral}{'avg\_species\_area'},\textcolor{stringliteral}{'surface\_area'})
+\end{DoxyCode}
+
+
+Names of columns for which the values should be rounded. 
+
+
+
+Definition at line \hyperlink{DataTable_8php_source_l00018}{18} of file \hyperlink{DataTable_8php_source}{Data\-Table.\-php}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+includes/Data\-Table.\-php\end{DoxyCompactItemize}

@@ -1,0 +1,177 @@
+\hypertarget{Exporter_8php}{\subsection{Exporter.\-php}
+\label{Exporter_8php}\index{includes/\-Exporter.\-php@{includes/\-Exporter.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 
+\hypertarget{Exporter_8php_source_l00006}{}\hyperlink{classExporter}{00006} \textcolor{keyword}{class }\hyperlink{classExporter}{Exporter} \{
+00007 
+\hypertarget{Exporter_8php_source_l00011}{}\hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{00011}     \textcolor{keyword}{public} \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth} = null;
+00012 
+\hypertarget{Exporter_8php_source_l00016}{}\hyperlink{classExporter_afba79cbecf1307454bafc80a9e442afa}{00016}     \textcolor{keyword}{public} \hyperlink{classExporter_afba79cbecf1307454bafc80a9e442afa}{$delimiter} = \textcolor{stringliteral}{";"};
+00017 
+\hypertarget{Exporter_8php_source_l00021}{}\hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{00021}     \textcolor{keyword}{public} \hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{$header} = TRUE;
+00022 
+\hypertarget{Exporter_8php_source_l00026}{}\hyperlink{classExporter_a2952bce65f130de4ba09e71655bdc89f}{00026}     \textcolor{keyword}{public} \hyperlink{classExporter_a2952bce65f130de4ba09e71655bdc89f}{$aphia2name} = array();
+00027 
+\hypertarget{Exporter_8php_source_l00032}{}\hyperlink{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{00032}     \textcolor{keyword}{public} \hyperlink{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{$exclude\_dominant\_substrates} = array();
+00033 
+\hypertarget{Exporter_8php_source_l00040}{}\hyperlink{classExporter_aef9e8f9d7dd29d6133b71acdc24e4ef6}{00040}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classExporter_aef9e8f9d7dd29d6133b71acdc24e4ef6}{\_\_construct}(\hyperlink{classExporter_afba79cbecf1307454bafc80a9e442afa}{$delimiter}=\textcolor{stringliteral}{";"}, \hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{$header}
+      =TRUE) \{
+00041         $this->delimiter = \hyperlink{classExporter_afba79cbecf1307454bafc80a9e442afa}{$delimiter};
+00042         $this->header = \hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{$header};
+00043     \}
+00044 
+\hypertarget{Exporter_8php_source_l00050}{}\hyperlink{classExporter_a63e4609c0612518bb77fd8b05693f92a}{00050}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classExporter_a63e4609c0612518bb77fd8b05693f92a}{export\_csv}($filename) \{
+00051         \textcolor{keywordflow}{if} (!$this->sth) \textcolor{keywordflow}{return};
+00052         header(\textcolor{stringliteral}{"Content-Type: text/csv; charset=utf-8"});
+00053         header(\textcolor{stringliteral}{"Content-Disposition: attachment; filename=\{$filename\}"});
+00054         \textcolor{keywordflow}{if} ($this->header) print implode($this->delimiter, $this->get\_header(
+      $this->sth)).\textcolor{stringliteral}{"\(\backslash\)n"};
+00055         \textcolor{keywordflow}{while} ( $row = $this->sth->fetch(PDO::FETCH\_NUM) ) \{
+00056             print implode($this->delimiter, $row).\textcolor{stringliteral}{"\(\backslash\)n"};
+00057         \}
+00058         exit();
+00059     \}
+00060 
+00067     \textcolor{keyword}{private} \textcolor{keyword}{function} get\_header(\hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}) \{
+00068         \hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{$header} = array();
+00069         \textcolor{keywordflow}{for} ($i = 0; $i < \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->columnCount(); $i++) \{
+00070             $meta = \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->getColumnMeta($i);
+00071             $field = $meta[\textcolor{stringliteral}{'name'}];
+00072             \hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{$header}[] = $field;
+00073         \}
+00074         \textcolor{keywordflow}{return} \hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{$header};
+00075     \}
+00076 
+\hypertarget{Exporter_8php_source_l00088}{}\hyperlink{classExporter_aa2afe95206f1731839936a65a0e2cf97}{00088}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classExporter_aa2afe95206f1731839936a65a0e2cf97}{set\_coverage\_two\_species}($aphia\_id1
+      , $aphia\_id2) \{
+00089         global $db;
+00090 
+00091         $this->\hyperlink{classExporter_aef6631756a775063a2f55d7d8475c8cc}{set\_names\_from\_aphia\_ids}(array(
+      $aphia\_id1, $aphia\_id2));
+00092         $tags\_image\_unusable = \textcolor{stringliteral}{"'"}.implode(\textcolor{stringliteral}{"','"}, $db->tags\_image\_unusable).\textcolor{stringliteral}{"'"}
+      ;
+00093 
+00094         $query = \textcolor{stringliteral}{"SELECT i.id AS image\_id,}
+00095 \textcolor{stringliteral}{                i.img\_dir,}
+00096 \textcolor{stringliteral}{                i.file\_name,}
+00097 \textcolor{stringliteral}{                COALESCE(a1.vector\_count, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id1]\} count\(\backslash\)",}
+00098 \textcolor{stringliteral}{                COALESCE(a1.species\_area/i.img\_area, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id1]\} coverage\(\backslash\)",}
+00099 \textcolor{stringliteral}{                COALESCE(a2.vector\_count, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id2]\} count\(\backslash\)",}
+00100 \textcolor{stringliteral}{                COALESCE(a2.species\_area/i.img\_area, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id2]\} coverage\(\backslash\)"}
+00101 \textcolor{stringliteral}{            FROM image\_info i}
+00102 \textcolor{stringliteral}{                INNER JOIN image\_annotation\_status ann ON ann.image\_info\_id =
+       i.id}
+00103 \textcolor{stringliteral}{                LEFT JOIN areas\_image\_grouped a1 ON a1.image\_info\_id = i.id AND
+       a1.aphia\_id = :aphia\_id1}
+00104 \textcolor{stringliteral}{                LEFT JOIN areas\_image\_grouped a2 ON a2.image\_info\_id = i.id AND
+       a2.aphia\_id = :aphia\_id2}
+00105 \textcolor{stringliteral}{            WHERE i.img\_area IS NOT NULL}
+00106 \textcolor{stringliteral}{                AND ann.annotation\_status = 'complete'}
+00107 \textcolor{stringliteral}{                AND NOT EXISTS (SELECT 1 FROM image\_tags WHERE image\_info\_id =
+       i.id AND image\_tag IN (\{$tags\_image\_unusable\}))}
+00108 \textcolor{stringliteral}{                --where}
+00109 \textcolor{stringliteral}{                AND (a1.species\_area IS NOT NULL OR a2.species\_area IS NOT
+       NULL);"};
+00110         \textcolor{keywordflow}{if} ( count($this->exclude\_dominant\_substrates) > 0 ) \{
+00111             \hyperlink{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{$exclude\_dominant\_substrates} = \textcolor{stringliteral}{"'"}.
+      implode(\textcolor{stringliteral}{"','"}, $this->exclude\_dominant\_substrates).\textcolor{stringliteral}{"'"};
+00112             $query = str\_replace(\textcolor{stringliteral}{"--where"}, \textcolor{stringliteral}{"AND NOT EXISTS (SELECT 1 FROM
+       image\_substrate WHERE image\_info\_id = i.id AND substrate\_type IN
+       (\{$exclude\_dominant\_substrates\}) AND dominance = 'dominant')}
+00113 \textcolor{stringliteral}{                --where"}, $query);
+00114         \}
+00115 
+00116         \textcolor{keywordflow}{try} \{
+00117             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth} = $db->dbh->prepare($query);
+00118 
+00119             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->bindParam(\textcolor{stringliteral}{":aphia\_id1"}, $aphia\_id1, PDO::PARAM\_INT);
+00120             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->bindParam(\textcolor{stringliteral}{":aphia\_id2"}, $aphia\_id2, PDO::PARAM\_INT);
+00121             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->execute();
+00122         \}
+00123         \textcolor{keywordflow}{catch} (Exception $e) \{
+00124             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00125         \}
+00126         $this->sth = \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth};
+00127     \}
+00128 
+\hypertarget{Exporter_8php_source_l00140}{}\hyperlink{classExporter_a029e2313283f605eeda5ebb46ceb4038}{00140}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classExporter_a029e2313283f605eeda5ebb46ceb4038}{set\_coverage\_two\_species\_present}
+      ($aphia\_id1, $aphia\_id2) \{
+00141         global $db;
+00142 
+00143         $this->\hyperlink{classExporter_aef6631756a775063a2f55d7d8475c8cc}{set\_names\_from\_aphia\_ids}(array(
+      $aphia\_id1, $aphia\_id2));
+00144         $tags\_image\_unusable = \textcolor{stringliteral}{"'"}.implode(\textcolor{stringliteral}{"','"}, $db->tags\_image\_unusable).\textcolor{stringliteral}{"'"}
+      ;
+00145 
+00146         $query = \textcolor{stringliteral}{"SELECT i.id AS image\_id,}
+00147 \textcolor{stringliteral}{                i.img\_dir,}
+00148 \textcolor{stringliteral}{                i.file\_name,}
+00149 \textcolor{stringliteral}{                COALESCE(a1.vector\_count, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id1]\} count\(\backslash\)",}
+00150 \textcolor{stringliteral}{                COALESCE(a1.species\_area/i.img\_area, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id1]\} coverage\(\backslash\)",}
+00151 \textcolor{stringliteral}{                COALESCE(a2.vector\_count, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id2]\} count\(\backslash\)",}
+00152 \textcolor{stringliteral}{                COALESCE(a2.species\_area/i.img\_area, 0) AS \(\backslash\)"
+      \{$this->aphia2name[$aphia\_id2]\} coverage\(\backslash\)"}
+00153 \textcolor{stringliteral}{            FROM image\_info i}
+00154 \textcolor{stringliteral}{                INNER JOIN image\_annotation\_status ann ON ann.image\_info\_id =
+       i.id}
+00155 \textcolor{stringliteral}{                LEFT JOIN areas\_image\_grouped a1 ON a1.image\_info\_id = i.id AND
+       a1.aphia\_id = :aphia\_id1}
+00156 \textcolor{stringliteral}{                LEFT JOIN areas\_image\_grouped a2 ON a2.image\_info\_id = i.id AND
+       a2.aphia\_id = :aphia\_id2}
+00157 \textcolor{stringliteral}{            WHERE i.img\_area IS NOT NULL}
+00158 \textcolor{stringliteral}{                AND ann.annotation\_status = 'complete'}
+00159 \textcolor{stringliteral}{                AND NOT EXISTS (SELECT 1 FROM image\_tags WHERE image\_info\_id =
+       i.id AND image\_tag IN (\{$tags\_image\_unusable\}))}
+00160 \textcolor{stringliteral}{                --where}
+00161 \textcolor{stringliteral}{                AND (a1.species\_area IS NOT NULL AND a2.species\_area IS NOT
+       NULL);"};
+00162         \textcolor{keywordflow}{if} ( count($this->exclude\_dominant\_substrates) > 0 ) \{
+00163             \hyperlink{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{$exclude\_dominant\_substrates} = \textcolor{stringliteral}{"'"}.
+      implode(\textcolor{stringliteral}{"','"}, $this->exclude\_dominant\_substrates).\textcolor{stringliteral}{"'"};
+00164             $query = str\_replace(\textcolor{stringliteral}{"--where"}, \textcolor{stringliteral}{"AND NOT EXISTS (SELECT 1 FROM
+       image\_substrate WHERE image\_info\_id = i.id AND substrate\_type IN
+       (\{$exclude\_dominant\_substrates\}) AND dominance = 'dominant')}
+00165 \textcolor{stringliteral}{                --where"}, $query);
+00166         \}
+00167 
+00168         \textcolor{keywordflow}{try} \{
+00169             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth} = $db->dbh->prepare($query);
+00170             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->bindParam(\textcolor{stringliteral}{":aphia\_id1"}, $aphia\_id1, PDO::PARAM\_INT);
+00171             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->bindParam(\textcolor{stringliteral}{":aphia\_id2"}, $aphia\_id2, PDO::PARAM\_INT);
+00172             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->execute();
+00173         \}
+00174         \textcolor{keywordflow}{catch} (Exception $e) \{
+00175             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00176         \}
+00177         $this->sth = \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth};
+00178     \}
+00179 
+\hypertarget{Exporter_8php_source_l00187}{}\hyperlink{classExporter_aef6631756a775063a2f55d7d8475c8cc}{00187}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classExporter_aef6631756a775063a2f55d7d8475c8cc}{set\_names\_from\_aphia\_ids}($ids) \{
+00188         global $db;
+00189 
+00190         $query = sprintf(\textcolor{stringliteral}{"SELECT aphia\_id,scientific\_name}
+00191 \textcolor{stringliteral}{            FROM species}
+00192 \textcolor{stringliteral}{            WHERE aphia\_id IN (%s);"}, implode(\textcolor{charliteral}{','}, $ids));
+00193         \textcolor{keywordflow}{try} \{
+00194             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth} = $db->dbh->prepare($query);
+00195             \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->execute();
+00196         \}
+00197         \textcolor{keywordflow}{catch} (Exception $e) \{
+00198             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00199         \}
+00200         \textcolor{keywordflow}{while} ( $row = \hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{$sth}->fetch(PDO::FETCH\_ASSOC) ) \{
+00201             $this->aphia2name[$row[\textcolor{stringliteral}{'aphia\_id'}]] = $row[\textcolor{stringliteral}{'scientific\_name'}];
+00202         \}
+00203     \}
+00204 \}
+\end{DoxyCode}

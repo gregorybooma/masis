@@ -1,0 +1,181 @@
+\hypertarget{JSON_8php}{\subsection{J\-S\-O\-N.\-php}
+\label{JSON_8php}\index{includes/\-J\-S\-O\-N.\-php@{includes/\-J\-S\-O\-N.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 
+\hypertarget{JSON_8php_source_l00006}{}\hyperlink{classJSON}{00006} \textcolor{keyword}{class }\hyperlink{classJSON}{JSON} \{
+00007 
+\hypertarget{JSON_8php_source_l00015}{}\hyperlink{classJSON_a66b5ebb4e30753852638dbbf0d53e799}{00015}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classJSON_a66b5ebb4e30753852638dbbf0d53e799}{get\_image\_info}($rel\_path) \{
+00016         global $db;
+00017 
+00018         $abs\_path = realpath(\hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'base\_path'}) . $rel\_path)
+      ;
+00019 
+00020         \textcolor{keywordflow}{if} ( !is\_file($abs\_path) ) \{
+00021             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( \textcolor{stringliteral}{"Not a file: \{$abs\_path\}"} );
+00022         \}
+00023 
+00024         \textcolor{comment}{// Get file info.}
+00025         $size = @getimagesize($abs\_path);
+00026         \textcolor{keywordflow}{if} ( $size === FALSE ) \{
+00027             $e = error\_get\_last();
+00028             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e[\textcolor{stringliteral}{'message'}] );
+00029         \}
+00030         $width = $size[0];
+00031         $height = $size[1];
+00032         $type = $size[2];
+00033         $stack = explode(\textcolor{charliteral}{'/'}, $rel\_path);
+00034 
+00035         \textcolor{comment}{// Set info array.}
+00036         $info = array();
+00037         $info[\textcolor{stringliteral}{'name'}] = array\_pop($stack);
+00038         $info[\textcolor{stringliteral}{'dir'}] = array\_pop($stack);
+00039         $info[\textcolor{stringliteral}{'width'}] = $width;
+00040         $info[\textcolor{stringliteral}{'height'}] = $height;
+00041         $info[\textcolor{stringliteral}{'mime'}] = $size[\textcolor{stringliteral}{'mime'}];
+00042         $info[\textcolor{stringliteral}{'url'}] = \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'base\_url'}) . ltrim($rel\_path, \textcolor{charliteral}{
+      '/'});
+00043         $info[\textcolor{stringliteral}{'path'}] = $abs\_path;
+00044         $info[\textcolor{stringliteral}{'exif'}] = @exif\_read\_data($abs\_path);
+00045 
+00046         $arr = $db->get\_image\_attributes($info[\textcolor{stringliteral}{'dir'}], $info[\textcolor{stringliteral}{'name'}]);
+00047         $info = array\_merge($info, $arr);
+00048 
+00049         \textcolor{keywordflow}{if} ( empty($info[\textcolor{stringliteral}{'area'}]) && !empty($info[\textcolor{stringliteral}{'altitude'}]) ) \{
+00050             $info[\textcolor{stringliteral}{'area'}] = MaSIS::get\_area\_from\_altitude($info[\textcolor{stringliteral}{'altitude'}]);
+00051         \}
+00052         \textcolor{keywordflow}{if} ( !empty($info[\textcolor{stringliteral}{'area'}]) && !empty($width) && !empty($height) ) \{
+00053             $info[\textcolor{stringliteral}{'area\_per\_pixel'}] = $info[\textcolor{stringliteral}{'area'}] / ($width * $height);
+00054         \}
+00055         \textcolor{keywordflow}{if} ( !empty($info[\textcolor{stringliteral}{'latitude'}]) && !empty($info[\textcolor{stringliteral}{'longitude'}]) ) \{
+00056             $info[\textcolor{stringliteral}{'location\_map\_url'}] = htmlentities(\textcolor{stringliteral}{"
+      https://maps.google.com/maps?q=\{$info['latitude']\},\{$info['longitude']\}&iwloc=A&hl=en"});
+00057         \}
+00058         \textcolor{keywordflow}{return} json\_encode($info);
+00059     \}
+00060 
+\hypertarget{JSON_8php_source_l00070}{}\hyperlink{classJSON_a1f9cea49a726222ca98b6df75efbb0df}{00070}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classJSON_a1f9cea49a726222ca98b6df75efbb0df}{get\_species\_from\_worms}($term, 
+      $searchpar=0) \{
+00071         global $db;
+00072 
+00073         \textcolor{comment}{// Call the WoRMS webservice.}
+00074         $client = \textcolor{keyword}{new} SoapClient(\textcolor{stringliteral}{"
+      http://www.marinespecies.org/aphia.php?p=soap&wsdl=1"});
+00075 
+00076         \textcolor{keywordflow}{switch} ($searchpar) \{
+00077             \textcolor{keywordflow}{case} 0:
+00078                 \textcolor{comment}{// Get max. 50 records matching the scientific species name.}
+00079                 $records = $client->getAphiaRecords($term);
+00080                 \textcolor{keywordflow}{break};
+00081             \textcolor{keywordflow}{case} 1:
+00082                 \textcolor{comment}{// Get max. 50 records matching the common species name.}
+00083                 $records = $client->getAphiaRecordsByVernacular($term);
+00084                 \textcolor{keywordflow}{break};
+00085             \textcolor{keywordflow}{default}:
+00086                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( \textcolor{stringliteral}{"Value '$searchpar' is invalid for
+       parameter `searchpar`."} );
+00087         \}
+00088 
+00089         $cache = array();
+00090         $species = array();
+00091         $species[] = array(\textcolor{stringliteral}{'label'} => \textcolor{stringliteral}{"Unassigned"}, \textcolor{stringliteral}{'value'} => null);
+00092         \textcolor{keywordflow}{if} ($records) \{
+00093             \textcolor{comment}{// Cache the records to the local database.}
+00094             $db->cache\_aphia\_records($records, \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'
+      update\_species\_records'}));
+00095 
+00096             \textcolor{keywordflow}{foreach} ( $records as $sp ) \{
+00097                 \textcolor{comment}{// Skip records with a specific status.}
+00098                 \textcolor{keywordflow}{if} ( in\_array($sp->status, $db->aphia\_status\_exclude) ) \textcolor{keywordflow}{
+      continue};
+00099                 \textcolor{comment}{// Show in the label if a record is unaccepted.}
+00100                 $label = $sp->status == \textcolor{stringliteral}{'unaccepted'} ? $sp->scientificname . \textcolor{stringliteral}{"
+       (unaccepted)"} : $sp->scientificname;
+00101 
+00102                 $species[] = array(
+00103                     \textcolor{stringliteral}{'label'} => $label,
+00104                     \textcolor{stringliteral}{'value'} => $sp->AphiaID
+00105                     );
+00106             \}
+00107         \}
+00108         \textcolor{keywordflow}{return} json\_encode($species);
+00109     \}
+00110 
+\hypertarget{JSON_8php_source_l00121}{}\hyperlink{classJSON_a1c6b7055dca8f87c890dd1a3dc6b4c09}{00121}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classJSON_a1c6b7055dca8f87c890dd1a3dc6b4c09}{get\_species\_matching}($term, $limit=20) 
+      \{
+00122         global $db;
+00123 
+00124         $sth = $db->get\_species\_matching($term, $limit);
+00125         $species = array();
+00126         $species[] = array(\textcolor{stringliteral}{'label'} => \textcolor{stringliteral}{"Unassigned"}, \textcolor{stringliteral}{'value'} => null);
+00127         \textcolor{keywordflow}{while} ( $sp = $sth->fetch(PDO::FETCH\_OBJ) ) \{
+00128                 \textcolor{comment}{// Show in the label if a record is unaccepted.}
+00129                 $label = $sp->status == \textcolor{stringliteral}{'unaccepted'} ? $sp->scientific\_name . \textcolor{stringliteral}{"
+       (unaccepted)"} : $sp->scientific\_name;
+00130             $species[] = array(
+00131                 \textcolor{stringliteral}{'value'} => $sp->aphia\_id,
+00132                 \textcolor{stringliteral}{'label'} => $label
+00133                 );
+00134         \}
+00135         \textcolor{keywordflow}{return} json\_encode($species);
+00136     \}
+00137 
+\hypertarget{JSON_8php_source_l00146}{}\hyperlink{classJSON_a3dc5fecab5727b9e24af963f98ae7ed3}{00146}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classJSON_a3dc5fecab5727b9e24af963f98ae7ed3}{get\_substrate\_types}() \{
+00147         global $db;
+00148 
+00149         $sth = $db->get\_substrate\_types();
+00150         $types = array();
+00151         \textcolor{keywordflow}{while} ( $row = $sth->fetch(PDO::FETCH\_ASSOC) ) \{
+00152             $types[] = array(
+00153                 \textcolor{stringliteral}{'value'} => $row[\textcolor{stringliteral}{'name'}],
+00154                 \textcolor{stringliteral}{'label'} => $row[\textcolor{stringliteral}{'name'}]
+00155                 );
+00156         \}
+00157         \textcolor{keywordflow}{return} json\_encode($types);
+00158     \}
+00159 
+\hypertarget{JSON_8php_source_l00168}{}\hyperlink{classJSON_ae455596a746767bc1ed3805a2770be69}{00168}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classJSON_ae455596a746767bc1ed3805a2770be69}{get\_image\_tag\_types}() \{
+00169         global $db;
+00170 
+00171         $sth = $db->get\_image\_tag\_types();
+00172         $types = array();
+00173         \textcolor{keywordflow}{while} ( $row = $sth->fetch(PDO::FETCH\_ASSOC) ) \{
+00174             $types[] = array(
+00175                 \textcolor{stringliteral}{'value'} => $row[\textcolor{stringliteral}{'name'}],
+00176                 \textcolor{stringliteral}{'label'} => $row[\textcolor{stringliteral}{'name'}]
+00177                 );
+00178         \}
+00179         \textcolor{keywordflow}{return} json\_encode($types);
+00180     \}
+00181 
+\hypertarget{JSON_8php_source_l00188}{}\hyperlink{classJSON_a8e8a4959e85674496ec7ffa0adb8ef9c}{00188}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classJSON_a8e8a4959e85674496ec7ffa0adb8ef9c}{get\_substrate\_annotations}(
+      $image\_id) \{
+00189         global $db;
+00190 
+00191         $sth = $db->get\_substrate\_annotations($image\_id);
+00192         $annotations = $sth->fetchAll(PDO::FETCH\_OBJ);
+00193         \textcolor{keywordflow}{return} json\_encode($annotations);
+00194     \}
+00195 
+\hypertarget{JSON_8php_source_l00202}{}\hyperlink{classJSON_af9e69b033fc445c5b7f342108c1f2644}{00202}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classJSON_af9e69b033fc445c5b7f342108c1f2644}{get\_image\_tags}($image\_id) \{
+00203         global $db;
+00204 
+00205         $sth = $db->get\_image\_tags($image\_id);
+00206         $tags = $sth->fetchAll(PDO::FETCH\_OBJ);
+00207         \textcolor{keywordflow}{return} json\_encode($tags);
+00208     \}
+00209 
+00210     \textcolor{keyword}{public} \textcolor{keyword}{function} get\_vectors($image\_id) \{
+00211         global $db;
+00212 
+00213         $sth = $db->get\_vectors($image\_id);
+00214         $vectors = array();
+00215         \textcolor{keywordflow}{while} ( $row = $sth->fetch(PDO::FETCH\_ASSOC) ) \{
+00216             $vectors[] = $row;
+00217         \}
+00218         \textcolor{keywordflow}{return} json\_encode($vectors);
+00219     \}
+00220 \}
+\end{DoxyCode}

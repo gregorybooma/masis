@@ -1,0 +1,185 @@
+\hypertarget{classExporter}{\subsection{Exporter Class Reference}
+\label{classExporter}\index{Exporter@{Exporter}}
+}
+
+
+Export data to files in C\-S\-V format.  
+
+
+\subsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classExporter_aef9e8f9d7dd29d6133b71acdc24e4ef6}{\-\_\-\-\_\-construct} (\$delimiter=\char`\"{};\char`\"{}, \$header=T\-R\-U\-E)
+\begin{DoxyCompactList}\small\item\em Set the values for the object attributes. \end{DoxyCompactList}\item 
+\hyperlink{classExporter_a63e4609c0612518bb77fd8b05693f92a}{export\-\_\-csv} (\$filename)
+\begin{DoxyCompactList}\small\item\em Print results from a P\-D\-O statement hander in C\-S\-V format. \end{DoxyCompactList}\item 
+\hyperlink{classExporter_aa2afe95206f1731839936a65a0e2cf97}{set\-\_\-coverage\-\_\-two\-\_\-species} (\$aphia\-\_\-id1, \$aphia\-\_\-id2)
+\begin{DoxyCompactList}\small\item\em Set vector count and coverage/square meter for two species per image on images where either species is present. \end{DoxyCompactList}\item 
+\hyperlink{classExporter_a029e2313283f605eeda5ebb46ceb4038}{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present} (\$aphia\-\_\-id1, \$aphia\-\_\-id2)
+\begin{DoxyCompactList}\small\item\em Set vector count and coverage/square meter for two species per image on images where both species are present. \end{DoxyCompactList}\item 
+\hyperlink{classExporter_aef6631756a775063a2f55d7d8475c8cc}{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids} (\$ids)
+\begin{DoxyCompactList}\small\item\em Populate the aphia2name attribute. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classExporter_a910c25744dd81011c43aac920867b291}{\hyperlink{classExporter_a910c25744dd81011c43aac920867b291}{\$sth} = null}\label{classExporter_a910c25744dd81011c43aac920867b291}
+
+\begin{DoxyCompactList}\small\item\em P\-D\-O statement handler set by a set\-\_\-$\ast$ method. \end{DoxyCompactList}\item 
+\hypertarget{classExporter_afba79cbecf1307454bafc80a9e442afa}{\hyperlink{classExporter_afba79cbecf1307454bafc80a9e442afa}{\$delimiter} = \char`\"{};\char`\"{}}\label{classExporter_afba79cbecf1307454bafc80a9e442afa}
+
+\begin{DoxyCompactList}\small\item\em Character to be used as the C\-S\-V field delimiter. \end{DoxyCompactList}\item 
+\hypertarget{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{\hyperlink{classExporter_a5b5357c605795c38227db7ffdb88ffaa}{\$header} = T\-R\-U\-E}\label{classExporter_a5b5357c605795c38227db7ffdb88ffaa}
+
+\begin{DoxyCompactList}\small\item\em Whether to print a header for the C\-S\-V output. \end{DoxyCompactList}\item 
+\hypertarget{classExporter_a2952bce65f130de4ba09e71655bdc89f}{\hyperlink{classExporter_a2952bce65f130de4ba09e71655bdc89f}{\$aphia2name} = array()}\label{classExporter_a2952bce65f130de4ba09e71655bdc89f}
+
+\begin{DoxyCompactList}\small\item\em Associative array with Aphia I\-D as key, species name as value. \end{DoxyCompactList}\item 
+\hypertarget{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{\hyperlink{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{\$exclude\-\_\-dominant\-\_\-substrates} = array()}\label{classExporter_af894c7d3f943ae0a52ce33ec8330726a}
+
+\begin{DoxyCompactList}\small\item\em Images with a dominant substrate type that matches a value in this list are excluded. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Export data to files in C\-S\-V format. 
+
+Definition at line \hyperlink{Exporter_8php_source_l00006}{6} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+
+
+
+\subsubsection{Constructor \& Destructor Documentation}
+\hypertarget{classExporter_aef9e8f9d7dd29d6133b71acdc24e4ef6}{\index{Exporter@{Exporter}!\-\_\-\-\_\-construct@{\-\_\-\-\_\-construct}}
+\index{\-\_\-\-\_\-construct@{\-\_\-\-\_\-construct}!Exporter@{Exporter}}
+\paragraph[{\-\_\-\-\_\-construct}]{\setlength{\rightskip}{0pt plus 5cm}Exporter\-::\-\_\-\-\_\-construct (
+\begin{DoxyParamCaption}
+\item[{}]{\$delimiter = {\ttfamily \char`\"{};\char`\"{}}, }
+\item[{}]{\$header = {\ttfamily TRUE}}
+\end{DoxyParamCaption}
+)}}\label{classExporter_aef9e8f9d7dd29d6133b71acdc24e4ef6}
+
+
+Set the values for the object attributes. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$delimiter} & Character to be used as the C\-S\-V field delimiter. \\
+\hline
+bool & {\em \$header} & Whether to print a header for the C\-S\-V output. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Exporter_8php_source_l00040}{40} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+
+
+
+\subsubsection{Member Function Documentation}
+\hypertarget{classExporter_a63e4609c0612518bb77fd8b05693f92a}{\index{Exporter@{Exporter}!export\-\_\-csv@{export\-\_\-csv}}
+\index{export\-\_\-csv@{export\-\_\-csv}!Exporter@{Exporter}}
+\paragraph[{export\-\_\-csv}]{\setlength{\rightskip}{0pt plus 5cm}Exporter\-::export\-\_\-csv (
+\begin{DoxyParamCaption}
+\item[{}]{\$filename}
+\end{DoxyParamCaption}
+)}}\label{classExporter_a63e4609c0612518bb77fd8b05693f92a}
+
+
+Print results from a P\-D\-O statement hander in C\-S\-V format. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$filename} & The name of the C\-S\-V file to be exported. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Exporter_8php_source_l00050}{50} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+
+\hypertarget{classExporter_aa2afe95206f1731839936a65a0e2cf97}{\index{Exporter@{Exporter}!set\-\_\-coverage\-\_\-two\-\_\-species@{set\-\_\-coverage\-\_\-two\-\_\-species}}
+\index{set\-\_\-coverage\-\_\-two\-\_\-species@{set\-\_\-coverage\-\_\-two\-\_\-species}!Exporter@{Exporter}}
+\paragraph[{set\-\_\-coverage\-\_\-two\-\_\-species}]{\setlength{\rightskip}{0pt plus 5cm}Exporter\-::set\-\_\-coverage\-\_\-two\-\_\-species (
+\begin{DoxyParamCaption}
+\item[{}]{\$aphia\-\_\-id1, }
+\item[{}]{\$aphia\-\_\-id2}
+\end{DoxyParamCaption}
+)}}\label{classExporter_aa2afe95206f1731839936a65a0e2cf97}
+
+
+Set vector count and coverage/square meter for two species per image on images where either species is present. 
+
+Only images for which the annotation status is \char`\"{}complete\char`\"{} are used in the calculations.
+
+
+\begin{DoxyParams}[1]{Parameters}
+integer & {\em \$aphia\-\_\-id1} & Aphia I\-D for species A. \\
+\hline
+integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & \\
+\hline
+\end{DoxyExceptions}
+
+
+Definition at line \hyperlink{Exporter_8php_source_l00088}{88} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+
+\hypertarget{classExporter_a029e2313283f605eeda5ebb46ceb4038}{\index{Exporter@{Exporter}!set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present@{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present}}
+\index{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present@{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present}!Exporter@{Exporter}}
+\paragraph[{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present}]{\setlength{\rightskip}{0pt plus 5cm}Exporter\-::set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present (
+\begin{DoxyParamCaption}
+\item[{}]{\$aphia\-\_\-id1, }
+\item[{}]{\$aphia\-\_\-id2}
+\end{DoxyParamCaption}
+)}}\label{classExporter_a029e2313283f605eeda5ebb46ceb4038}
+
+
+Set vector count and coverage/square meter for two species per image on images where both species are present. 
+
+Only images for which the annotation status is \char`\"{}complete\char`\"{} are used in the calculations.
+
+
+\begin{DoxyParams}[1]{Parameters}
+integer & {\em \$aphia\-\_\-id1} & Aphia I\-D for species A. \\
+\hline
+integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & \\
+\hline
+\end{DoxyExceptions}
+
+
+Definition at line \hyperlink{Exporter_8php_source_l00140}{140} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+
+\hypertarget{classExporter_aef6631756a775063a2f55d7d8475c8cc}{\index{Exporter@{Exporter}!set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids@{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids}}
+\index{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids@{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids}!Exporter@{Exporter}}
+\paragraph[{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids}]{\setlength{\rightskip}{0pt plus 5cm}Exporter\-::set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids (
+\begin{DoxyParamCaption}
+\item[{}]{\$ids}
+\end{DoxyParamCaption}
+)}}\label{classExporter_aef6631756a775063a2f55d7d8475c8cc}
+
+
+Populate the aphia2name attribute. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+Array & {\em \$ids} & Aphia I\-D's  Array \$this-\/$>$aphia2name \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Exception} & \\
+\hline
+\end{DoxyExceptions}
+
+
+Definition at line \hyperlink{Exporter_8php_source_l00187}{187} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+includes/Exporter.\-php\end{DoxyCompactItemize}

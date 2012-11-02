@@ -1,0 +1,81 @@
+\hypertarget{classConfig}{\subsection{Config Class Reference}
+\label{classConfig}\index{Config@{Config}}
+}
+
+
+Read and write configurations.  
+
+
+\subsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{read} (\$name)
+\begin{DoxyCompactList}\small\item\em Get the value for a configuration. \end{DoxyCompactList}\item 
+static \hyperlink{classConfig_a975f9e49fe4636732dbffacc62e3dbd9}{write} (\$name, \$value)
+\begin{DoxyCompactList}\small\item\em Set a configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classConfig_abf0820c6706551fc7e0ce741c525545f}{static \hyperlink{classConfig_abf0820c6706551fc7e0ce741c525545f}{\$conf\-Array}}\label{classConfig_abf0820c6706551fc7e0ce741c525545f}
+
+\begin{DoxyCompactList}\small\item\em Array that contains all configurations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Read and write configurations. 
+
+Configurations are written to a static variable that can be accessed from anywhere within the program. 
+
+Definition at line \hyperlink{Config_8php_source_l00016}{16} of file \hyperlink{Config_8php_source}{Config.\-php}.
+
+
+
+\subsubsection{Member Function Documentation}
+\hypertarget{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{\index{Config@{Config}!read@{read}}
+\index{read@{read}!Config@{Config}}
+\paragraph[{read}]{\setlength{\rightskip}{0pt plus 5cm}static Config\-::read (
+\begin{DoxyParamCaption}
+\item[{}]{\$name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classConfig_a05b671c1d9906d653dfab37fc5dc1588}
+
+
+Get the value for a configuration. 
+
+\begin{DoxyVerb}@param string $name The key in the array
+\end{DoxyVerb}
+ \begin{DoxyReturn}{Returns}
+mixed The value for the configuration with key \$name 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{Config_8php_source_l00028}{28} of file \hyperlink{Config_8php_source}{Config.\-php}.
+
+\hypertarget{classConfig_a975f9e49fe4636732dbffacc62e3dbd9}{\index{Config@{Config}!write@{write}}
+\index{write@{write}!Config@{Config}}
+\paragraph[{write}]{\setlength{\rightskip}{0pt plus 5cm}static Config\-::write (
+\begin{DoxyParamCaption}
+\item[{}]{\$name, }
+\item[{}]{\$value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classConfig_a975f9e49fe4636732dbffacc62e3dbd9}
+
+
+Set a configuration. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$name} & The key in the array \\
+\hline
+string & {\em \$value} & The value of the key in the array \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Config_8php_source_l00038}{38} of file \hyperlink{Config_8php_source}{Config.\-php}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+includes/Config.\-php\end{DoxyCompactItemize}

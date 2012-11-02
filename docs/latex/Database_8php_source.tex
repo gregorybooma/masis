@@ -1,0 +1,651 @@
+\hypertarget{Database_8php}{\subsection{Database.\-php}
+\label{Database_8php}\index{includes/\-Database.\-php@{includes/\-Database.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 
+\hypertarget{Database_8php_source_l00006}{}\hyperlink{classDatabase}{00006} \textcolor{keyword}{class }\hyperlink{classDatabase}{Database} \{
+\hypertarget{Database_8php_source_l00010}{}\hyperlink{classDatabase_af7c7304034efe8fd0b7f9d8b8ad63acc}{00010}     \textcolor{keyword}{public} \hyperlink{classDatabase_af7c7304034efe8fd0b7f9d8b8ad63acc}{$dbh} = null;
+00011 
+\hypertarget{Database_8php_source_l00015}{}\hyperlink{classDatabase_a502df1b3553fedfb4eb93788e9008294}{00015}     \textcolor{keyword}{public} \hyperlink{classDatabase_a502df1b3553fedfb4eb93788e9008294}{$aphia\_status\_exclude} = array(\textcolor{stringliteral}{'nomen dubium'},\textcolor{stringliteral}{'
+      nomen nudum'},\textcolor{stringliteral}{'deleted'});
+00016 
+\hypertarget{Database_8php_source_l00020}{}\hyperlink{classDatabase_aac282092ecb7f4f3862af28726d18f6e}{00020}     \textcolor{keyword}{public} \hyperlink{classDatabase_aac282092ecb7f4f3862af28726d18f6e}{$tags\_image\_unusable} = array(\textcolor{stringliteral}{'unusable'},\textcolor{stringliteral}{'cannot
+       see seafloor'},\textcolor{stringliteral}{'altitude too high'});
+00021 
+\hypertarget{Database_8php_source_l00025}{}\hyperlink{classDatabase_a27f4e88bfd7fcd348e0f544170fb2fbe}{00025}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a27f4e88bfd7fcd348e0f544170fb2fbe}{connect}() \{
+00026         \textcolor{keywordflow}{try} \{
+00027             $this->dbh = \textcolor{keyword}{new} PDO(\textcolor{stringliteral}{"pgsql:dbname="} . \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'
+      database'}) . \textcolor{stringliteral}{";host="} . \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'hostname'}),
+00028                 \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'username'}),
+00029                 \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'password'}),
+00030                 \hyperlink{classConfig_a05b671c1d9906d653dfab37fc5dc1588}{Config::read}(\textcolor{stringliteral}{'drivers'}));
+00031         \}
+00032         \textcolor{keywordflow}{catch} (PDOException $e) \{
+00033             exit( \textcolor{stringliteral}{"Unable to connect: "} . $e->getMessage() );
+00034         \}
+00035 
+00036         \textcolor{comment}{// Throw exceptions so errors can be handled gracefully.}
+00037         $this->dbh->setAttribute( PDO::ATTR\_ERRMODE, PDO::ERRMODE\_EXCEPTION );
+00038     \}
+00039 
+\hypertarget{Database_8php_source_l00048}{}\hyperlink{classDatabase_a18962b53bf38e115cfca934bd2d63d3b}{00048}         \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a18962b53bf38e115cfca934bd2d63d3b}{query}($query, $bind = null, $fetch = \textcolor{stringliteral}{'FETCH\_ASSOC'}
+      ) \{
+00049                 \textcolor{comment}{/* Prepare the query statement */}
+00050                 $this->sth = $this->dbh->prepare($query);
+00051                 \textcolor{comment}{/* Bind each value supplied from $bind */}
+00052                 \textcolor{keywordflow}{if} ($bind != null) \{
+00053                         \textcolor{keywordflow}{foreach}($bind as $select => $value) \{
+00054                                 \textcolor{comment}{/* For each type of value give the appropriate
+       param */}
+00055                                 \textcolor{keywordflow}{if} (is\_int($value)) \{
+00056                                         $param = PDO::PARAM\_INT;
+00057                                 \} elseif (is\_bool($value)) \{
+00058                                         $param = PDO::PARAM\_BOOL;
+00059                                 \} elseif (is\_null($value)) \{
+00060                                         $param = PDO::PARAM\_NULL;
+00061                                 \} elseif (is\_string($value)) \{
+00062                                         $param = PDO::PARAM\_STR;
+00063                                 \} \textcolor{keywordflow}{else} \{
+00064                                         $param = FALSE;
+00065                                 \}
+00066                                 \textcolor{keywordflow}{if} ($param) \{
+00067                                         $this->sth->bindValue($select, $value, 
+      $param);
+00068                                 \}
+00069                         \}
+00070                 \}
+00071 
+00072                 \textcolor{keywordflow}{if} (!$this->sth->execute())\{
+00073                         $result = array(
+00074                                 1 => \textcolor{stringliteral}{'false'},
+00075                                 2 => \textcolor{stringliteral}{'<b>[DATABASE] Error - Query:</b> There
+       was an error in sql syntax'},
+00076                         );
+00077                         \textcolor{keywordflow}{return} $result;
+00078                 \}
+00079 
+00080                 \textcolor{keywordflow}{if} ($fetch == \textcolor{stringliteral}{'FETCH\_ASSOC'}) \{
+00081                         $result = $this->sth->fetch(PDO::FETCH\_ASSOC);
+00082                 \}
+00083         elseif ($fetch == \textcolor{stringliteral}{'FETCH\_BOTH'}) \{
+00084                         $result = $this->sth->fetch(PDO::FETCH\_BOTH);
+00085                 \}
+00086         elseif ($fetch == \textcolor{stringliteral}{'FETCH\_LAZY'}) \{
+00087                         $result = $this->sth->fetch(PDO::FETCH\_LAZY);
+00088                 \}
+00089         elseif ($fetch == \textcolor{stringliteral}{'FETCH\_OBJ'}) \{
+00090                         $result = $this->sth->fetch(PDO::FETCH\_OBJ);
+00091                 \}
+00092         elseif ($fetch == \textcolor{stringliteral}{'fetchAll'}) \{
+00093                         $result = $this->sth->fetchAll();
+00094                 \}
+00095                 \textcolor{keywordflow}{return} $result;
+00096         \}
+00097 
+\hypertarget{Database_8php_source_l00105}{}\hyperlink{classDatabase_af7bc1f009ae4cfec8a19ce4c1cc0a43a}{00105}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_af7bc1f009ae4cfec8a19ce4c1cc0a43a}{get\_image\_attributes}($dir, $filename) \{
+00106         $filename = explode(\textcolor{charliteral}{'.'}, $filename);
+00107         $filename = $filename[0] . \textcolor{stringliteral}{".%"};
+00108 
+00109         \textcolor{keywordflow}{try} \{
+00110             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT i.id,}
+00111 \textcolor{stringliteral}{                    i.img\_dir,}
+00112 \textcolor{stringliteral}{                    i.file\_name,}
+00113 \textcolor{stringliteral}{                    i.event\_id,}
+00114 \textcolor{stringliteral}{                    i.mission\_id,}
+00115 \textcolor{stringliteral}{                    i.longitude,}
+00116 \textcolor{stringliteral}{                    i.latitude,}
+00117 \textcolor{stringliteral}{                    i.timestamp,}
+00118 \textcolor{stringliteral}{                    i.nav\_depth AS depth,}
+00119 \textcolor{stringliteral}{                    i.nav\_altitude AS altitude,}
+00120 \textcolor{stringliteral}{                    i.img\_area AS area,}
+00121 \textcolor{stringliteral}{                    i.temperature,}
+00122 \textcolor{stringliteral}{                    i.salinity,}
+00123 \textcolor{stringliteral}{                    a.annotation\_status}
+00124 \textcolor{stringliteral}{                FROM image\_info i}
+00125 \textcolor{stringliteral}{                    LEFT OUTER JOIN image\_annotation\_status a ON
+       a.image\_info\_id = i.id}
+00126 \textcolor{stringliteral}{                WHERE i.img\_dir = :dir}
+00127 \textcolor{stringliteral}{                    AND i.file\_name SIMILAR TO :filename;"});
+00128             $sth->bindParam(\textcolor{stringliteral}{":dir"}, $dir, PDO::PARAM\_STR);
+00129             $sth->bindParam(\textcolor{stringliteral}{":filename"}, $filename, PDO::PARAM\_STR);
+00130             $sth->execute();
+00131         \}
+00132         \textcolor{keywordflow}{catch} (Exception $e) \{
+00133             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00134         \}
+00135         \textcolor{keywordflow}{return} $sth->fetch(PDO::FETCH\_ASSOC);
+00136     \}
+00137 
+00138     \textcolor{keyword}{public} \textcolor{keyword}{function} get\_files\_for\_dir($dir) \{
+00139         \textcolor{keywordflow}{try} \{
+00140             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT i.file\_name,}
+00141 \textcolor{stringliteral}{                    a.annotation\_status,}
+00142 \textcolor{stringliteral}{                    COUNT(v.id) AS n\_vectors,}
+00143 \textcolor{stringliteral}{                    -- This is put in a subquery because when image\_substrate}
+00144 \textcolor{stringliteral}{                    -- returns multiple records, the corresponding record from}
+00145 \textcolor{stringliteral}{                    -- image\_info is repeated.}
+00146 \textcolor{stringliteral}{                    (SELECT MAX(substrate\_type) FROM image\_substrate WHERE
+       image\_info\_id = i.id) AS substrate\_annotated,}
+00147 \textcolor{stringliteral}{                    -- Get comma separated list of image tags.}
+00148 \textcolor{stringliteral}{                    (SELECT STRING\_AGG(image\_tag, ',') FROM image\_tags WHERE
+       image\_info\_id = i.id) AS tags}
+00149 \textcolor{stringliteral}{                FROM image\_info i}
+00150 \textcolor{stringliteral}{                    LEFT OUTER JOIN vectors v ON v.image\_info\_id = i.id}
+00151 \textcolor{stringliteral}{                    LEFT OUTER JOIN image\_annotation\_status a ON
+       a.image\_info\_id = i.id}
+00152 \textcolor{stringliteral}{                WHERE i.img\_dir = :dir}
+00153 \textcolor{stringliteral}{                GROUP BY i.id, i.file\_name, a.annotation\_status}
+00154 \textcolor{stringliteral}{                ORDER BY i.file\_name;"});
+00155             $sth->bindParam(\textcolor{stringliteral}{":dir"}, $dir, PDO::PARAM\_STR);
+00156             $sth->execute();
+00157         \}
+00158         \textcolor{keywordflow}{catch} (Exception $e) \{
+00159             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00160         \}
+00161         \textcolor{keywordflow}{return} $sth;
+00162     \}
+00163 
+\hypertarget{Database_8php_source_l00170}{}\hyperlink{classDatabase_a0fa69e8599adb5307cfc552ac9bf2c0d}{00170}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a0fa69e8599adb5307cfc552ac9bf2c0d}{cache\_aphia\_records}($records, $update=\textcolor{keyword}{
+      true}) \{
+00171         \textcolor{comment}{// Begin a database transaction.}
+00172         $this->dbh->beginTransaction();
+00173 
+00174         \textcolor{keywordflow}{foreach} ($records as $sp) \{
+00175             \textcolor{comment}{// Skip Aphia records with a specific status.}
+00176             \textcolor{keywordflow}{if} ( in\_array($sp->status, $this->aphia\_status\_exclude) ) \textcolor{keywordflow}{continue};
+00177 
+00178             \textcolor{comment}{// Check if this record already exists in the database.}
+00179             \textcolor{keywordflow}{try} \{
+00180                 $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT aphia\_id FROM species}
+00181 \textcolor{stringliteral}{                    WHERE aphia\_id = :aphia\_id;"});
+00182                 $sth->bindParam(\textcolor{stringliteral}{":aphia\_id"}, $sp->AphiaID, PDO::PARAM\_INT);
+00183                 $sth->execute();
+00184             \}
+00185             \textcolor{keywordflow}{catch} (Exception $e) \{
+00186                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00187             \}
+00188             $row = $sth->fetch();
+00189             $aphia\_id = $row ? $row[0] : NULL;
+00190 
+00191             \textcolor{comment}{// Cache or update the record.}
+00192             $query = NULL;
+00193             \textcolor{keywordflow}{if} ( is\_null($aphia\_id) ) \{
+00194                 $query = \textcolor{stringliteral}{"INSERT INTO species (}
+00195 \textcolor{stringliteral}{                        aphia\_id,}
+00196 \textcolor{stringliteral}{                        lsid,}
+00197 \textcolor{stringliteral}{                        scientific\_name,}
+00198 \textcolor{stringliteral}{                        status,}
+00199 \textcolor{stringliteral}{                        valid\_aphia\_id,}
+00200 \textcolor{stringliteral}{                        valid\_name,}
+00201 \textcolor{stringliteral}{                        kingdom,}
+00202 \textcolor{stringliteral}{                        phylum,}
+00203 \textcolor{stringliteral}{                        class,}
+00204 \textcolor{stringliteral}{                        \(\backslash\)"order\(\backslash\)",}
+00205 \textcolor{stringliteral}{                        family,}
+00206 \textcolor{stringliteral}{                        genus}
+00207 \textcolor{stringliteral}{                        )}
+00208 \textcolor{stringliteral}{                    VALUES (}
+00209 \textcolor{stringliteral}{                        :aphia\_id,}
+00210 \textcolor{stringliteral}{                        :lsid,}
+00211 \textcolor{stringliteral}{                        :scientific\_name,}
+00212 \textcolor{stringliteral}{                        :status,}
+00213 \textcolor{stringliteral}{                        :valid\_aphia\_id,}
+00214 \textcolor{stringliteral}{                        :valid\_name,}
+00215 \textcolor{stringliteral}{                        :kingdom,}
+00216 \textcolor{stringliteral}{                        :phylum,}
+00217 \textcolor{stringliteral}{                        :class,}
+00218 \textcolor{stringliteral}{                        :order,}
+00219 \textcolor{stringliteral}{                        :family,}
+00220 \textcolor{stringliteral}{                        :genus);"};
+00221             \}
+00222             \textcolor{keywordflow}{else} \textcolor{keywordflow}{if} ($update) \{
+00223                 $query = \textcolor{stringliteral}{"UPDATE species SET (}
+00224 \textcolor{stringliteral}{                        lsid,}
+00225 \textcolor{stringliteral}{                        scientific\_name,}
+00226 \textcolor{stringliteral}{                        status,}
+00227 \textcolor{stringliteral}{                        valid\_aphia\_id,}
+00228 \textcolor{stringliteral}{                        valid\_name,}
+00229 \textcolor{stringliteral}{                        kingdom,}
+00230 \textcolor{stringliteral}{                        phylum,}
+00231 \textcolor{stringliteral}{                        class,}
+00232 \textcolor{stringliteral}{                        \(\backslash\)"order\(\backslash\)",}
+00233 \textcolor{stringliteral}{                        family,}
+00234 \textcolor{stringliteral}{                        genus}
+00235 \textcolor{stringliteral}{                    ) = (}
+00236 \textcolor{stringliteral}{                        :lsid,}
+00237 \textcolor{stringliteral}{                        :scientific\_name,}
+00238 \textcolor{stringliteral}{                        :status,}
+00239 \textcolor{stringliteral}{                        :valid\_aphia\_id,}
+00240 \textcolor{stringliteral}{                        :valid\_name,}
+00241 \textcolor{stringliteral}{                        :kingdom,}
+00242 \textcolor{stringliteral}{                        :phylum,}
+00243 \textcolor{stringliteral}{                        :class,}
+00244 \textcolor{stringliteral}{                        :order,}
+00245 \textcolor{stringliteral}{                        :family,}
+00246 \textcolor{stringliteral}{                        :genus)}
+00247 \textcolor{stringliteral}{                    WHERE aphia\_id = :aphia\_id;"};
+00248             \}
+00249 
+00250             \textcolor{keywordflow}{if} (!$query) \textcolor{keywordflow}{continue};
+00251 
+00252             \textcolor{keywordflow}{try} \{
+00253                 $sth = $this->dbh->prepare($query);
+00254                 $sth->bindParam(\textcolor{stringliteral}{":aphia\_id"}, $sp->AphiaID, PDO::PARAM\_INT);
+00255                 $sth->bindParam(\textcolor{stringliteral}{":lsid"}, $sp->lsid, PDO::PARAM\_STR);
+00256                 $sth->bindParam(\textcolor{stringliteral}{":scientific\_name"}, $sp->scientificname, 
+      PDO::PARAM\_STR);
+00257                 $sth->bindParam(\textcolor{stringliteral}{":status"}, $sp->status, PDO::PARAM\_STR);
+00258                 $sth->bindParam(\textcolor{stringliteral}{":valid\_aphia\_id"}, $sp->valid\_AphiaID, 
+      PDO::PARAM\_INT);
+00259                 $sth->bindParam(\textcolor{stringliteral}{":valid\_name"}, $sp->valid\_name, PDO::PARAM\_STR)
+      ;
+00260                 $sth->bindParam(\textcolor{stringliteral}{":kingdom"}, $sp->kingdom, PDO::PARAM\_STR);
+00261                 $sth->bindParam(\textcolor{stringliteral}{":phylum"}, $sp->phylum, PDO::PARAM\_STR);
+00262                 $sth->bindParam(\textcolor{stringliteral}{":class"}, $sp->class, PDO::PARAM\_STR);
+00263                 $sth->bindParam(\textcolor{stringliteral}{":order"}, $sp->order, PDO::PARAM\_STR);
+00264                 $sth->bindParam(\textcolor{stringliteral}{":family"}, $sp->family, PDO::PARAM\_STR);
+00265                 $sth->bindParam(\textcolor{stringliteral}{":genus"}, $sp->genus, PDO::PARAM\_STR);
+00266                 $sth->execute();
+00267             \}
+00268             \textcolor{keywordflow}{catch} (Exception $e) \{
+00269                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00270             \}
+00271         \}
+00272 
+00273         \textcolor{comment}{// Commit the transaction.}
+00274         $this->dbh->commit();
+00275     \}
+00276 
+\hypertarget{Database_8php_source_l00286}{}\hyperlink{classDatabase_a5972a2838b98ed0b7816a528ac823bec}{00286}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a5972a2838b98ed0b7816a528ac823bec}{get\_species\_matching}($term, $limit=20) 
+      \{
+00287         \textcolor{keywordflow}{try} \{
+00288             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT * FROM species}
+00289 \textcolor{stringliteral}{                WHERE scientific\_name ~* :term}
+00290 \textcolor{stringliteral}{                ORDER BY scientific\_name}
+00291 \textcolor{stringliteral}{                LIMIT :limit;"});
+00292             $sth->bindParam(\textcolor{stringliteral}{":term"}, $term, PDO::PARAM\_STR);
+00293             $sth->bindParam(\textcolor{stringliteral}{":limit"}, $limit, PDO::PARAM\_INT);
+00294             $sth->execute();
+00295         \}
+00296         \textcolor{keywordflow}{catch} (Exception $e) \{
+00297             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00298         \}
+00299         \textcolor{keywordflow}{return} $sth;
+00300     \}
+00301 
+\hypertarget{Database_8php_source_l00307}{}\hyperlink{classDatabase_a9549b0da67a3ad1f6e2f569d67e107ec}{00307}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a9549b0da67a3ad1f6e2f569d67e107ec}{get\_substrate\_types}() \{
+00308         \textcolor{keywordflow}{try} \{
+00309             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT name FROM substrate\_types ORDER
+       BY name;"});
+00310             $sth->execute();
+00311         \}
+00312         \textcolor{keywordflow}{catch} (Exception $e) \{
+00313             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00314         \}
+00315         \textcolor{keywordflow}{return} $sth;
+00316     \}
+00317 
+\hypertarget{Database_8php_source_l00323}{}\hyperlink{classDatabase_a9470debaa4dbabb3fb87f48c8bece98b}{00323}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a9470debaa4dbabb3fb87f48c8bece98b}{get\_image\_tag\_types}() \{
+00324         \textcolor{keywordflow}{try} \{
+00325             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT name FROM image\_tag\_types ORDER
+       BY name;"});
+00326             $sth->execute();
+00327         \}
+00328         \textcolor{keywordflow}{catch} (Exception $e) \{
+00329             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00330         \}
+00331         \textcolor{keywordflow}{return} $sth;
+00332     \}
+00333 
+\hypertarget{Database_8php_source_l00340}{}\hyperlink{classDatabase_a231a45ee6f3292841b5b1272d5fac725}{00340}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a231a45ee6f3292841b5b1272d5fac725}{get\_vectors}($image\_id) \{
+00341         \textcolor{keywordflow}{try} \{
+00342             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT v.vector\_id,}
+00343 \textcolor{stringliteral}{                v.vector\_wkt,}
+00344 \textcolor{stringliteral}{                v.aphia\_id,}
+00345 \textcolor{stringliteral}{                s.scientific\_name}
+00346 \textcolor{stringliteral}{            FROM vectors v}
+00347 \textcolor{stringliteral}{                -- OUTER JOIN because unassigned vectors should be returned}
+00348 \textcolor{stringliteral}{                -- as well}
+00349 \textcolor{stringliteral}{                LEFT OUTER JOIN species s ON v.aphia\_id = s.aphia\_id}
+00350 \textcolor{stringliteral}{            WHERE v.image\_info\_id = :image\_id;"});
+00351             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00352             $sth->execute();
+00353         \}
+00354         \textcolor{keywordflow}{catch} (Exception $e) \{
+00355             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00356         \}
+00357         \textcolor{keywordflow}{return} $sth;
+00358     \}
+00359 
+\hypertarget{Database_8php_source_l00366}{}\hyperlink{classDatabase_a9cbb05bd40bab06c6d1900b9e1905613}{00366}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a9cbb05bd40bab06c6d1900b9e1905613}{save\_vectors}($vectors) \{
+00367         global $member;
+00368 
+00369         \textcolor{comment}{// Get user info.}
+00370         $user = $member->data();
+00371 
+00372         \textcolor{comment}{// Start a database transaction.}
+00373         $this->dbh->beginTransaction();
+00374 
+00375         \textcolor{keywordflow}{foreach} ($vectors as $i => $vector) \{
+00376             \textcolor{comment}{// Check if this particular vector already exists in the database.}
+00377             \textcolor{keywordflow}{try} \{
+00378                 $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT id FROM vectors}
+00379 \textcolor{stringliteral}{                    WHERE image\_info\_id = :image\_id}
+00380 \textcolor{stringliteral}{                        AND vector\_id = :vector\_id;"});
+00381                 $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $vector[\textcolor{stringliteral}{'image\_id'}], 
+      PDO::PARAM\_INT);
+00382                 $sth->bindParam(\textcolor{stringliteral}{":vector\_id"}, $vector[\textcolor{stringliteral}{'id'}], PDO::PARAM\_STR);
+00383                 $sth->execute();
+00384             \}
+00385             \textcolor{keywordflow}{catch} (Exception $e) \{
+00386                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00387             \}
+00388             $row = $sth->fetch();
+00389             $vector\_id = $row ? $row[0] : NULL;
+00390 
+00391             \textcolor{comment}{// Handle vectors not assigned to a species.}
+00392             \textcolor{comment}{// The ( !is\_int() && !ctype\_digit() ) part is for checking numeric}
+00393             \textcolor{comment}{// strings.}
+00394             \textcolor{keywordflow}{if} ( !isset($vector[\textcolor{stringliteral}{'aphia\_id'}]) || ( !is\_int($vector[\textcolor{stringliteral}{'aphia\_id'}]) 
+      && !ctype\_digit($vector[\textcolor{stringliteral}{'aphia\_id'}]) ) ) \{
+00395                 $vector[\textcolor{stringliteral}{'aphia\_id'}] = NULL;
+00396                 $vector[\textcolor{stringliteral}{'species\_name'}] = NULL;
+00397             \}
+00398 
+00399             \textcolor{comment}{// Save or update vector.}
+00400             \textcolor{keywordflow}{if} ( is\_null($vector\_id) ) \{
+00401                 $query = \textcolor{stringliteral}{"INSERT INTO vectors (}
+00402 \textcolor{stringliteral}{                        image\_info\_id,}
+00403 \textcolor{stringliteral}{                        aphia\_id,}
+00404 \textcolor{stringliteral}{                        vector\_id,}
+00405 \textcolor{stringliteral}{                        vector\_wkt,}
+00406 \textcolor{stringliteral}{                        area\_pixels,}
+00407 \textcolor{stringliteral}{                        area\_m2,}
+00408 \textcolor{stringliteral}{                        created\_by,}
+00409 \textcolor{stringliteral}{                        remarks)}
+00410 \textcolor{stringliteral}{                    VALUES (}
+00411 \textcolor{stringliteral}{                        :image\_id,}
+00412 \textcolor{stringliteral}{                        :aphia\_id,}
+00413 \textcolor{stringliteral}{                        :id,}
+00414 \textcolor{stringliteral}{                        :vector\_wkt,}
+00415 \textcolor{stringliteral}{                        :area\_pixels,}
+00416 \textcolor{stringliteral}{                        :area\_m2,}
+00417 \textcolor{stringliteral}{                        :user\_id,}
+00418 \textcolor{stringliteral}{                        :species\_name);"};
+00419             \}
+00420             \textcolor{keywordflow}{else} \{
+00421                 $query = \textcolor{stringliteral}{"UPDATE vectors SET (}
+00422 \textcolor{stringliteral}{                        aphia\_id,}
+00423 \textcolor{stringliteral}{                        vector\_wkt,}
+00424 \textcolor{stringliteral}{                        area\_pixels,}
+00425 \textcolor{stringliteral}{                        area\_m2,}
+00426 \textcolor{stringliteral}{                        updated\_by,}
+00427 \textcolor{stringliteral}{                        updated\_on,}
+00428 \textcolor{stringliteral}{                        remarks}
+00429 \textcolor{stringliteral}{                    ) = (}
+00430 \textcolor{stringliteral}{                        :aphia\_id,}
+00431 \textcolor{stringliteral}{                        :vector\_wkt,}
+00432 \textcolor{stringliteral}{                        :area\_pixels,}
+00433 \textcolor{stringliteral}{                        :area\_m2,}
+00434 \textcolor{stringliteral}{                        :user\_id,}
+00435 \textcolor{stringliteral}{                        NOW(),}
+00436 \textcolor{stringliteral}{                        :species\_name)}
+00437 \textcolor{stringliteral}{                    WHERE image\_info\_id = :image\_id}
+00438 \textcolor{stringliteral}{                        AND vector\_id = :id;"};
+00439             \}
+00440             \textcolor{keywordflow}{try} \{
+00441                 $sth = $this->dbh->prepare($query);
+00442                 $sth->bindParam(\textcolor{stringliteral}{":id"}, $vector[\textcolor{stringliteral}{'id'}], PDO::PARAM\_STR);
+00443                 $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $vector[\textcolor{stringliteral}{'image\_id'}], 
+      PDO::PARAM\_INT);
+00444                 $sth->bindParam(\textcolor{stringliteral}{":aphia\_id"}, $vector[\textcolor{stringliteral}{'aphia\_id'}], 
+      PDO::PARAM\_INT);
+00445                 $sth->bindParam(\textcolor{stringliteral}{":vector\_wkt"}, $vector[\textcolor{stringliteral}{'vector\_wkt'}], 
+      PDO::PARAM\_STR);
+00446                 $sth->bindParam(\textcolor{stringliteral}{":area\_pixels"}, $vector[\textcolor{stringliteral}{'area\_pixels'}], 
+      PDO::PARAM\_INT);
+00447                 $sth->bindParam(\textcolor{stringliteral}{":area\_m2"}, $vector[\textcolor{stringliteral}{'area\_m2'}], PDO::PARAM\_STR)
+      ;
+00448                 $sth->bindParam(\textcolor{stringliteral}{":user\_id"}, $user->id, PDO::PARAM\_STR);
+00449                 $sth->bindParam(\textcolor{stringliteral}{":species\_name"}, $vector[\textcolor{stringliteral}{'species\_name'}], 
+      PDO::PARAM\_STR);
+00450                 $sth->execute();
+00451             \}
+00452             \textcolor{keywordflow}{catch} (Exception $e) \{
+00453                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00454             \}
+00455         \}
+00456 
+00457         \textcolor{comment}{// Commit the transaction.}
+00458         $this->dbh->commit();
+00459     \}
+00460 
+00461     \textcolor{keyword}{public} \textcolor{keyword}{function} delete\_vector($image\_id, $vector\_id) \{
+00462         \textcolor{keywordflow}{try} \{
+00463             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"DELETE FROM vectors}
+00464 \textcolor{stringliteral}{            WHERE image\_info\_id = :image\_id}
+00465 \textcolor{stringliteral}{                AND vector\_id = :vector\_id;"});
+00466             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00467             $sth->bindParam(\textcolor{stringliteral}{":vector\_id"}, $vector\_id, PDO::PARAM\_STR);
+00468             $sth->execute();
+00469         \}
+00470         \textcolor{keywordflow}{catch} (Exception $e) \{
+00471             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00472         \}
+00473     \}
+00474 
+\hypertarget{Database_8php_source_l00484}{}\hyperlink{classDatabase_a0fba6ad55208137b25381d4b73954c2c}{00484}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a0fba6ad55208137b25381d4b73954c2c}{set\_areas\_image\_grouped}() \{
+00485         \textcolor{comment}{// Start a database transaction.}
+00486         $this->dbh->beginTransaction();
+00487 
+00488         \textcolor{keywordflow}{try} \{
+00489             $sth = $this->dbh->exec(\textcolor{stringliteral}{"TRUNCATE areas\_image\_grouped;"});
+00490         \}
+00491         \textcolor{keywordflow}{catch} (Exception $e) \{
+00492             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00493         \}
+00494 
+00495         \textcolor{keywordflow}{try} \{
+00496             $sth = $this->dbh->exec(\textcolor{stringliteral}{"INSERT INTO areas\_image\_grouped
+       (image\_info\_id,aphia\_id,vector\_count,species\_area,image\_area)}
+00497 \textcolor{stringliteral}{                SELECT i.id,}
+00498 \textcolor{stringliteral}{                    s.aphia\_id,}
+00499 \textcolor{stringliteral}{                    count(v.id),}
+00500 \textcolor{stringliteral}{                    sum(v.area\_m2),}
+00501 \textcolor{stringliteral}{                    i.img\_area}
+00502 \textcolor{stringliteral}{                FROM vectors v}
+00503 \textcolor{stringliteral}{                    INNER JOIN species s ON s.aphia\_id = v.aphia\_id}
+00504 \textcolor{stringliteral}{                    INNER JOIN image\_info i ON i.id = v.image\_info\_id}
+00505 \textcolor{stringliteral}{                GROUP BY i.id, s.aphia\_id;"});
+00506         \}
+00507         \textcolor{keywordflow}{catch} (Exception $e) \{
+00508             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00509         \}
+00510 
+00511         \textcolor{comment}{// Commit the transaction.}
+00512         $this->dbh->commit();
+00513     \}
+00514 
+\hypertarget{Database_8php_source_l00521}{}\hyperlink{classDatabase_afa6f84f0b79f0be0b4a81e9898c2b3e7}{00521}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_afa6f84f0b79f0be0b4a81e9898c2b3e7}{set\_areas}() \{
+00522         \textcolor{keywordflow}{try} \{
+00523             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT id, altitude FROM image\_info}
+00524 \textcolor{stringliteral}{                WHERE area IS NULL;"});
+00525             $sth->execute();
+00526         \}
+00527         \textcolor{keywordflow}{catch} (Exception $e) \{
+00528             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00529         \}
+00530 
+00531         \textcolor{comment}{// Start a database transaction.}
+00532         $this->dbh->beginTransaction();
+00533 
+00534         $count = 0;
+00535         \textcolor{keywordflow}{while} ( $row = $sth->fetch(PDO::FETCH\_ASSOC) ) \{
+00536             $area = MaSIS::get\_area\_from\_altitude($row[\textcolor{stringliteral}{'altitude'}]);
+00537 
+00538             \textcolor{keywordflow}{try} \{
+00539                 $sth2 = $this->dbh->prepare(\textcolor{stringliteral}{"UPDATE image\_info SET area = :area}
+00540 \textcolor{stringliteral}{                    WHERE id = :id;"});
+00541                 $sth2->bindParam(\textcolor{stringliteral}{":area"}, $area, PDO::PARAM\_STR);
+00542                 $sth2->bindParam(\textcolor{stringliteral}{":id"}, $row[\textcolor{stringliteral}{'id'}], PDO::PARAM\_INT);
+00543                 $sth2->execute();
+00544             \}
+00545             \textcolor{keywordflow}{catch} (Exception $e) \{
+00546                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00547             \}
+00548             $count++;
+00549         \}
+00550 
+00551         \textcolor{comment}{// Commit the transaction.}
+00552         $this->dbh->commit();
+00553         \textcolor{keywordflow}{return} $count;
+00554     \}
+00555 
+\hypertarget{Database_8php_source_l00562}{}\hyperlink{classDatabase_a4e89aa8e1053f8753a22572f65e0d2be}{00562}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a4e89aa8e1053f8753a22572f65e0d2be}{set\_annotation\_status}($image\_id, 
+      $status) \{
+00563         \textcolor{keywordflow}{try} \{
+00564             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT annotation\_status}
+00565 \textcolor{stringliteral}{                FROM image\_annotation\_status WHERE image\_info\_id = :image\_id;"})
+      ;
+00566             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00567             $sth->execute();
+00568         \}
+00569         \textcolor{keywordflow}{catch} (Exception $e) \{
+00570             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00571         \}
+00572         $row = $sth->fetch();
+00573         $annotation\_status = $row ? $row[0] : NULL;
+00574 
+00575         \textcolor{comment}{// If the status is already set to the same value, do nothing.}
+00576         \textcolor{keywordflow}{if} ($annotation\_status == $status) \textcolor{keywordflow}{return};
+00577 
+00578         \textcolor{comment}{// Set the new record or update the existing.}
+00579         \textcolor{keywordflow}{if} ($annotation\_status == NULL) \{
+00580             $query = \textcolor{stringliteral}{"INSERT INTO image\_annotation\_status VALUES (:image\_id,
+       :status);"};
+00581         \}
+00582         \textcolor{keywordflow}{else} \{
+00583             $query = \textcolor{stringliteral}{"UPDATE image\_annotation\_status SET annotation\_status =
+       :status}
+00584 \textcolor{stringliteral}{                WHERE image\_info\_id = :image\_id;"};
+00585         \}
+00586         \textcolor{keywordflow}{try} \{
+00587             $sth = $this->dbh->prepare($query);
+00588             $sth->bindParam(\textcolor{stringliteral}{":status"}, $status, PDO::PARAM\_STR);
+00589             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00590             $sth->execute();
+00591         \}
+00592         \textcolor{keywordflow}{catch} (Exception $e) \{
+00593             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00594         \}
+00595     \}
+00596 
+\hypertarget{Database_8php_source_l00603}{}\hyperlink{classDatabase_adf48d605dd4622b07cc9a7f548cc5917}{00603}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_adf48d605dd4622b07cc9a7f548cc5917}{get\_substrate\_annotations}(
+      $image\_id) \{
+00604         \textcolor{keywordflow}{try} \{
+00605             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT substrate\_type, dominance}
+00606 \textcolor{stringliteral}{                FROM image\_substrate}
+00607 \textcolor{stringliteral}{                WHERE image\_info\_id = :image\_id;"});
+00608             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00609             $sth->execute();
+00610         \}
+00611         \textcolor{keywordflow}{catch} (Exception $e) \{
+00612             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00613         \}
+00614         \textcolor{keywordflow}{return} $sth;
+00615     \}
+00616 
+\hypertarget{Database_8php_source_l00623}{}\hyperlink{classDatabase_a1e9b6dcb97dbec39092dc887db9242b2}{00623}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a1e9b6dcb97dbec39092dc887db9242b2}{get\_image\_tags}($image\_id) \{
+00624         \textcolor{keywordflow}{try} \{
+00625             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"SELECT image\_tag}
+00626 \textcolor{stringliteral}{                FROM image\_tags}
+00627 \textcolor{stringliteral}{                WHERE image\_info\_id = :image\_id;"});
+00628             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00629             $sth->execute();
+00630         \}
+00631         \textcolor{keywordflow}{catch} (Exception $e) \{
+00632             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00633         \}
+00634         \textcolor{keywordflow}{return} $sth;
+00635     \}
+00636 
+\hypertarget{Database_8php_source_l00645}{}\hyperlink{classDatabase_a241720daf5ac8d79ce1283898c0a7da3}{00645}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a241720daf5ac8d79ce1283898c0a7da3}{set\_substrate\_annotations}(
+      $image\_id, $annotations) \{
+00646         \textcolor{comment}{// Start a database transaction.}
+00647         $this->dbh->beginTransaction();
+00648 
+00649         \textcolor{comment}{// Delete all substrate annotations for this image.}
+00650         \textcolor{keywordflow}{try} \{
+00651             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"DELETE FROM image\_substrate WHERE
+       image\_info\_id = :image\_id;"});
+00652             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00653             $sth->execute();
+00654         \}
+00655         \textcolor{keywordflow}{catch} (Exception $e) \{
+00656             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00657         \}
+00658 
+00659         \textcolor{comment}{// Set the new substrate annotations.}
+00660         \textcolor{keywordflow}{foreach} ( $annotations as $dominance => $substrates ) \{
+00661             \textcolor{comment}{// Check if the dominance is set ok.}
+00662             \textcolor{keywordflow}{if} ( !in\_array($dominance, array(\textcolor{stringliteral}{'dominant'},\textcolor{stringliteral}{'subdominant'})) ) \{
+00663                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception(\textcolor{stringliteral}{"Invalid dominance type. Must be 'dominant'
+       or 'subdominant', but got '\{$dominance\}'."});
+00664             \}
+00665 
+00666             \textcolor{keywordflow}{foreach} ( $substrates as $substrate\_type ) \{
+00667                 \textcolor{keywordflow}{try} \{
+00668                     $sth = $this->dbh->prepare(\textcolor{stringliteral}{"INSERT INTO image\_substrate
+       VALUES (:image\_id, :substrate\_type, :dominance);"});
+00669                     $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00670                     $sth->bindParam(\textcolor{stringliteral}{":substrate\_type"}, $substrate\_type, 
+      PDO::PARAM\_INT);
+00671                     $sth->bindParam(\textcolor{stringliteral}{":dominance"}, $dominance, PDO::PARAM\_STR);
+00672                     $sth->execute();
+00673                 \}
+00674                 \textcolor{keywordflow}{catch} (Exception $e) \{
+00675                     \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00676                 \}
+00677             \}
+00678         \}
+00679 
+00680         \textcolor{comment}{// Commit the transaction.}
+00681         $this->dbh->commit();
+00682     \}
+00683 
+\hypertarget{Database_8php_source_l00690}{}\hyperlink{classDatabase_a19ba63b5a89bb24232cd474c54b4f731}{00690}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classDatabase_a19ba63b5a89bb24232cd474c54b4f731}{set\_image\_tags}($image\_id, $tags) \{
+00691         \textcolor{comment}{// Start a database transaction.}
+00692         $this->dbh->beginTransaction();
+00693 
+00694         \textcolor{comment}{// Delete all tags for this image.}
+00695         \textcolor{keywordflow}{try} \{
+00696             $sth = $this->dbh->prepare(\textcolor{stringliteral}{"DELETE FROM image\_tags WHERE
+       image\_info\_id = :image\_id;"});
+00697             $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00698             $sth->execute();
+00699         \}
+00700         \textcolor{keywordflow}{catch} (Exception $e) \{
+00701             \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00702         \}
+00703 
+00704         \textcolor{comment}{// Set the new substrate annotations.}
+00705         \textcolor{keywordflow}{foreach} ( $tags as $tag ) \{
+00706             \textcolor{keywordflow}{try} \{
+00707                 $sth = $this->dbh->prepare(\textcolor{stringliteral}{"INSERT INTO image\_tags VALUES
+       (:image\_id, :tag);"});
+00708                 $sth->bindParam(\textcolor{stringliteral}{":image\_id"}, $image\_id, PDO::PARAM\_INT);
+00709                 $sth->bindParam(\textcolor{stringliteral}{":tag"}, $tag, PDO::PARAM\_INT);
+00710                 $sth->execute();
+00711             \}
+00712             \textcolor{keywordflow}{catch} (Exception $e) \{
+00713                 \textcolor{keywordflow}{throw} \textcolor{keyword}{new} Exception( $e->getMessage() );
+00714             \}
+00715         \}
+00716 
+00717         \textcolor{comment}{// Commit the transaction.}
+00718         $this->dbh->commit();
+00719     \}
+00720 \}
+\end{DoxyCode}

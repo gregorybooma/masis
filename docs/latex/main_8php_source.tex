@@ -1,0 +1,369 @@
+\hypertarget{main_8php}{\subsection{main.\-php}
+\label{main_8php}\index{pages/main.\-php@{pages/main.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 $user = $member->data();
+00003 ?>
+00004 <!DOCTYPE html PUBLIC \textcolor{stringliteral}{"-//W3C//DTD XHTML 1.1//EN"} \textcolor{stringliteral}{"
+      http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"}>
+00005 <html xmlns=\textcolor{stringliteral}{"http://www.w3.org/1999/xhtml"} xml:lang=\textcolor{stringliteral}{"en"} lang=\textcolor{stringliteral}{"en"} dir=\textcolor{stringliteral}{"ltr"}>
+00006   <head>
+00007     <meta http-equiv=\textcolor{stringliteral}{"content-type"} content=\textcolor{stringliteral}{"text/html; charset=utf-8"} />
+00008     <title>MaSIS &mdash; Marine Species Identification System</title>
+00009     <!-- stylesheets: -->
+00010     <link rel=\textcolor{stringliteral}{"stylesheet"} href=\textcolor{stringliteral}{"resources/openlayers/theme/default/style.css"} 
+      type=\textcolor{stringliteral}{"text/css"} />
+00011     <link rel=\textcolor{stringliteral}{"stylesheet"} href=\textcolor{stringliteral}{"resources/jquery.filetree/jquery.filetree.css"}
+       type=\textcolor{stringliteral}{"text/css"} />
+00012     <link rel=\textcolor{stringliteral}{"stylesheet"} href=\textcolor{stringliteral}{"
+      resources/jquery.ui/themes/benthic/jquery-ui.css"} type=\textcolor{stringliteral}{"text/css"} />
+00013     <link rel=\textcolor{stringliteral}{"stylesheet"} href=\textcolor{stringliteral}{"
+      resources/jquery.datatables/css/jquery.dataTables\_themeroller.css"} type=\textcolor{stringliteral}{"text/css"} />
+00014     <link rel=\textcolor{stringliteral}{"stylesheet"} href=\textcolor{stringliteral}{"styles/main.css"} type=\textcolor{stringliteral}{"text/css"} />
+00015     <!-- javascripts: -->
+00016     <script src=\textcolor{stringliteral}{"resources/underscore/underscore-min.js"} type=\textcolor{stringliteral}{"text/javascript"}
+      ></script>
+00017     <script src=\textcolor{stringliteral}{"resources/jquery/jquery.min.js"} type=\textcolor{stringliteral}{"text/javascript"}></
+      script>
+00018     <script src=\textcolor{stringliteral}{"resources/jquery.ui/jquery-ui.min.js"} type=\textcolor{stringliteral}{"text/javascript"}><
+      /script>
+00019     <script src=\textcolor{stringliteral}{"resources/jquery.filetree/jquery.filetree.js"} type=\textcolor{stringliteral}{"
+      text/javascript"}></script>
+00020     <script src=\textcolor{stringliteral}{"resources/jquery.datatables/jquery.dataTables.min.js"} type=\textcolor{stringliteral}{"
+      text/javascript"}></script>
+00021     <script src=\textcolor{stringliteral}{"resources/openlayers/lib/OpenLayers.js"} type=\textcolor{stringliteral}{"text/javascript"}
+      ></script>
+00022     <script src=\textcolor{stringliteral}{"resources/masis/masis.std.js"} type=\textcolor{stringliteral}{"text/javascript"}></script>
+00023     <script src=\textcolor{stringliteral}{"resources/masis/masis.core.js"} type=\textcolor{stringliteral}{"text/javascript"}></script
+      >
+00024   </head>
+00025   <body>
+00026     <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"content-wrapper"}>
+00027 
+00028     <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"header"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"clearfix"}>
+00029         <h1>MaSIS</h1>
+00030         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"user"}>
+00031             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"user-options"}>
+00032                 <ul>
+00033                     <li>Hello, <?php print $user->first\_name; ?></li>
+00034                     <li><a href=\textcolor{stringliteral}{"?p=logout"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"}>Logout</a></li>
+00035                 </ul>
+00036             </div>
+00037         </div>
+00038     </div>
+00039 
+00040     <!-- tabs -->
+00041     <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"tabs"}>
+00042         <ul>
+00043             <li><a href=\textcolor{stringliteral}{"#tab-workspace"}>Workspace</a></li>
+00044             <li><a href=\textcolor{stringliteral}{"#tab-manager"}>Manager</a></li>
+00045             <li><a href=\textcolor{stringliteral}{"#tab-statistics"}>Statistics</a></li>
+00046         </ul>
+00047 
+00048         <!-- tab workspace -->
+00049         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"tab-workspace"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"clearfix"}>
+00050 
+00051             <!-- sidebar-left -->
+00052             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"sidebar-left"}>
+00053                 <!-- controls -->
+00054                 <div>
+00055                     <h1><a href=\textcolor{stringliteral}{"#"}>Controls</a></h1>
+00056                     <div>
+00057                         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"feature-controls"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"control-buttons"}>
+00058                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"none"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{
+      "navigateToggle"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} checked=\textcolor{stringliteral}{"checked"} />
+00059                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"navigateToggle"}>Navigate</label>
+00060                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"polygon"} \textcolor{keywordtype}{
+      id}=\textcolor{stringliteral}{"selectToggle"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} />
+00061                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"selectToggle"}>Select</label>
+00062                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"annotate"}
+       \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"annotateToggle"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} />
+00063                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"annotateToggle"}>Annotate</label>
+00064                             <span \textcolor{keyword}{class}=\textcolor{stringliteral}{"section"}>Modify selections:</span>
+00065                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"modify"} \textcolor{keywordtype}{
+      id}=\textcolor{stringliteral}{"transformToggle"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} />
+00066                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"transformToggle"}>Transform</label>
+00067                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"modify"} \textcolor{keywordtype}{
+      id}=\textcolor{stringliteral}{"rotateToggle"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} />
+00068                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"rotateToggle"}>Rotate</label>
+00069                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"modify"} \textcolor{keywordtype}{
+      id}=\textcolor{stringliteral}{"resizeToggle"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} />
+00070                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"resizeToggle"}>Resize</label>
+00071                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"drag"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{
+      "dragToggle"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} />
+00072                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"dragToggle"}>Drag</label>
+00073                             <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"control"} value=\textcolor{stringliteral}{"remove"} \textcolor{keywordtype}{
+      id}=\textcolor{stringliteral}{"removePolygon"} onclick=\textcolor{stringliteral}{"toggleControl(this);"} />
+00074                             <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"removePolygon"}>Delete</label>
+00075                         </div>
+00076                     </div>
+00077                 </div>
+00078                 <!-- end controls -->
+00079 
+00080                 <!-- layer switcher -->
+00081                 <div>
+00082                     <h1><a href=\textcolor{stringliteral}{"#"}>Layers</a></h1>
+00083                     <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"olControlLayerSwitcher"}></div>
+00084                 </div>
+00085                 <!-- end layer switcher -->
+00086 
+00087                 <!-- photo library -->
+00088                 <div>
+00089                     <h1><a href=\textcolor{stringliteral}{"#"}>Photo Library</a></h1>
+00090                     <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"photo-library"}></div>
+00091                 </div>
+00092                 <!-- end photo library -->
+00093             </div>
+00094             <!-- end sidebar-left -->
+00095 
+00096             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"content"}>
+00097                 <!-- buttons -->
+00098                 <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"workspace-buttons"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"action-buttons"}>
+00099                     <ul>
+00100                         <li><a href=\textcolor{stringliteral}{"#"} onclick=\textcolor{stringliteral}{"onSaveSelections(); return
+       false;"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"}>Save Selections</a></li>
+00101                         <li><a href=\textcolor{stringliteral}{"#"} onclick=\textcolor{stringliteral}{"onAnnotateImage(); return
+       false;"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"}>Annotate Image</a></li>
+00102                         <li><a href=\textcolor{stringliteral}{"#"} onclick=\textcolor{stringliteral}{"onShowImageInformation();
+       return false;"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"}>Image Information</a></li>
+00103                     </ul>
+00104                 </div>
+00105                 <!-- end buttons -->
+00106 
+00107                 <!-- map -->
+00108                 <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"map"}></div>
+00109                 <!-- end map -->
+00110 
+00111                 <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"context-controls"}>
+00112                     <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"polygon-controls"}>
+00113                         <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"polygon"} value=\textcolor{stringliteral}{"custom"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"
+      polygonCustom"} checked=\textcolor{stringliteral}{"checked"} onchange=\textcolor{stringliteral}{"setPolygonControl(this)"} />
+00114                         <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"polygonCustom"}>Custom</label>
+00115                         <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"polygon"} value=\textcolor{stringliteral}{"square"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"
+      polygonSquare"} onchange=\textcolor{stringliteral}{"setPolygonControl(this)"} />
+00116                         <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"polygonSquare"}>Square</label>
+00117                         <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"polygon"} value=\textcolor{stringliteral}{"pentagon"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{
+      "polygonPentagon"} onchange=\textcolor{stringliteral}{"setPolygonControl(this)"} />
+00118                         <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"polygonPentagon"}>Pentagon</label>
+00119                         <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"polygon"} value=\textcolor{stringliteral}{"hexagon"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"
+      polygonHexagon"} onchange=\textcolor{stringliteral}{"setPolygonControl(this)"} />
+00120                         <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"polygonHexagon"}>Hexagon</label>
+00121                         <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"polygon"} value=\textcolor{stringliteral}{"circle"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"
+      polygonCircle"} onchange=\textcolor{stringliteral}{"setPolygonControl(this)"} />
+00122                         <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"polygonCircle"}>Circle</label>
+00123                     </div>
+00124                 </div>
+00125 
+00126             </div> <!-- end content -->
+00127 
+00128         </div>
+00129         <!-- end tab workspace -->
+00130 
+00131         <!-- tab manager -->
+00132         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"tab-manager"}>
+00133             <h1>Manager</h1>
+00134 
+00135             <h2>Images with unassigned selections</h2>
+00136             <p>Images with selections that are not assigned to a species.</p>
+00137             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"images-unassigned-vectors"}>Loading...</div>
+00138 
+00139             <h2>Images flagged \textcolor{keywordflow}{for} review</h2>
+00140             <p>Images that need to be reviewed.</p>
+00141             <p>To mark an image as \textcolor{stringliteral}{"reviewed"}, \textcolor{keyword}{remove} the
+00142             <span \textcolor{keyword}{class}=\textcolor{stringliteral}{"tag"}>flag \textcolor{keywordflow}{for} review</span> tag and add the <span \textcolor{keyword}{
+      class}=\textcolor{stringliteral}{"tag"}>reviewed</span>
+00143             tag in the Annotate Image dialog.</p>
+00144             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"images-need-review"}>Loading...</div>
+00145 
+00146             <h2>Highlighted Images</h2>
+00147             <p>Images of special interest.</p>
+00148             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"images-highlighted"}>Loading...</div>
+00149 
+00150             <h2>Images with unaccepted species</h2>
+00151             <p>Images with annotations of unaccepted Aphia species records.</p>
+00152             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"images-species-unaccepted"}>Loading...</div>
+00153         </div>
+00154         <!-- end tab manager -->
+00155 
+00156         <!-- tab statistics -->
+00157         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"tab-statistics"}>
+00158             <h1>Species coverage</h1>
+00159 
+00160             <h2>Overall coverage</h2>
+00161             <p>Coverage based on all annotated images. Only images \textcolor{keywordflow}{for} which
+00162             the annotation status is \textcolor{keyword}{set} to \textcolor{stringliteral}{"Complete"} are included in the
+00163             calculation.</p>
+00164             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"species-coverage-overall"}>Loading...</div>
+00165 
+00166             <h2>Coverage where present</h2>
+00167             <p>Coverage based on images where the species was found.</p>
+00168             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"species-coverage-where-present"}>Loading...</div>
+00169 
+00170             <h2>Export</h2>
+00171             <p>The forms below allow you to export species coverage data to
+00172             CSV data files. Only images \textcolor{keywordflow}{for} which the annotation status is \textcolor{keyword}{set}
+00173             to \textcolor{stringliteral}{"Complete"} are included. Images tagged as
+00174             <span \textcolor{keyword}{class}=\textcolor{stringliteral}{"tag"}>unusable</span> or similar are excluded.</p>
+00175 
+00176             <form action=\textcolor{stringliteral}{"load.php"} method=\textcolor{stringliteral}{"get"} target=\textcolor{stringliteral}{"\_blank"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"
+      export-coverage-two-species"}>
+00177             <input type=\textcolor{stringliteral}{"hidden"} name=\textcolor{stringliteral}{"do"} value=\textcolor{stringliteral}{"export\_coverage\_two\_species"} 
+      />
+00178             <input type=\textcolor{stringliteral}{"hidden"} name=\textcolor{stringliteral}{"reset\_areas"} value=\textcolor{stringliteral}{"1"} />
+00179             <fieldset>
+00180                 <legend>Species coverage per image</legend>
+00181                 <p>Export the species selections count and species
+00182                 coverage/m<sup>2</sup> \textcolor{keywordflow}{for} two species per image.</p>
+00183                 <p><label>Aphia ID Species A: <br/><input type=\textcolor{stringliteral}{"text"} name=\textcolor{stringliteral}{"
+      aphia\_id1"} size=\textcolor{stringliteral}{"30"} value=\textcolor{stringliteral}{""} placeholder=\textcolor{stringliteral}{"Enter species name..."}></label></p>
+00184                 <p><label>Aphia ID Species B: <br/><input type=\textcolor{stringliteral}{"text"} name=\textcolor{stringliteral}{"
+      aphia\_id2"} size=\textcolor{stringliteral}{"30"} value=\textcolor{stringliteral}{""} placeholder=\textcolor{stringliteral}{"Enter species name..."}></label></p>
+00185                 <p><label><input type=\textcolor{stringliteral}{"checkbox"} name=\textcolor{stringliteral}{"and"} value=\textcolor{stringliteral}{"1"} /> Only 
+      include images where both species are present</label></p>
+00186                 <p><label>Dominant substrate types to exclude: <img src=\textcolor{stringliteral}{"
+      /styles/images/icons/help.png"} title=\textcolor{stringliteral}{"Separate multiple types by a comma (e.g.
+       sand,mud)"} /><br/><input type=\textcolor{stringliteral}{"text"} name=\textcolor{stringliteral}{"exclude\_dominant\_substrates"} size=\textcolor{stringliteral}{"30"} value
+      =\textcolor{stringliteral}{""}></label></p>
+00187                 <p><input type=\textcolor{stringliteral}{"submit"} value=\textcolor{stringliteral}{"Export"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"} /></p>
+00188             </fieldset>
+00189             </form>
+00190         </div>
+00191         <!-- end tab statistics -->
+00192 
+00193     </div> <!-- end tabs -->
+00194     </div> <!-- end content-wrapper -->
+00195 
+00196     <!-- dialogs -->
+00197     <div \textcolor{keyword}{class}=\textcolor{stringliteral}{"hidden"}>
+00198         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-on-save-selections"} title=\textcolor{stringliteral}{"Save selections?"}>
+00199             <p><span \textcolor{keyword}{class}=\textcolor{stringliteral}{"ui-icon ui-icon-alert"} style=\textcolor{stringliteral}{"float:left; margin:0
+       7px 20px 0;"}></span>You are about to save all selections. Continue?</p>
+00200         </div>
+00201 
+00202         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-remove-selection"} title=\textcolor{stringliteral}{"Remove selection?"}>
+00203             <p><span \textcolor{keyword}{class}=\textcolor{stringliteral}{"ui-icon ui-icon-alert"} style=\textcolor{stringliteral}{"float:left; margin:0
+       7px 20px 0;"}></span>The selection will be permanently deleted. Are you sure?</p>
+00204         </div>
+00205 
+00206         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-selections-save-success"} title=\textcolor{stringliteral}{"Selections saved"}>
+00207             <p><span \textcolor{keyword}{class}=\textcolor{stringliteral}{"ui-icon ui-icon-circle-check"} style=\textcolor{stringliteral}{"float:left;
+       margin:0 7px 20px 0;"}></span>All selections have been saved.</p>
+00208         </div>
+00209 
+00210         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"error-dialogs"}>
+00211             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-unknown-error"} title=\textcolor{stringliteral}{"Error"}>
+00212                 <p><span \textcolor{keyword}{class}=\textcolor{stringliteral}{"ui-icon ui-icon-circle-close"} style=\textcolor{stringliteral}{"
+      float:left; margin:0 7px 20px 0;"}></span>An unknown error has occured. Please contact the 
+      website administrator about \textcolor{keyword}{this} problem.</p>
+00213             </div>
+00214 
+00215             <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-error-image-area-unknown"} title=\textcolor{stringliteral}{"Error"}>
+00216                 <p><span \textcolor{keyword}{class}=\textcolor{stringliteral}{"ui-icon ui-icon-circle-close"} style=\textcolor{stringliteral}{"
+      float:left; margin:0 7px 20px 0;"}></span>The area \textcolor{keywordflow}{for} \textcolor{keyword}{this} image is unknown. Cannot work 
+      with \textcolor{keyword}{this} image.</p>
+00217             </div>
+00218         </div>
+00219 
+00220         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-assign-species"} title=\textcolor{stringliteral}{"Assign species"}>
+00221             <p>To assign a species to the selection, enter a species name in 
+      the search
+00222             field and wait \textcolor{keywordflow}{for} a list of matches to appear. Select a species 
+      from
+00223             the list to assign the species.</p>
+00224             <p>When searching by common name, enter the full name.</p>
+00225             <form>
+00226             <fieldset>
+00227                 <legend>Select species</legend>
+00228                 <p>
+00229                     <select name=\textcolor{stringliteral}{"searchpar"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"select-species-worms-searchpar
+      "}>
+00230                         <option value=\textcolor{stringliteral}{"0"} selected>Scientific Name</option>
+00231                         <option value=\textcolor{stringliteral}{"1"}>Common Name</option>
+00232                     </select>
+00233                     <input type=\textcolor{stringliteral}{"text"} name=\textcolor{stringliteral}{"select-species"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"select-species
+      "} size=\textcolor{stringliteral}{"50"} value=\textcolor{stringliteral}{""} placeholder=\textcolor{stringliteral}{"Enter species name..."} />
+00234                 </p>
+00235                 <p>
+00236                     Source:
+00237                     <label><input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"select-species-source"} 
+      value=\textcolor{stringliteral}{"worms"} checked=\textcolor{stringliteral}{"checked"} /> marinespecies.org</label>
+00238                     <label><input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"select-species-source"} 
+      value=\textcolor{stringliteral}{"local"} /> Local</label>
+00239                 </p>
+00240             </fieldset>
+00241 
+00242             <p>Assigned to: <span \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"assign-species-label"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"text-italic"}
+      ><a href=\textcolor{stringliteral}{"#"}>Unassigned</a></span></p>
+00243         </div>
+00244 
+00245         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-annotate-image"} title=\textcolor{stringliteral}{"Annotate Image"}>
+00246             <fieldset>
+00247                 <legend>Dominant Substrate</legend>
+00248                 <select \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"select-dominant-substrate"}>
+00249                     <option value=\textcolor{stringliteral}{""}>Select substrate type...</option>
+00250                 </select>
+00251                 <a href=\textcolor{stringliteral}{"#"} onclick=\textcolor{stringliteral}{"onAddCategory('select-dominant-substrate',
+       'dominant-substrates-list'); return false;"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"}>Add</a>
+00252                 <div \textcolor{keyword}{class}=\textcolor{stringliteral}{"category-editor"}>
+00253                     <ul \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dominant-substrates-list"}></ul>
+00254                 </div>
+00255             </fieldset>
+00256 
+00257             <fieldset>
+00258                 <legend>Subdominant Substrate</legend>
+00259                 <select \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"select-subdominant-substrate"}>
+00260                     <option value=\textcolor{stringliteral}{""}>Select substrate type...</option>
+00261                 </select>
+00262                 <a href=\textcolor{stringliteral}{"#"} onclick=\textcolor{stringliteral}{"
+      onAddCategory('select-subdominant-substrate', 'subdominant-substrates-list'); return false;"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"}>Add</a>
+00263                 <div \textcolor{keyword}{class}=\textcolor{stringliteral}{"category-editor"}>
+00264                     <ul \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"subdominant-substrates-list"}></ul>
+00265                 </div>
+00266             </fieldset>
+00267 
+00268             <fieldset>
+00269                 <legend>Image Tags</legend>
+00270                 <select \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"select-image-tag"}>
+00271                     <option value=\textcolor{stringliteral}{""}>Select tag...</option>
+00272                 </select>
+00273                 <a href=\textcolor{stringliteral}{"#"} onclick=\textcolor{stringliteral}{"onAddCategory('select-image-tag',
+       'image-tags-list'); return false;"} \textcolor{keyword}{class}=\textcolor{stringliteral}{"button"}>Add</a>
+00274                 <div \textcolor{keyword}{class}=\textcolor{stringliteral}{"category-editor"}>
+00275                     <ul \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"image-tags-list"}></ul>
+00276                 </div>
+00277             </fieldset>
+00278 
+00279             <fieldset>
+00280                 <legend>Annotation status</legend>
+00281                 <p>Set the status to \textcolor{stringliteral}{"Complete"} \textcolor{keywordflow}{if} all organisms on the image 
+      have been identified.</p>
+00282                 <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"image-annotation-status"}>
+00283                     <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"annotation-status"} value=\textcolor{stringliteral}{"
+      incomplete"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"annotation-status-incomplete"} checked=\textcolor{stringliteral}{"checked"} />
+00284                     <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"annotation-status-incomplete"}>Incomplete</label
+      >
+00285                     <input type=\textcolor{stringliteral}{"radio"} name=\textcolor{stringliteral}{"annotation-status"} value=\textcolor{stringliteral}{"
+      complete"} \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"annotation-status-complete"} />
+00286                     <label \textcolor{keywordflow}{for}=\textcolor{stringliteral}{"annotation-status-complete"}>Complete</label>
+00287                 </div>
+00288             </fieldset>
+00289         </div>
+00290 
+00291         <div \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"dialog-image-info"} title=\textcolor{stringliteral}{"Image Information"}>
+00292             <fieldset>
+00293                 <legend>Image Information</legend>
+00294                 <table \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"image-info-file"}></table>
+00295             </fieldset>
+00296             <fieldset>
+00297                 <legend>Event Information</legend>
+00298                 <table \textcolor{keywordtype}{id}=\textcolor{stringliteral}{"image-info-event"}></table>
+00299             </fieldset>
+00300         </div>
+00301     </div>
+00302     <!-- end dialogs -->
+00303 
+00304   </body>
+00305 </html>
+\end{DoxyCode}

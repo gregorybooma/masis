@@ -1,0 +1,85 @@
+\hypertarget{HTML_8php}{\subsection{H\-T\-M\-L.\-php}
+\label{HTML_8php}\index{includes/\-H\-T\-M\-L.\-php@{includes/\-H\-T\-M\-L.\-php}}
+}
+
+\begin{DoxyCode}
+00001 <?php
+00002 
+\hypertarget{HTML_8php_source_l00006}{}\hyperlink{classHTML}{00006} \textcolor{keyword}{class }\hyperlink{classHTML}{HTML} \{
+00007 
+\hypertarget{HTML_8php_source_l00017}{}\hyperlink{classHTML_ad9045b6ccdf9e6c7e3b4c228772a74f9}{00017}     \textcolor{keyword}{public} \textcolor{keyword}{function} \hyperlink{classHTML_ad9045b6ccdf9e6c7e3b4c228772a74f9}{get\_file\_list}($base\_path, $dir) \{
+00018         global $db;
+00019 
+00020         $html = \textcolor{stringliteral}{""};
+00021         \textcolor{keywordflow}{if} ( file\_exists($base\_path . $dir) ) \{
+00022             $files = scandir($base\_path . $dir);
+00023             natcasesort($files);
+00024             \textcolor{keywordflow}{if} ( count($files) > 2 ) \{ \textcolor{comment}{/* The 2 accounts for . and .. */}
+00025                 $html .= \textcolor{stringliteral}{"<ul class=\(\backslash\)"jqueryFileTree\(\backslash\)" style=\(\backslash\)"display: none;\(\backslash\)"
+      >"};
+00026                 \textcolor{comment}{// List dirs}
+00027                 \textcolor{keywordflow}{foreach}( $files as $file ) \{
+00028                     \textcolor{keywordflow}{if} ( file\_exists($base\_path . $dir . $file) && $file != \textcolor{charliteral}{'.'}
+       && $file != \textcolor{stringliteral}{'..'} && is\_dir($base\_path . $dir . $file) ) \{
+00029                         $html .= \textcolor{stringliteral}{"<li class=\(\backslash\)"directory collapsed\(\backslash\)"><a href=\(\backslash\)"#
+      \(\backslash\)" rel=\(\backslash\)""} . htmlentities($dir . $file) . \textcolor{stringliteral}{"/\(\backslash\)">\{$file\}</a></li>"};
+00030                     \}
+00031                 \}
+00032                 \textcolor{comment}{// List files}
+00033                 \textcolor{comment}{// File names for current folder are obtained from the database}
+00034                 \textcolor{comment}{// because only files also represented in the database should}
+00035                 \textcolor{comment}{// be listed.}
+00036                 $stack = explode(\textcolor{charliteral}{'/'}, trim($dir, \textcolor{charliteral}{'/'}));
+00037                 $img\_dir = array\_pop($stack);
+00038                 $ext\_pattern = \textcolor{stringliteral}{'/\(\backslash\).[A-Za-z]+$/'};
+00039                 $sth = $db->get\_files\_for\_dir($img\_dir);
+00040                 \textcolor{keywordflow}{while} ( $row = $sth->fetch(PDO::FETCH\_ASSOC) ) \{
+00041                     \textcolor{comment}{// Many entries in the database are .ppm files which are}
+00042                     \textcolor{comment}{// not supported. So replace the extension .ppm by common}
+00043                     \textcolor{comment}{// and supported file type extensions and look for these}
+00044                     \textcolor{comment}{// files instead.}
+00045                     $file = array();
+00046                     $file[] = preg\_replace($ext\_pattern, \textcolor{stringliteral}{'.jpeg'}, $row[\textcolor{stringliteral}{'
+      file\_name'}]);
+00047                     $file[] = preg\_replace($ext\_pattern, \textcolor{stringliteral}{'.jpg'}, $row[\textcolor{stringliteral}{'
+      file\_name'}]);
+00048                     $file[] = preg\_replace($ext\_pattern, \textcolor{stringliteral}{'.png'}, $row[\textcolor{stringliteral}{'
+      file\_name'}]);
+00049                     \textcolor{keywordflow}{foreach} ($file as $filename) \{
+00050                         \textcolor{keywordflow}{if} ( file\_exists($base\_path . $dir . $filename) ) \{
+00051                             \textcolor{comment}{// Set the file extension.}
+00052                             $ext = preg\_replace(\textcolor{stringliteral}{'/^.*\(\backslash\)./'}, \textcolor{stringliteral}{''}, $filename);
+00053                             \textcolor{comment}{// Set the image tags.}
+00054                             $tags = explode(\textcolor{charliteral}{','}, $row[\textcolor{stringliteral}{'tags'}]);
+00055                             \textcolor{comment}{// Set the indicator icons.}
+00056                             $indicators = \textcolor{stringliteral}{""};
+00057                             $indicators .= $row[\textcolor{stringliteral}{'n\_vectors'}] > 0 ? \textcolor{stringliteral}{"<span
+       class='vector-count' title='\{$row['n\_vectors']\}
+       selection(s)'>\{$row['n\_vectors']\}</span>"} : \textcolor{stringliteral}{""};
+00058                             $indicators .= $row[\textcolor{stringliteral}{'substrate\_annotated'}] ? \textcolor{stringliteral}{"<span
+       class='icon substrate-annotated' title='Substrate is annotated'></span>"} : \textcolor{stringliteral}{""};
+00059                             $indicators .= $row[\textcolor{stringliteral}{'annotation\_status'}] == \textcolor{stringliteral}{'
+      complete'} ? \textcolor{stringliteral}{"<span class='icon annotation-complete' title='Annotation
+       complete'></span>"} : \textcolor{stringliteral}{""};
+00060                             $indicators .= in\_array(\textcolor{stringliteral}{'flag for review'}, $tags) ?
+       \textcolor{stringliteral}{"<span class='icon needs-review' title='Flagged for review'></span>"} : \textcolor{stringliteral}{""};
+00061                             $indicators .= in\_array(\textcolor{stringliteral}{'unusable'}, $tags) ? \textcolor{stringliteral}{"<span
+       class='icon unusable' title='Marked unusable'></span>"} : \textcolor{stringliteral}{""};
+00062                             $indicators .= in\_array(\textcolor{stringliteral}{'highlight'}, $tags) ? \textcolor{stringliteral}{"
+      <span class='icon highlight' title='Highlighted image'></span>"} : \textcolor{stringliteral}{""};
+00063 
+00064                             $html .= \textcolor{stringliteral}{"<li class=\(\backslash\)"file ext\_\{$ext\}\(\backslash\)"><a href=\(\backslash\)"#
+      \(\backslash\)" rel=\(\backslash\)""} . htmlentities($dir . $filename) . \textcolor{stringliteral}{"\(\backslash\)">\{$filename\}</a><span
+       class='indicators'>\{$indicators\}</span></li>"};
+00065                             \textcolor{keywordflow}{break};
+00066                         \}
+00067                     \}
+00068                 \}
+00069                 $html .= \textcolor{stringliteral}{"</ul>"};
+00070             \}
+00071         \}
+00072         \textcolor{keywordflow}{return} $html;
+00073     \}
+00074 \}
+00075 
+\end{DoxyCode}

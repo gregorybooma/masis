@@ -1,0 +1,177 @@
+\hypertarget{classMember}{\subsection{Member Class Reference}
+\label{classMember}\index{Member@{Member}}
+}
+
+
+Handle user login.  
+
+
+\subsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classMember_a1b63bcda0a4ff98a704d8219dd00940e}{\-\_\-\-\_\-construct} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classMember_af167bc35d83e6fd60e875ad800028924}{\hyperlink{classMember_af167bc35d83e6fd60e875ad800028924}{current\-Path} ()}\label{classMember_af167bc35d83e6fd60e875ad800028924}
+
+\begin{DoxyCompactList}\small\item\em Return the current U\-R\-L directory. \end{DoxyCompactList}\item 
+\hypertarget{classMember_af4bf2a5c4bb9839768c7547707fb3ef0}{\hyperlink{classMember_af4bf2a5c4bb9839768c7547707fb3ef0}{current\-Page} ()}\label{classMember_af4bf2a5c4bb9839768c7547707fb3ef0}
+
+\begin{DoxyCompactList}\small\item\em Return the current U\-R\-L. \end{DoxyCompactList}\item 
+\hypertarget{classMember_a4f141835943affa73028f0f412522670}{\hyperlink{classMember_a4f141835943affa73028f0f412522670}{gen\-Salt} ()}\label{classMember_a4f141835943affa73028f0f412522670}
+
+\begin{DoxyCompactList}\small\item\em Generate a random salt to be used in password hasing. \end{DoxyCompactList}\item 
+\hyperlink{classMember_ad7ab0ff1849464c8378a88205fcc2149}{gen\-Hash} (\$salt, \$password, \$rounds=12)
+\begin{DoxyCompactList}\small\item\em This creates a hash of the selected password and uses a unique salt provided by gen\-Salt function. \end{DoxyCompactList}\item 
+\hyperlink{classMember_a13daaf7ca65d2456c80f280a3cf9dfef}{verify} (\$password, \$existing\-Hash)
+\begin{DoxyCompactList}\small\item\em Verify the password. \end{DoxyCompactList}\item 
+\hypertarget{classMember_aedacc5cf03c724d93df1c732489d15a2}{\hyperlink{classMember_aedacc5cf03c724d93df1c732489d15a2}{login} ()}\label{classMember_aedacc5cf03c724d93df1c732489d15a2}
+
+\begin{DoxyCompactList}\small\item\em Handle user login. \end{DoxyCompactList}\item 
+\hypertarget{classMember_a1ebfbff8b4159700fd6ba42d3abffa41}{\hyperlink{classMember_a1ebfbff8b4159700fd6ba42d3abffa41}{session\-Is\-Set} ()}\label{classMember_a1ebfbff8b4159700fd6ba42d3abffa41}
+
+\begin{DoxyCompactList}\small\item\em Checks if the session is set. \end{DoxyCompactList}\item 
+\hypertarget{classMember_a9d15d39e7d2e9417086f08fd8d2ba52e}{\hyperlink{classMember_a9d15d39e7d2e9417086f08fd8d2ba52e}{logout} ()}\label{classMember_a9d15d39e7d2e9417086f08fd8d2ba52e}
+
+\begin{DoxyCompactList}\small\item\em Reset and destroy session, delete cookies, and redirects to main page. \end{DoxyCompactList}\item 
+\hyperlink{classMember_aec76f4eeb51b0a6678305e71ca90f9d4}{create\-New\-Cookie} (\$user\-\_\-id)
+\begin{DoxyCompactList}\small\item\em If the user has checked the \char`\"{}\-Remember me\char`\"{} option, create a login session cookie for them. \end{DoxyCompactList}\item 
+\hyperlink{classMember_ac2dcb4c19a67fe43eb5806105401bfed}{delete\-Cookie} (\$user\-\_\-id)
+\begin{DoxyCompactList}\small\item\em Delete the users cookie. \end{DoxyCompactList}\item 
+\hypertarget{classMember_a9efd5a33fc7ecde58c4869061ab4e3df}{\hyperlink{classMember_a9efd5a33fc7ecde58c4869061ab4e3df}{data} ()}\label{classMember_a9efd5a33fc7ecde58c4869061ab4e3df}
+
+\begin{DoxyCompactList}\small\item\em Return user data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classMember_ad34ad36031d144cb0b1fe6020bfcaf4b}{\hyperlink{classMember_ad34ad36031d144cb0b1fe6020bfcaf4b}{\$username\-\_\-suffix} = \char`\"{}@mit.\-edu\char`\"{}}\label{classMember_ad34ad36031d144cb0b1fe6020bfcaf4b}
+
+\begin{DoxyCompactList}\small\item\em The suffix used for any user name. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsubsection{Detailed Description}
+Handle user login. 
+
+Definition at line \hyperlink{Member_8php_source_l00013}{13} of file \hyperlink{Member_8php_source}{Member.\-php}.
+
+
+
+\subsubsection{Constructor \& Destructor Documentation}
+\hypertarget{classMember_a1b63bcda0a4ff98a704d8219dd00940e}{\index{Member@{Member}!\-\_\-\-\_\-construct@{\-\_\-\-\_\-construct}}
+\index{\-\_\-\-\_\-construct@{\-\_\-\-\_\-construct}!Member@{Member}}
+\paragraph[{\-\_\-\-\_\-construct}]{\setlength{\rightskip}{0pt plus 5cm}Member\-::\-\_\-\-\_\-construct (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classMember_a1b63bcda0a4ff98a704d8219dd00940e}
+
+
+Constructor. 
+
+
+\begin{DoxyItemize}
+\item Set some basic settings for extra security.
+\item Start the session.
+\item Check last know I\-P to prevent hijacking. 
+\end{DoxyItemize}
+
+Definition at line \hyperlink{Member_8php_source_l00027}{27} of file \hyperlink{Member_8php_source}{Member.\-php}.
+
+
+
+\subsubsection{Member Function Documentation}
+\hypertarget{classMember_aec76f4eeb51b0a6678305e71ca90f9d4}{\index{Member@{Member}!create\-New\-Cookie@{create\-New\-Cookie}}
+\index{create\-New\-Cookie@{create\-New\-Cookie}!Member@{Member}}
+\paragraph[{create\-New\-Cookie}]{\setlength{\rightskip}{0pt plus 5cm}Member\-::create\-New\-Cookie (
+\begin{DoxyParamCaption}
+\item[{}]{\$user\-\_\-id}
+\end{DoxyParamCaption}
+)}}\label{classMember_aec76f4eeb51b0a6678305e71ca90f9d4}
+
+
+If the user has checked the \char`\"{}\-Remember me\char`\"{} option, create a login session cookie for them. 
+
+The login session details are saved to the database.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$user\-\_\-id} & The users id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Member_8php_source_l00256}{256} of file \hyperlink{Member_8php_source}{Member.\-php}.
+
+\hypertarget{classMember_ac2dcb4c19a67fe43eb5806105401bfed}{\index{Member@{Member}!delete\-Cookie@{delete\-Cookie}}
+\index{delete\-Cookie@{delete\-Cookie}!Member@{Member}}
+\paragraph[{delete\-Cookie}]{\setlength{\rightskip}{0pt plus 5cm}Member\-::delete\-Cookie (
+\begin{DoxyParamCaption}
+\item[{}]{\$user\-\_\-id}
+\end{DoxyParamCaption}
+)}}\label{classMember_ac2dcb4c19a67fe43eb5806105401bfed}
+
+
+Delete the users cookie. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$user\-\_\-id} & The users id \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Member_8php_source_l00281}{281} of file \hyperlink{Member_8php_source}{Member.\-php}.
+
+\hypertarget{classMember_ad7ab0ff1849464c8378a88205fcc2149}{\index{Member@{Member}!gen\-Hash@{gen\-Hash}}
+\index{gen\-Hash@{gen\-Hash}!Member@{Member}}
+\paragraph[{gen\-Hash}]{\setlength{\rightskip}{0pt plus 5cm}Member\-::gen\-Hash (
+\begin{DoxyParamCaption}
+\item[{}]{\$salt, }
+\item[{}]{\$password, }
+\item[{}]{\$rounds = {\ttfamily 12}}
+\end{DoxyParamCaption}
+)}}\label{classMember_ad7ab0ff1849464c8378a88205fcc2149}
+
+
+This creates a hash of the selected password and uses a unique salt provided by gen\-Salt function. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$salt} & The random salt for the password \\
+\hline
+string & {\em \$password} & The provided password \\
+\hline
+int & {\em \$rounds} & Cost parameter for the blowfish algorithm (must be in range 04-\/31) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Member_8php_source_l00094}{94} of file \hyperlink{Member_8php_source}{Member.\-php}.
+
+\hypertarget{classMember_a13daaf7ca65d2456c80f280a3cf9dfef}{\index{Member@{Member}!verify@{verify}}
+\index{verify@{verify}!Member@{Member}}
+\paragraph[{verify}]{\setlength{\rightskip}{0pt plus 5cm}Member\-::verify (
+\begin{DoxyParamCaption}
+\item[{}]{\$password, }
+\item[{}]{\$existing\-Hash}
+\end{DoxyParamCaption}
+)}}\label{classMember_a13daaf7ca65d2456c80f280a3cf9dfef}
+
+
+Verify the password. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$password} & The provided password \\
+\hline
+string & {\em \$existing\-Hash} & The current stored hashed password \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Member_8php_source_l00106}{106} of file \hyperlink{Member_8php_source}{Member.\-php}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+includes/Member.\-php\end{DoxyCompactItemize}

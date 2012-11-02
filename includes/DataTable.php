@@ -1,19 +1,19 @@
 <?php
 
 /**
- * The DataTable class for generating HTML tables.
+ * Generate HTML tables.
+ *
+ * Generated HTML tables can be used for the DataTables jQuery extension.
  */
 class DataTable {
 
     /**
      * The number of decimals to round to.
-     * @var Integer
      */
     public $round_precision = 5;
 
     /**
      * Names of columns for which the values should be rounded.
-     * @var Array
      */
     public $round_columns = array('species_cover_percent','species_area',
         'avg_species_area','surface_area');
@@ -60,8 +60,8 @@ class DataTable {
     /**
      * Print HTML table.
      *
-     * @param string $body The HTML <tbody> element for the table.
-     * @param string $properties Optional additional properties for the <table> tag.
+     * @param string $body The HTML tbody element for the table.
+     * @param string $properties Optional additional properties for the table tag.
      * @param array $components Specifies the elements for the table. Possible
      *      items for the array are the strings 'header' and 'footer'. By
      *      default, both the header and the table are printed.
@@ -79,9 +79,9 @@ class DataTable {
     }
 
     /**
-     * Prints the HTML <thead> element for a table.
+     * Prints the HTML thead element for a table.
      *
-     * The <thead> element contains the column names set in $this->tableHeads.
+     * The thead element contains the column names set in $this->tableHeads.
      *
      * @uses $this->tableHeads
      */
@@ -94,9 +94,9 @@ class DataTable {
     }
 
     /**
-     * Prints the HTML <tfoot> element for a table.
+     * Prints the HTML tfoot element for a table.
      *
-     * The <tfoot> element contains the column names set in $this->tableHeads.
+     * The tfoot element contains the column names set in $this->tableHeads.
      *
      * @uses $this->tableHeads
      */
@@ -113,7 +113,7 @@ class DataTable {
      *
      * @param $sth PDO Statement handler.
      * @param $class Optional CSS class for rows.
-     * @return string A HTML <tbody> element.
+     * @return string A HTML tbody element.
      */
     public function build_tbody($sth, $class="") {
         $tbody = "<tbody>";

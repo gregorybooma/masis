@@ -8,7 +8,7 @@
  */
 
 /**
- * The Notice class handles error reporting.
+ * Handle message reporting for the login system.
  */
 class Notice {
     private $_notices = array();

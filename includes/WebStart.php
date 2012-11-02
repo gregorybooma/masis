@@ -3,7 +3,10 @@
 // Mark valid web server entry point.
 define('MASIS', true);
 
-class MaSIS {
+/**
+ * Load web content.
+ */
+class WebStart {
     static $lens_angle_x = 0.510472157;
     static $lens_angle_y = 0.386512004;
     public $page_title;
@@ -21,6 +24,7 @@ class MaSIS {
             require(ROOT."/settings.php");
         } else {
             require(ROOT."/includes/Setup.php");
+            $setup = new Setup();
             return;
         }
 
@@ -91,5 +95,4 @@ class MaSIS {
 
         return $size_y * $size_x;
     }
-
 }

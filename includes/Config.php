@@ -1,37 +1,41 @@
 <?php
 /*
- * Config Class
+ * Originally part of Tutis Login <http://www.firedartstudios.com/labs/tutis-login>
+ * Author: FireDart
+ * License: CC-BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>
  *
- * Used to write config information into a static var to be
- * used anywhere
+ * Modified by Serrano Pereira for MaSIS
+ */
+
+/**
+ * Read and write configurations.
+ *
+ * Configurations are written to a static variable that can be accessed from
+ * anywhere within the program.
  */
 class Config {
-	/*
-	 * @var $configArray
-	 *
-	 * Used to store all the configs
+	/**
+	 * Array that contains all configurations.
 	 */
 	static $confArray;
-	/*
-	 * Config Read function
+
+	/**
+	 * Get the value for a configuration.
 	 *
-	 * Reads the config value from the $confArray
-	 *
-	 * @param string $name the key in the array
+	 * @param string $name The key in the array
+     * @return mixed The value for the configuration with key $name
 	 */
 	public static function read($name) {
 		return self::$confArray[$name];
 	}
-	/*
-	 * Config Write function
+
+	/**
+	 * Set a configuration.
 	 *
-	 * Writes data to the $confArray
-	 *
-	 * @param string $name the key in the array
-	 * @param string $value the value of the key in the array
+	 * @param string $name The key in the array
+	 * @param string $value The value of the key in the array
 	 */
 	public static function write($name, $value) {
 		self::$confArray[$name] = $value;
 	}
 }
-?>

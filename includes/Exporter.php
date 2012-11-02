@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The Exporter class exports data to files in CSV format.
+ * Export data to files in CSV format.
  */
 class Exporter {
 
@@ -12,26 +12,22 @@ class Exporter {
 
     /**
      * Character to be used as the CSV field delimiter.
-     * @var String
      */
     public $delimiter = ";";
 
     /**
      * Whether to print a header for the CSV output.
-     * @var Bool
      */
     public $header = TRUE;
 
     /**
      * Associative array with Aphia ID as key, species name as value.
-     * @var Array
      */
     public $aphia2name = array();
 
     /**
      * Images with a dominant substrate type that matches a value in this
      * list are excluded.
-     * @var Array
      */
     public $exclude_dominant_substrates = array();
 

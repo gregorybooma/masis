@@ -10,5 +10,5 @@ require_once("$root/includes/Member.php");
 $member = new Member();
 
 require("$root/includes/WebStart.php");
-$masis = new MaSIS();
+$masis = new WebStart();
 $masis->start();

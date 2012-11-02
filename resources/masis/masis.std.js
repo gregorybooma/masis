@@ -1,7 +1,7 @@
 /**
  * Round a decimal number to a set number of decimals.
  *
- * @param {Number} num The number to be round
+ * @param {Number} num The number to be rounded
  * @param {Number} dec The number of decimals to round to
  * @return {Number} The rounded number
  */

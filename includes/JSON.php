@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The JSON class generates data in JSON format.
+ * Generate data in JSON format.
  */
 class JSON {
 

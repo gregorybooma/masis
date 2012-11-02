@@ -7,7 +7,7 @@ var selectedFeature;
 var controls;
 
 /**
- * Class for collecting image information in a single object.
+ * @class Class for collecting image information in a single object.
  */
 function ImageInfo() {
     // Properties
@@ -22,10 +22,20 @@ function ImageInfo() {
     this.area;
     this.area_per_pixel;
 
-    // Methods
+    /**
+    * Return the width of the image in meters.
+    *
+    * @return {Numeric} Image width in meters.
+    */
     this.get_width = function () {
         return Math.sqrt(this.area_per_pixel) * this.width;
     };
+
+    /**
+    * Return the height of the image in meters.
+    *
+    * @return {Numeric} Image height in meters.
+    */
     this.get_height = function () {
         return Math.sqrt(this.area_per_pixel) * this.height;
     };
@@ -36,6 +46,9 @@ function ImageInfo() {
  * - Initialize the interface
  * - Initialize the workspace
  * - Load the photo library
+ *
+ * @method ready
+ * @constructor
  */
 $(document).ready(function() {
     // Initialize the interface.
@@ -655,10 +668,10 @@ function onAnnotateImage() {
 }
 
 /**
- * Add a category item to a catefory-editor.
+ * Add a category item to a category-editor.
  *
- * @param {String} select_id The ID for the category selector
- * @param {String} list_id The ID for the category list to add the selected category to
+ * @param {String} select_id The ID for the category selector element
+ * @param {String} list_id The ID for the category list element to add the selected category to
  */
 function onAddCategory(select_id, list_id) {
     // Get the selected category name.
@@ -895,8 +908,7 @@ function setImage(path) {
 /**
  * Set the image information object `imageObject`.
  *
- * @param {String} info The relative path to the image file. This is the path
- *      from the root of the web folder.
+ * @param {Object} info Object with image information.
  */
 function setImageObject(info) {
     // Attributes for which the type whould be changed.
@@ -922,7 +934,7 @@ function setImageObject(info) {
 /**
  * Load a new image into the workspace.
  *
- * @param {String} img An ImageInfo object
+ * @param {Object} img An ImageInfo object
  */
 function loadImage(img) {
     // Check the image object.

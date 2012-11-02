@@ -7,9 +7,14 @@
  * Modified by Serrano Pereira for MaSIS
  */
 
-
+/**
+ * Handle user login.
+ */
 class Member {
 
+    /**
+     * The suffix used for any user name.
+     */
     public $username_suffix = "@mit.edu";
 
     /**

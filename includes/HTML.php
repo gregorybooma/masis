@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The HTML class for generating HTML.
+ * Generate HTML output.
  */
 class HTML {
 

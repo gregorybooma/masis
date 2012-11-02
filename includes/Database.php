@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The Database class provides methods for retrieving data from the database.
+ * Provides methods for retrieving data from the database.
  */
 class Database {
     /**
@@ -11,13 +11,11 @@ class Database {
 
     /**
      * Skip records with an Aphia status set in this variable.
-     * @var Array
      */
     public $aphia_status_exclude = array('nomen dubium','nomen nudum','deleted');
 
     /**
      * Images with these tags are considered unusable.
-     * @var Array
      */
     public $tags_image_unusable = array('unusable','cannot see seafloor','altitude too high');
 
@@ -100,7 +98,7 @@ class Database {
     /**
      * Get the attributes for an image file.
      *
-     * @param string $dir Directory name for the image file (e.g. iCamera_2010-08-18_1924_session0010).
+     * @param string $dir Directory name for the image file.
      * @param array $filename File name of the image file (e.g. 004624.jpeg).
      * @return float $altitude Altitude at which the photo was taken.
      */
@@ -362,7 +360,7 @@ class Database {
     /**
      * Save vectors to the database.
      *
-     * @param integer $vectors An array of vector arrays.
+     * @param Array $vectors An array of vector arrays.
      * @return A PDO statement handler.
      */
     public function save_vectors($vectors) {

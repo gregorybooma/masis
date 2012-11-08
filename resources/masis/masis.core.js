@@ -361,6 +361,9 @@ function initWorkspace() {
     var container = document.getElementById("olControlLayerSwitcher");
     map.addControl(new OpenLayers.Control.LayerSwitcher({div: container}));
 
+    // Show coordinates in the bottom right corner of the map.
+    //map.addControl(new OpenLayers.Control.MousePosition());
+
     // Set controls.
     controls = {
         polygon: new OpenLayers.Control.DrawFeature(vectorLayer, OpenLayers.Handler.Polygon),

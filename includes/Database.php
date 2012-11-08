@@ -151,7 +151,7 @@ class Database {
                     LEFT OUTER JOIN image_annotation_status a ON a.image_info_id = i.id
                 WHERE i.img_dir = :dir
                 GROUP BY i.id, i.file_name, a.annotation_status
-                ORDER BY i.file_name;");
+                ORDER BY i.timestamp, i.file_name;");
             $sth->bindParam(":dir", $dir, PDO::PARAM_STR);
             $sth->execute();
         }

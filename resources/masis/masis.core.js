@@ -300,7 +300,7 @@ function initWorkspace() {
     map = new OpenLayers.Map('map', {
         units: 'dd', // Set units to decimal degrees (but we treat them as pixels)
         theme: null,
-        displayProjection: 'EPSG:90091'
+        displayProjection: 'EPSG:4326'
         }
     );
 

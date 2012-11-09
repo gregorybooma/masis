@@ -183,6 +183,7 @@ $user = $member->data();
                 <p><label>Aphia ID Species A: <br/><input type="text" name="aphia_id1" size="30" value="" placeholder="Enter species name..."></label></p>
                 <p><label>Aphia ID Species B: <br/><input type="text" name="aphia_id2" size="30" value="" placeholder="Enter species name..."></label></p>
                 <p><label><input type="checkbox" name="and" value="1" /> Only include images where both species are present</label></p>
+                <p><label>Dominant substrate types to include: <img src="/styles/images/icons/help.png" title="Separate multiple types by a comma (e.g. sand,mud)" /><br/><input type="text" name="include_dominant_substrates" size="30" value=""></label></p>
                 <p><label>Dominant substrate types to exclude: <img src="/styles/images/icons/help.png" title="Separate multiple types by a comma (e.g. sand,mud)" /><br/><input type="text" name="exclude_dominant_substrates" size="30" value=""></label></p>
                 <p><input type="submit" value="Export" class="button" /></p>
             </fieldset>

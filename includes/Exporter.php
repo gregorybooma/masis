@@ -32,6 +32,12 @@ class Exporter {
     public $exclude_dominant_substrates = array();
 
     /**
+     * Images with a dominant substrate type that matches a value in this
+     * list are exclusively included.
+     */
+    public $include_dominant_substrates = array();
+
+    /**
      * Set the values for the object attributes.
      *
      * @param string $delimiter Character to be used as the CSV field delimiter.
@@ -83,6 +89,8 @@ class Exporter {
      *
      * @param integer $aphia_id1 Aphia ID for species A.
      * @param integer $aphia_id2 Aphia ID for species B.
+     * @uses array $this->exclude_dominant_substrates List of dominant substrates to exclude.
+     * @uses array $this->include_dominant_substrates List of dominant substrates to include exclusively.
      * @throws Exception
      */
     public function set_coverage_two_species($aphia_id1, $aphia_id2) {
@@ -112,6 +120,11 @@ class Exporter {
             $query = str_replace("--where", "AND NOT EXISTS (SELECT 1 FROM image_substrate WHERE image_info_id = i.id AND substrate_type IN ({$exclude_dominant_substrates}) AND dominance = 'dominant')
                 --where", $query);
         }
+        if ( count($this->include_dominant_substrates) > 0 ) {
+            $include_dominant_substrates = "'".implode("','", $this->include_dominant_substrates)."'";
+            $query = str_replace("--where", "AND EXISTS (SELECT 1 FROM image_substrate WHERE image_info_id = i.id AND substrate_type IN ({$include_dominant_substrates}) AND dominance = 'dominant')
+                --where", $query);
+        }
 
         try {
             $sth = $db->dbh->prepare($query);
@@ -135,6 +148,8 @@ class Exporter {
      *
      * @param integer $aphia_id1 Aphia ID for species A.
      * @param integer $aphia_id2 Aphia ID for species B.
+     * @uses array $this->exclude_dominant_substrates List of dominant substrates to exclude.
+     * @uses array $this->include_dominant_substrates List of dominant substrates to include exclusively.
      * @throws Exception
      */
     public function set_coverage_two_species_present($aphia_id1, $aphia_id2) {
@@ -162,6 +177,11 @@ class Exporter {
         if ( count($this->exclude_dominant_substrates) > 0 ) {
             $exclude_dominant_substrates = "'".implode("','", $this->exclude_dominant_substrates)."'";
             $query = str_replace("--where", "AND NOT EXISTS (SELECT 1 FROM image_substrate WHERE image_info_id = i.id AND substrate_type IN ({$exclude_dominant_substrates}) AND dominance = 'dominant')
+                --where", $query);
+        }
+        if ( count($this->include_dominant_substrates) > 0 ) {
+            $include_dominant_substrates = "'".implode("','", $this->include_dominant_substrates)."'";
+            $query = str_replace("--where", "AND EXISTS (SELECT 1 FROM image_substrate WHERE image_info_id = i.id AND substrate_type IN ({$include_dominant_substrates}) AND dominance = 'dominant')
                 --where", $query);
         }
 

@@ -1033,7 +1033,7 @@ function updateImageInfoDialog(img) {
     if (img.exif.Make) $('#image-info-file').append("<tr><th>Camera Brand:</th><td>" + img.exif.Make + "</td></tr>");
     if (img.exif.Model) $('#image-info-file').append("<tr><th>Camera Model:</th><td>" + img.exif.Model + "</td></tr>");
     if (img.exif.ImageDescription) $('#image-info-file').append("<tr><th>Description:</th><td>" + img.exif.ImageDescription + "</td></tr>");
-    if (img.area) $('#image-info-file').append("<tr><th>Image Area:</th><td>" + roundNumber(img.area, 2) + " m<sup>2</sup></td></tr>");
+    if (img.area) $('#image-info-file').append("<tr><th>Image Area:</th><td>" + roundNumber(img.area, 5) + " m<sup>2</sup></td></tr>");
 
     if (img.event_id) $('#image-info-event').append("<tr><th>Event ID:</th><td>" + img.event_id + "</td></tr>");
     if (img.mission_id) $('#image-info-event').append("<tr><th>Mission ID:</th><td>" + img.mission_id + "</td></tr>");

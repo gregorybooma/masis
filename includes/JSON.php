@@ -207,6 +207,12 @@ class JSON {
         return json_encode($tags);
     }
 
+    /**
+     * Return the vectors for an image.
+     *
+     * @param int $image_id The id for the image
+     * @return Array of vectors in JSON format
+     */
     public function get_vectors($image_id) {
         global $db;
 

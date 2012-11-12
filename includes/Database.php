@@ -135,15 +135,25 @@ class Database {
         return $sth->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Return the list of image file names for an image directory.
+     *
+     * The list of file names is obtained from the database for the specified
+     * image directory name. In addition to file name also annotation status,
+     * vector count, boolean substrate annotated, and image tags are returned.
+     * This function is used to show a file list for a directory in the photo
+     * library.
+     *
+     * @param string $dir The name of the image directory.
+     * @return A PDO statement handler.
+     */
     public function get_files_for_dir($dir) {
         try {
             $sth = $this->dbh->prepare("SELECT i.file_name,
                     a.annotation_status,
                     COUNT(v.id) AS n_vectors,
-                    -- This is put in a subquery because when image_substrate
-                    -- returns multiple records, the corresponding record from
-                    -- image_info is repeated.
-                    (SELECT MAX(substrate_type) FROM image_substrate WHERE image_info_id = i.id) AS substrate_annotated,
+                    -- This boolean tells whether the substrate is annotated
+                    (SELECT 1 FROM image_substrate WHERE image_info_id = i.id LIMIT 1) AS substrate_annotated,
                     -- Get comma separated list of image tags.
                     (SELECT STRING_AGG(image_tag, ',') FROM image_tags WHERE image_info_id = i.id) AS tags
                 FROM image_info i
@@ -458,6 +468,12 @@ class Database {
         $this->dbh->commit();
     }
 
+    /**
+     * Delete a vector from the database.
+     *
+     * @param integer $image_id The unique identifier for an image in the database.
+     * @param string $vector_id The ID of the vector that will be deleted.
+     */
     public function delete_vector($image_id, $vector_id) {
         try {
             $sth = $this->dbh->prepare("DELETE FROM vectors

@@ -6,6 +6,15 @@
 Provides methods for retrieving data from the database.  
 
 
+
+
+Collaboration diagram for Database\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=208pt]{classDatabase__coll__graph}
+\end{center}
+\end{figure}
 \subsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -16,9 +25,8 @@ Provides methods for retrieving data from the database.
 \begin{DoxyCompactList}\small\item\em Create a new database prepared query. \end{DoxyCompactList}\item 
 \hyperlink{classDatabase_af7bc1f009ae4cfec8a19ce4c1cc0a43a}{get\-\_\-image\-\_\-attributes} (\$dir, \$filename)
 \begin{DoxyCompactList}\small\item\em Get the attributes for an image file. \end{DoxyCompactList}\item 
-\hypertarget{classDatabase_a6cf70f0c423b4b32d9b2825c74152da4}{{\bfseries get\-\_\-files\-\_\-for\-\_\-dir} (\$dir)}\label{classDatabase_a6cf70f0c423b4b32d9b2825c74152da4}
-
-\item 
+\hyperlink{classDatabase_a6cf70f0c423b4b32d9b2825c74152da4}{get\-\_\-files\-\_\-for\-\_\-dir} (\$dir)
+\begin{DoxyCompactList}\small\item\em Return the list of image file names for an image directory. \end{DoxyCompactList}\item 
 \hyperlink{classDatabase_a0fa69e8599adb5307cfc552ac9bf2c0d}{cache\-\_\-aphia\-\_\-records} (\$records, \$update=true)
 \begin{DoxyCompactList}\small\item\em Caches the records retrieved from the online Wo\-R\-M\-S database. \end{DoxyCompactList}\item 
 \hyperlink{classDatabase_a5972a2838b98ed0b7816a528ac823bec}{get\-\_\-species\-\_\-matching} (\$term, \$limit=20)
@@ -31,9 +39,8 @@ Provides methods for retrieving data from the database.
 \begin{DoxyCompactList}\small\item\em Return all vectors for an image. \end{DoxyCompactList}\item 
 \hyperlink{classDatabase_a9cbb05bd40bab06c6d1900b9e1905613}{save\-\_\-vectors} (\$vectors)
 \begin{DoxyCompactList}\small\item\em Save vectors to the database. \end{DoxyCompactList}\item 
-\hypertarget{classDatabase_a764fbabef33fae2ff24290462d954a99}{{\bfseries delete\-\_\-vector} (\$image\-\_\-id, \$vector\-\_\-id)}\label{classDatabase_a764fbabef33fae2ff24290462d954a99}
-
-\item 
+\hyperlink{classDatabase_a764fbabef33fae2ff24290462d954a99}{delete\-\_\-vector} (\$image\-\_\-id, \$vector\-\_\-id)
+\begin{DoxyCompactList}\small\item\em Delete a vector from the database. \end{DoxyCompactList}\item 
 \hyperlink{classDatabase_a0fba6ad55208137b25381d4b73954c2c}{set\-\_\-areas\-\_\-image\-\_\-grouped} ()
 \begin{DoxyCompactList}\small\item\em Truncate and populate table {\ttfamily areas\-\_\-image\-\_\-grouped}. \end{DoxyCompactList}\item 
 \hyperlink{classDatabase_afa6f84f0b79f0be0b4a81e9898c2b3e7}{set\-\_\-areas} ()
@@ -91,7 +98,55 @@ boolean & {\em \$update} & Whether to update existing records in the database. \
 \end{DoxyParams}
 
 
-Definition at line \hyperlink{Database_8php_source_l00170}{170} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00180}{180} of file \hyperlink{Database_8php_source}{Database.\-php}.
+
+\hypertarget{classDatabase_a764fbabef33fae2ff24290462d954a99}{\index{Database@{Database}!delete\-\_\-vector@{delete\-\_\-vector}}
+\index{delete\-\_\-vector@{delete\-\_\-vector}!Database@{Database}}
+\paragraph[{delete\-\_\-vector}]{\setlength{\rightskip}{0pt plus 5cm}Database\-::delete\-\_\-vector (
+\begin{DoxyParamCaption}
+\item[{}]{\$image\-\_\-id, }
+\item[{}]{\$vector\-\_\-id}
+\end{DoxyParamCaption}
+)}}\label{classDatabase_a764fbabef33fae2ff24290462d954a99}
+
+
+Delete a vector from the database. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+integer & {\em \$image\-\_\-id} & The unique identifier for an image in the database. \\
+\hline
+string & {\em \$vector\-\_\-id} & The I\-D of the vector that will be deleted. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \hyperlink{Database_8php_source_l00477}{477} of file \hyperlink{Database_8php_source}{Database.\-php}.
+
+\hypertarget{classDatabase_a6cf70f0c423b4b32d9b2825c74152da4}{\index{Database@{Database}!get\-\_\-files\-\_\-for\-\_\-dir@{get\-\_\-files\-\_\-for\-\_\-dir}}
+\index{get\-\_\-files\-\_\-for\-\_\-dir@{get\-\_\-files\-\_\-for\-\_\-dir}!Database@{Database}}
+\paragraph[{get\-\_\-files\-\_\-for\-\_\-dir}]{\setlength{\rightskip}{0pt plus 5cm}Database\-::get\-\_\-files\-\_\-for\-\_\-dir (
+\begin{DoxyParamCaption}
+\item[{}]{\$dir}
+\end{DoxyParamCaption}
+)}}\label{classDatabase_a6cf70f0c423b4b32d9b2825c74152da4}
+
+
+Return the list of image file names for an image directory. 
+
+The list of file names is obtained from the database for the specified image directory name. In addition to file name also annotation status, vector count, boolean substrate annotated, and image tags are returned. This function is used to show a file list for a directory in the photo library.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$dir} & The name of the image directory. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A P\-D\-O statement handler. 
+\end{DoxyReturn}
+
+
+Definition at line \hyperlink{Database_8php_source_l00150}{150} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_af7bc1f009ae4cfec8a19ce4c1cc0a43a}{\index{Database@{Database}!get\-\_\-image\-\_\-attributes@{get\-\_\-image\-\_\-attributes}}
 \index{get\-\_\-image\-\_\-attributes@{get\-\_\-image\-\_\-attributes}!Database@{Database}}
@@ -135,7 +190,7 @@ A P\-D\-O statement handler.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00323}{323} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00333}{333} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a1e9b6dcb97dbec39092dc887db9242b2}{\index{Database@{Database}!get\-\_\-image\-\_\-tags@{get\-\_\-image\-\_\-tags}}
 \index{get\-\_\-image\-\_\-tags@{get\-\_\-image\-\_\-tags}!Database@{Database}}
@@ -158,7 +213,7 @@ A P\-D\-O statement handler.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00623}{623} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00639}{639} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a5972a2838b98ed0b7816a528ac823bec}{\index{Database@{Database}!get\-\_\-species\-\_\-matching@{get\-\_\-species\-\_\-matching}}
 \index{get\-\_\-species\-\_\-matching@{get\-\_\-species\-\_\-matching}!Database@{Database}}
@@ -186,7 +241,7 @@ A P\-D\-O statement handler.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00286}{286} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00296}{296} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_adf48d605dd4622b07cc9a7f548cc5917}{\index{Database@{Database}!get\-\_\-substrate\-\_\-annotations@{get\-\_\-substrate\-\_\-annotations}}
 \index{get\-\_\-substrate\-\_\-annotations@{get\-\_\-substrate\-\_\-annotations}!Database@{Database}}
@@ -209,7 +264,7 @@ A P\-D\-O statement handler.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00603}{603} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00619}{619} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a9549b0da67a3ad1f6e2f569d67e107ec}{\index{Database@{Database}!get\-\_\-substrate\-\_\-types@{get\-\_\-substrate\-\_\-types}}
 \index{get\-\_\-substrate\-\_\-types@{get\-\_\-substrate\-\_\-types}!Database@{Database}}
@@ -227,7 +282,7 @@ A P\-D\-O statement handler.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00307}{307} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00317}{317} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a231a45ee6f3292841b5b1272d5fac725}{\index{Database@{Database}!get\-\_\-vectors@{get\-\_\-vectors}}
 \index{get\-\_\-vectors@{get\-\_\-vectors}!Database@{Database}}
@@ -250,7 +305,7 @@ A P\-D\-O statement handler.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00340}{340} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00350}{350} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a18962b53bf38e115cfca934bd2d63d3b}{\index{Database@{Database}!query@{query}}
 \index{query@{query}!Database@{Database}}
@@ -300,7 +355,7 @@ A P\-D\-O statement handler.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00366}{366} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00376}{376} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a4e89aa8e1053f8753a22572f65e0d2be}{\index{Database@{Database}!set\-\_\-annotation\-\_\-status@{set\-\_\-annotation\-\_\-status}}
 \index{set\-\_\-annotation\-\_\-status@{set\-\_\-annotation\-\_\-status}!Database@{Database}}
@@ -323,7 +378,7 @@ string & {\em \$status} & The status, e.\-g. 'incomplete' or 'complete'. \\
 \end{DoxyParams}
 
 
-Definition at line \hyperlink{Database_8php_source_l00562}{562} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00578}{578} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_afa6f84f0b79f0be0b4a81e9898c2b3e7}{\index{Database@{Database}!set\-\_\-areas@{set\-\_\-areas}}
 \index{set\-\_\-areas@{set\-\_\-areas}!Database@{Database}}
@@ -343,7 +398,7 @@ int The number of updated records.
 \end{DoxyReturn}
 
 
-Definition at line \hyperlink{Database_8php_source_l00521}{521} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00537}{537} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a0fba6ad55208137b25381d4b73954c2c}{\index{Database@{Database}!set\-\_\-areas\-\_\-image\-\_\-grouped@{set\-\_\-areas\-\_\-image\-\_\-grouped}}
 \index{set\-\_\-areas\-\_\-image\-\_\-grouped@{set\-\_\-areas\-\_\-image\-\_\-grouped}!Database@{Database}}
@@ -360,7 +415,7 @@ This table contains the species coverage per image. The overall coverage for eac
 
 This function needs to be executed after vectors in the {\ttfamily vectors} table have been updated in order to get up-\/to-\/date coverage data. 
 
-Definition at line \hyperlink{Database_8php_source_l00484}{484} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00500}{500} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a19ba63b5a89bb24232cd474c54b4f731}{\index{Database@{Database}!set\-\_\-image\-\_\-tags@{set\-\_\-image\-\_\-tags}}
 \index{set\-\_\-image\-\_\-tags@{set\-\_\-image\-\_\-tags}!Database@{Database}}
@@ -383,7 +438,7 @@ array & {\em \$tags} & Array of strings/tag names \\
 \end{DoxyParams}
 
 
-Definition at line \hyperlink{Database_8php_source_l00690}{690} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00706}{706} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 \hypertarget{classDatabase_a241720daf5ac8d79ce1283898c0a7da3}{\index{Database@{Database}!set\-\_\-substrate\-\_\-annotations@{set\-\_\-substrate\-\_\-annotations}}
 \index{set\-\_\-substrate\-\_\-annotations@{set\-\_\-substrate\-\_\-annotations}!Database@{Database}}
@@ -406,7 +461,7 @@ array & {\em \$annotations} & Associative array of the annotations. The keys are
 \end{DoxyParams}
 
 
-Definition at line \hyperlink{Database_8php_source_l00645}{645} of file \hyperlink{Database_8php_source}{Database.\-php}.
+Definition at line \hyperlink{Database_8php_source_l00661}{661} of file \hyperlink{Database_8php_source}{Database.\-php}.
 
 
 

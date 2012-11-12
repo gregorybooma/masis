@@ -6,6 +6,15 @@
 Read and write configurations.  
 
 
+
+
+Collaboration diagram for Config\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=152pt]{classConfig__coll__graph}
+\end{center}
+\end{figure}
 \subsubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -42,9 +51,12 @@ Definition at line \hyperlink{Config_8php_source_l00016}{16} of file \hyperlink{
 
 Get the value for a configuration. 
 
-\begin{DoxyVerb}@param string $name The key in the array
-\end{DoxyVerb}
- \begin{DoxyReturn}{Returns}
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$name} & The key in the array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
 mixed The value for the configuration with key \$name 
 \end{DoxyReturn}
 

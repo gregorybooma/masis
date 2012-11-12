@@ -6,6 +6,15 @@
 Export data to files in C\-S\-V format.  
 
 
+
+
+Collaboration diagram for Exporter\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=240pt]{classExporter__coll__graph}
+\end{center}
+\end{figure}
 \subsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -36,7 +45,10 @@ Export data to files in C\-S\-V format.
 \begin{DoxyCompactList}\small\item\em Associative array with Aphia I\-D as key, species name as value. \end{DoxyCompactList}\item 
 \hypertarget{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{\hyperlink{classExporter_af894c7d3f943ae0a52ce33ec8330726a}{\$exclude\-\_\-dominant\-\_\-substrates} = array()}\label{classExporter_af894c7d3f943ae0a52ce33ec8330726a}
 
-\begin{DoxyCompactList}\small\item\em Images with a dominant substrate type that matches a value in this list are excluded. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Images with a dominant substrate type that matches a value in this list are excluded. \end{DoxyCompactList}\item 
+\hypertarget{classExporter_a2c28675e74d039ea5d9dcef24d4e0f59}{\hyperlink{classExporter_a2c28675e74d039ea5d9dcef24d4e0f59}{\$include\-\_\-dominant\-\_\-substrates} = array()}\label{classExporter_a2c28675e74d039ea5d9dcef24d4e0f59}
+
+\begin{DoxyCompactList}\small\item\em Images with a dominant substrate type that matches a value in this list are exclusively included. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsubsection{Detailed Description}
@@ -68,7 +80,7 @@ bool & {\em \$header} & Whether to print a header for the C\-S\-V output. \\
 \end{DoxyParams}
 
 
-Definition at line \hyperlink{Exporter_8php_source_l00040}{40} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+Definition at line \hyperlink{Exporter_8php_source_l00046}{46} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
 
 
 
@@ -91,7 +103,7 @@ string & {\em \$filename} & The name of the C\-S\-V file to be exported. \\
 \end{DoxyParams}
 
 
-Definition at line \hyperlink{Exporter_8php_source_l00050}{50} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+Definition at line \hyperlink{Exporter_8php_source_l00056}{56} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
 
 \hypertarget{classExporter_aa2afe95206f1731839936a65a0e2cf97}{\index{Exporter@{Exporter}!set\-\_\-coverage\-\_\-two\-\_\-species@{set\-\_\-coverage\-\_\-two\-\_\-species}}
 \index{set\-\_\-coverage\-\_\-two\-\_\-species@{set\-\_\-coverage\-\_\-two\-\_\-species}!Exporter@{Exporter}}
@@ -111,7 +123,7 @@ Only images for which the annotation status is \char`\"{}complete\char`\"{} are 
 \begin{DoxyParams}[1]{Parameters}
 integer & {\em \$aphia\-\_\-id1} & Aphia I\-D for species A. \\
 \hline
-integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B. \\
+integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B.  array \$this-\/$>$exclude\-\_\-dominant\-\_\-substrates List of dominant substrates to exclude.  array \$this-\/$>$include\-\_\-dominant\-\_\-substrates List of dominant substrates to include exclusively. \\
 \hline
 \end{DoxyParams}
 
@@ -121,7 +133,7 @@ integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B. \\
 \end{DoxyExceptions}
 
 
-Definition at line \hyperlink{Exporter_8php_source_l00088}{88} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+Definition at line \hyperlink{Exporter_8php_source_l00096}{96} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
 
 \hypertarget{classExporter_a029e2313283f605eeda5ebb46ceb4038}{\index{Exporter@{Exporter}!set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present@{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present}}
 \index{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present@{set\-\_\-coverage\-\_\-two\-\_\-species\-\_\-present}!Exporter@{Exporter}}
@@ -141,7 +153,7 @@ Only images for which the annotation status is \char`\"{}complete\char`\"{} are 
 \begin{DoxyParams}[1]{Parameters}
 integer & {\em \$aphia\-\_\-id1} & Aphia I\-D for species A. \\
 \hline
-integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B. \\
+integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B.  array \$this-\/$>$exclude\-\_\-dominant\-\_\-substrates List of dominant substrates to exclude.  array \$this-\/$>$include\-\_\-dominant\-\_\-substrates List of dominant substrates to include exclusively. \\
 \hline
 \end{DoxyParams}
 
@@ -151,7 +163,7 @@ integer & {\em \$aphia\-\_\-id2} & Aphia I\-D for species B. \\
 \end{DoxyExceptions}
 
 
-Definition at line \hyperlink{Exporter_8php_source_l00140}{140} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+Definition at line \hyperlink{Exporter_8php_source_l00155}{155} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
 
 \hypertarget{classExporter_aef6631756a775063a2f55d7d8475c8cc}{\index{Exporter@{Exporter}!set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids@{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids}}
 \index{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids@{set\-\_\-names\-\_\-from\-\_\-aphia\-\_\-ids}!Exporter@{Exporter}}
@@ -176,7 +188,7 @@ Array & {\em \$ids} & Aphia I\-D's  Array \$this-\/$>$aphia2name \\
 \end{DoxyExceptions}
 
 
-Definition at line \hyperlink{Exporter_8php_source_l00187}{187} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
+Definition at line \hyperlink{Exporter_8php_source_l00207}{207} of file \hyperlink{Exporter_8php_source}{Exporter.\-php}.
 
 
 

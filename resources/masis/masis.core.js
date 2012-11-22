@@ -626,7 +626,7 @@ function onAnnotateImage() {
         success: function(data) {
             for (i in data) {
                 var o = data[i];
-                $('#'+o.dominance+'-substrates-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.substrate_type + '</span><span class="remove">×</span></span></li>');
+                $('#'+o.dominance+'-substrates-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.substrate_type + '</span><span class="remove">&times;</span></span></li>');
             }
 
             // Set the callback function for the remove buttons.
@@ -646,7 +646,7 @@ function onAnnotateImage() {
         success: function(data) {
             for (i in data) {
                 var o = data[i];
-                $('#image-tags-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.image_tag + '</span><span class="remove">×</span></span></li>');
+                $('#image-tags-list').append('<li class="category-container-item"><span class="jellybean"><span class="value">' + o.image_tag + '</span><span class="remove">&times;</span></span></li>');
             }
 
             // Set the callback function for the remove buttons.
@@ -684,7 +684,7 @@ function onAddCategory(select_id, list_id) {
 
     // Add the category to the category list.
     if (value) {
-        $('#'+list_id).append('<li class="category-container-item"><span class="jellybean"><span class="value">' + label + '</span><span class="remove">×</span></span></li>');
+        $('#'+list_id).append('<li class="category-container-item"><span class="jellybean"><span class="value">' + label + '</span><span class="remove">&times;</span></span></li>');
 
         // Set the callback function for the remove button.
         $(".jellybean span.remove").click(function() {

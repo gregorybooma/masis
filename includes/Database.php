@@ -103,8 +103,12 @@ class Database {
      * @return float $altitude Altitude at which the photo was taken.
      */
     public function get_image_attributes($dir, $filename) {
-        $filename = explode('.', $filename);
-        $filename = $filename[0] . ".%";
+        // Get the file name without extension.
+        $info = pathinfo($filename);
+        $filename = basename($filename,'.'.$info['extension']);
+        // Add ".%" to the filename so that it can be used directly in the
+        // database query below.
+        $filename = $filename.".%";
 
         try {
             $sth = $this->dbh->prepare("SELECT i.id,

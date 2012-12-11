@@ -99,8 +99,8 @@ class Database {
      * Get the attributes for an image file.
      *
      * @param string $dir Directory name for the image file.
-     * @param array $filename File name of the image file (e.g. 004624.jpeg).
-     * @return float $altitude Altitude at which the photo was taken.
+     * @param string $filename File name of the image file (e.g. 004624.jpeg).
+     * @return array Image attributes.
      */
     public function get_image_attributes($dir, $filename) {
         // Get the file name without extension.

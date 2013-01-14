@@ -51,17 +51,25 @@ product.
 
 ## Project managers
 
-* Gregory Booma
-* Judith Pederson
+* Gregory Booma: Technical lead
+* Judith Pederson: Scientific oversight
 
 ## Developers
 
-* Serrano Pereira
+* Original Development (2012)
+- Serrano Pereira: Application design and development
+- Gregory Booma: Systems design and administration
+
+* Subsequent Development (2013)
+- Gregory Booma: All aspects
 
 ## Testing and suggestions
 
-* Benjamin Bray
-* Joseph Futrelle
-* Scott Gallager
-* James Noble
-* Amber York
+* MIT
+- Benjamin Bray
+- James Noble
+
+* WHOI
+- Joseph Futrelle
+- Amber York
+- Scott Gallagher

@@ -50,30 +50,34 @@ We would like to recognize the following names for their contribution to the
 product.
 
 ## Project managers
-> Gregory Booma: Technical lead
+Gregory Booma: Technical lead
 
-> Judith Pederson: Scientific oversight
+Judith Pederson: Scientific oversight
 
 ## Developers
 
 * Original Development (2012)
-> Serrano Pereira: Application design and development
 
-> Gregory Booma: Systems design and administration
+Serrano Pereira: Application design and development
+
+Gregory Booma: Systems design and administration
 
 * Subsequent Development (2013)
-> Gregory Booma: All aspects
+
+Gregory Booma: All aspects
 
 ## Testing and suggestions
 
 * MIT
-> Benjamin Bray
 
-> James Noble
+Benjamin Bray
+
+James Noble
 
 * WHOI
-> Joseph Futrelle
 
-> Amber York
+Joseph Futrelle
 
-> Scott Gallagher
+Amber York
+
+Scott Gallagher

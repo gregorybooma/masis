@@ -47,7 +47,7 @@ individual authors and are governed by their individual applicable license.
 # Credits
 
 We would like to recognize the following names for their contribution to the
-product.
+product:
 
 ## Project managers
 Gregory Booma: Technical lead
@@ -56,25 +56,25 @@ Judith Pederson: Scientific oversight
 
 ## Developers
 
-* Original Development (2012)
+**Original Development (2012)**
 
 Serrano Pereira: Application design and development
 
 Gregory Booma: Systems design and administration
 
-* Subsequent Development (2013)
+**Subsequent Development (2013)**
 
 Gregory Booma: All aspects
 
 ## Testing and suggestions
 
-* MIT
+**MIT**
 
 Benjamin Bray
 
 James Noble
 
-* WHOI
+**WHOI**
 
 Joseph Futrelle
 

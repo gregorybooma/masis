@@ -52,7 +52,7 @@ class Member {
      */
     public function currentPath() {
         $currentPath  = 'http';
-        if (isset($_SERVER["HTTPS"]) == "on") {$currentPage .= "s";}
+        if (isset($_SERVER["HTTPS"]) == "on") {$currentPath .= "s";}
         $currentPath .= "://";
         $currentPath .= dirname($_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"]) . '/';
         return $currentPath;

@@ -9,7 +9,7 @@ species captured on photographs.
 Copyright (c) 2012, Massachusetts Institute of Technology
 All rights reserved.
 
-License to be determined.
+GNU General Public License, Version 2. Refer to LICENSE file for details.
 
 # Disclaimer
 
@@ -49,8 +49,8 @@ individual authors and are governed by their individual applicable license.
 We would like to recognize the following names for their contribution to the
 product:
 
-## Project managers
-Gregory Booma: Technical lead
+## Administration
+Gregory Booma: Project manager
 
 Judith Pederson: Scientific oversight
 
@@ -60,7 +60,7 @@ Judith Pederson: Scientific oversight
 
 Serrano Pereira: Application design and development
 
-Gregory Booma: Systems design and administration
+Gregory Booma: Technical lead, Systems design and administration
 
 **Subsequent Development (2013)**
 
